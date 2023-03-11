@@ -3,6 +3,21 @@ name: ci
 on: [push]
 
 jobs:
+  build:
+    #    if: github.ref == 'refs/heads/dev'
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+#      - name: Login to DockerHub Registry
+#        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Build Docker image back
+        run: docker build -f=Dockerfile -t yutfut/back:${GITHUB_SHA::8} .
+
+#      - name: Push the image bcak
+#        run: docker push yutfut/vvti_back:${GITHUB_SHA::8}
+
 #  linter:
 #    name: Linter
 #    runs-on: ubuntu-latest
