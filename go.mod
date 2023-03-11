@@ -1,3 +1,3 @@
-module example.com/m
+module github.com/tp-study-ai/back-end
 
 go 1.19

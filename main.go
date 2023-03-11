@@ -1,8 +1,8 @@
 package main
 
 import (
-	"example.com/m/che"
 	"fmt"
+	"github.com/tp-study-ai/back-end/che"
 	"net/http"
 )
 
