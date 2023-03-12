@@ -16,7 +16,7 @@ jobs:
         run: docker build -f=Dockerfile -t yutfut/back:${GITHUB_SHA::8} .
 
       - name: Push the image bcak
-        run: docker push yutfut/vvti_back:${GITHUB_SHA::8}
+        run: docker push yutfut/back:${GITHUB_SHA::8}
 
 #  linter:
 #    name: Linter
