@@ -1,4 +1,4 @@
-module github.com/tp-study-ai/back-end
+module github.com/tp-study-ai/backend
 
 go 1.19
 

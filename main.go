@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/tp-study-ai/back-end/che"
+	"github.com/tp-study-ai/backend/che"
 	"net/http"
 )
 
