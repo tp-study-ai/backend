@@ -77,7 +77,7 @@ jobs:
     needs: build
     steps:
       - name: executing remote ssh commands to deploy
-        uses: appleboy/ssh-action@v0.1.4
+        uses: appleboy/ssh-action@master
         with:
 #          envs: GITHUB_SHA
           host: ${{ secrets.HOST }}
