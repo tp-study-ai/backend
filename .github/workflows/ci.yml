@@ -85,6 +85,7 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
             cd infrastructure/backend/
+            rm .env
             touch .env
             echo VERSION=${GITHUB_SHA::8} >> .env
             sudo docker-compose up -d
