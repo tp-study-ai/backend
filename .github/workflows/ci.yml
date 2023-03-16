@@ -11,7 +11,7 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: ${{ github.workflow }} backend start 1/3!
+          message: 1/3 ${{ github.repository }} backend start!
 
   build:
     #    if: github.ref == 'refs/heads/dev'
@@ -37,7 +37,7 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: ${{ github.workflow }} backend build done 2/3!
+          message: 2/3 ${{ github.repository }} backend build done!
 
 #  linter:
 #    name: Linter
@@ -120,5 +120,5 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: ${{ github.workflow }} backend успешно выполнен 3/3!
+          message: 3/3 ${{ github.repository }} успешно выполнен!
 
