@@ -1,8 +1,10 @@
-package cmd
+package main
 
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
+	"github.com/tp-study-ai/backend/conf"
+	"github.com/tp-study-ai/backend/internal/app/task"
 	"github.com/tp-study-ai/backend/tools"
 	"log"
 	"net/http"
@@ -15,12 +17,20 @@ func main() {
 	}
 	defer pgxManager.Close()
 
+	taskRepo := task.NewRepositoryTask(pgxManager)
+	taskUcase := task.NewUcaseTask(taskRepo)
+	taskHandler := task.NewHandlerTask(taskUcase)
+
 	router := echo.New()
 
+	serverRouting := conf.ServerHandlers{
+		TaskHandler: taskHandler,
+	}
+
+	serverRouting.ConfigureRouting(router)
+
 	httpServ := http.Server{
-		Addr:         "127.0.0.1",
-		//ReadTimeout:  time.Duration(config.ServConfig.ReadTimeout) * time.Second,
-		//WriteTimeout: time.Duration(config.ServConfig.WriteTimeout) * time.Second,
+		Addr:         "127.0.0.1:8001",
 		Handler:      router,
 	}
 
