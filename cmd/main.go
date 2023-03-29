@@ -30,8 +30,8 @@ func main() {
 	serverRouting.ConfigureRouting(router)
 
 	httpServ := http.Server{
-		Addr:         ":8000",
-		Handler:      router,
+		Addr:    ":8000",
+		Handler: router,
 	}
 
 	if err := router.StartServer(&httpServ); err != http.ErrServerClosed {
