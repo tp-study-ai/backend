@@ -30,7 +30,7 @@ func main() {
 	serverRouting.ConfigureRouting(router)
 
 	httpServ := http.Server{
-		Addr:         "127.0.0.1:8001",
+		Addr:         "127.0.0.1:8000",
 		Handler:      router,
 	}
 
