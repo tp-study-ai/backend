@@ -17,7 +17,7 @@ func NewPostgresqlX() (*pgx.ConnPool, error) {
 	//
 	//db.SetMaxOpenConns(1000)
 	//return db, nil
-	dsn := fmt.Sprintf("user=%s dbname=%s password=%s host=%s port=%d", "yutfut", "yutfut", "yutfut", "146.185.208.233", 5432)
+	dsn := fmt.Sprintf("user=%s dbname=%s password=%s host=%s port=%d", "yutfut", "yutfut", "yutfut", "db", 5432)
 	conn, err := pgx.ParseConnectionString(dsn)
 	if err != nil {
 		log.Fatalln("cant parse config", err)
