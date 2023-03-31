@@ -143,7 +143,7 @@ func (h HandlerTask) SendSolution(ctx echo.Context) error {
 	}
 
 	responseBody := bytes.NewBuffer(result)
-	resp, err := http.Post("http://127.0.0.1:8080/check_solution?api_key=study", "application/json", responseBody)
+	resp, err := http.Post("http://127.0.0.1:8080/check_solution?api_key=secret_key_here", "application/json", responseBody)
 	if err != nil {
 		che := CustomError{
 			Number: 3,
