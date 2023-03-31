@@ -103,7 +103,7 @@ type SourceCode struct {
 	Main2    string `json:"lib/sum.h"`
 }
 
-type SS struct {
+type SS123 struct {
 	SourceCode   SourceCode `json:"sourceCode"`
 	Tests        []Test     `json:"tests"`
 	BuildTimeout int        `json:"buildTimeout"`
@@ -116,7 +116,7 @@ type CustomError struct {
 }
 
 func (h HandlerTask) SendSolution(ctx echo.Context) error {
-	var solution SS
+	var solution SS123
 	solution.Tests = make([]Test, 0)
 
 	if err := ctx.Bind(&solution); err != nil {
