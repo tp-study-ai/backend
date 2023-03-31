@@ -106,6 +106,8 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
             cd infrastructure/
+            sudo docker-compose stop
+            sudo docker-compose down
             rm .env
             touch .env
             echo VERSION=${GITHUB_SHA::8} >> .env
