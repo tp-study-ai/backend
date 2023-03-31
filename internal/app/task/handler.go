@@ -110,14 +110,35 @@ type SS struct {
 	TestTimeout  int        `json:"testTimeout"`
 }
 
+type CustomError struct {
+	Number int    `json:"number"`
+	Error  string `json:"error"`
+}
+
 func (h HandlerTask) SendSolution(ctx echo.Context) error {
 	var solution SS
 
 	if err := ctx.Bind(&solution); err != nil {
-		return err
+		che := CustomError{
+			Number: 1,
+			Error:  err.Error(),
+		}
+		result, _ := json.Marshal(che)
+		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+		return ctx.JSONBlob(http.StatusOK, result)
 	}
 
-	result, _ := json.Marshal(solution)
+	result, err := json.Marshal(solution)
+	if err != nil {
+		che := CustomError{
+			Number: 2,
+			Error:  err.Error(),
+		}
+		result, _ := json.Marshal(che)
+		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+		return ctx.JSONBlob(http.StatusOK, result)
+	}
+
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
 }
