@@ -90,3 +90,34 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
 }
+
+type Test struct {
+	Input  string
+	Output string
+}
+
+type SourceCode struct {
+	Makefile string `json:"Makefile"`
+	Main     string `json:"main.c"`
+	Main1    string `json:"lib/sum.c"`
+	Main2    string `json:"lib/sum.h"`
+}
+
+type SS struct {
+	SourceCode   SourceCode `json:"sourceCode"`
+	Tests        []Test     `json:"tests"`
+	BuildTimeout int        `json:"buildTimeout"`
+	TestTimeout  int        `json:"testTimeout"`
+}
+
+func (h HandlerTask) SendSolution(ctx echo.Context) error {
+	var solution SS
+
+	if err := ctx.Bind(&solution); err != nil {
+		return err
+	}
+
+	result, _ := json.Marshal(solution)
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}
