@@ -1,10 +1,12 @@
 package task
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/tp-study-ai/backend/internal/app/models"
+	"io/ioutil"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -92,8 +94,7 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 }
 
 type Test struct {
-	Input  string
-	Output string
+	che []string
 }
 
 type SourceCode struct {
@@ -105,7 +106,7 @@ type SourceCode struct {
 
 type SS123 struct {
 	SourceCode   SourceCode `json:"sourceCode"`
-	Tests        []Test     `json:"tests"`
+	Tests        [][]string `json:"tests"`
 	BuildTimeout int        `json:"buildTimeout"`
 	TestTimeout  int        `json:"testTimeout"`
 }
@@ -117,16 +118,17 @@ type CustomError struct {
 
 func (h HandlerTask) SendSolution(ctx echo.Context) error {
 	var solution SS123
-	solution.Tests = make([]Test, 0)
+	solution.Tests = make([][]string, 0)
 
 	if err := ctx.Bind(&solution); err != nil {
+		fmt.Println(solution)
 		che := CustomError{
 			Number: 1,
 			Error:  err.Error(),
 		}
 		result, _ := json.Marshal(che)
 		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-		return ctx.JSONBlob(http.StatusOK, result)
+		return ctx.JSONBlob(http.StatusInternalServerError, result)
 	}
 
 	result, err := json.Marshal(solution)
@@ -137,8 +139,35 @@ func (h HandlerTask) SendSolution(ctx echo.Context) error {
 		}
 		result, _ := json.Marshal(che)
 		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-		return ctx.JSONBlob(http.StatusOK, result)
+		return ctx.JSONBlob(http.StatusInternalServerError, result)
 	}
+
+	responseBody := bytes.NewBuffer(result)
+	resp, err := http.Post("http://127.0.0.1:8080/check_solution?api_key=study", "application/json", responseBody)
+	if err != nil {
+		che := CustomError{
+			Number: 3,
+			Error:  err.Error(),
+		}
+		result, _ := json.Marshal(che)
+		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+		return ctx.JSONBlob(http.StatusInternalServerError, result)
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		che := CustomError{
+			Number: 4,
+			Error:  err.Error(),
+		}
+		result, _ := json.Marshal(che)
+		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+		return ctx.JSONBlob(http.StatusInternalServerError, result)
+	}
+	sb := string(body)
+	fmt.Printf(sb)
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
