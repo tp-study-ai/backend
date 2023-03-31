@@ -117,6 +117,7 @@ type CustomError struct {
 
 func (h HandlerTask) SendSolution(ctx echo.Context) error {
 	var solution SS
+	solution.Tests = make([]Test, 0)
 
 	if err := ctx.Bind(&solution); err != nil {
 		che := CustomError{
