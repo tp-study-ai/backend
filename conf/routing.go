@@ -20,5 +20,6 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo) {
 
 	router.GET("/api/get_task", sh.TaskHandler.GetTask)
 	router.GET("/api/get_task_by_id", sh.TaskHandler.GetTaskById)
-	router.POST("/api/send_solution", sh.TaskHandler.SendSolution)
+	router.POST("/api/check_solution", sh.TaskHandler.CheckSolution)
+	router.POST("/api/my_send_solution", sh.TaskHandler.MySendSolution)
 }

@@ -43,3 +43,54 @@ type Task struct {
 	Output           string   `json:"output"`
 	Note             string   `json:"note"`
 }
+
+type SourceCode1 struct {
+	Makefile string `json:"Makefile"`
+	Main     string `json:"main.c"`
+	Main1    string `json:"lib/sum.c"`
+	Main2    string `json:"lib/sum.h"`
+}
+
+type SS123 struct {
+	SourceCode   SourceCode1 `json:"sourceCode"`
+	Tests        [][]string  `json:"tests"`
+	BuildTimeout int         `json:"buildTimeout"`
+	TestTimeout  int         `json:"testTimeout"`
+}
+
+type SourceCode struct {
+	Makefile string `json:"Makefile"`
+	Main     string `json:"main.c"`
+}
+
+type CheckSolution struct {
+	SourceCode   SourceCode `json:"sourceCode"`
+	Tests        [][]string `json:"tests"`
+	BuildTimeout int        `json:"buildTimeout"`
+	TestTimeout  int        `json:"testTimeout"`
+}
+
+type CustomError struct {
+	Number int    `json:"number"`
+	Error  string `json:"error"`
+}
+
+type CheckSolutionRequest struct {
+	TaskId   int    `json:"task_id"`
+	Solution string `json:"solution"`
+}
+
+type CheckSolutionUseCase struct {
+	TaskId   int    `json:"task_id"`
+	Solution string `json:"solution"`
+}
+
+type CheckSolutionUseCaseResponse struct {
+	CheckTime    float64 `json:"checkTime"`
+	BuildTime    float64 `json:"buildTime"`
+	CheckResult  int     `json:"checkResult"`
+	CheckMessage string  `json:"checkMessage"`
+	TestsPassed  int     `json:"testsPassed"`
+	TestsTotal   int     `json:"testsTotal"`
+	LintSuccess  bool    `json:"lintSuccess"`
+}

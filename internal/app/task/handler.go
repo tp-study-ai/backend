@@ -13,17 +13,17 @@ import (
 )
 
 type HandlerTask struct {
-	Ucase Ucase
+	UseCase UseCase
 }
 
-func NewHandlerTask(ucase Ucase) *HandlerTask {
+func NewHandlerTask(useCase UseCase) *HandlerTask {
 	return &HandlerTask{
-		Ucase: ucase,
+		UseCase: useCase,
 	}
 }
 
 func (h HandlerTask) GetTask(ctx echo.Context) error {
-	task, err := h.Ucase.GetTask()
+	task, err := h.UseCase.GetTask()
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -60,8 +60,7 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 	fmt.Println("Param: ", id, " ", reflect.TypeOf(id))
 	che, _ := strconv.ParseInt(id, 10, 64)
 
-	task, err := h.Ucase.GetTaskById(int(che))
-	//task, err := h.Ucase.GetTask()
+	task, err := h.UseCase.GetTaskById(int(che))
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -93,36 +92,43 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 	return ctx.JSONBlob(http.StatusOK, result)
 }
 
-type Test struct {
-	che []string
+func (h HandlerTask) CheckSolution(ctx echo.Context) error {
+	var solution models.CheckSolutionRequest
+	if err := ctx.Bind(&solution); err != nil {
+		fmt.Println(solution)
+		che := models.CustomError{
+			Number: 1,
+			Error:  err.Error(),
+		}
+		result, _ := json.Marshal(che)
+		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+		return ctx.JSONBlob(http.StatusInternalServerError, result)
+	}
+
+	cheche, err := h.UseCase.CheckSolution(solution)
+
+	result, err := json.Marshal(cheche)
+	if err != nil {
+		che := models.CustomError{
+			Number: 2,
+			Error:  err.Error(),
+		}
+		result, _ := json.Marshal(che)
+		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+		return ctx.JSONBlob(http.StatusInternalServerError, result)
+	}
+
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
 }
 
-type SourceCode struct {
-	Makefile string `json:"Makefile"`
-	Main     string `json:"main.c"`
-	Main1    string `json:"lib/sum.c"`
-	Main2    string `json:"lib/sum.h"`
-}
-
-type SS123 struct {
-	SourceCode   SourceCode `json:"sourceCode"`
-	Tests        [][]string `json:"tests"`
-	BuildTimeout int        `json:"buildTimeout"`
-	TestTimeout  int        `json:"testTimeout"`
-}
-
-type CustomError struct {
-	Number int    `json:"number"`
-	Error  string `json:"error"`
-}
-
-func (h HandlerTask) SendSolution(ctx echo.Context) error {
-	var solution SS123
+func (h HandlerTask) MySendSolution(ctx echo.Context) error {
+	var solution models.SS123
 	solution.Tests = make([][]string, 0)
 
 	if err := ctx.Bind(&solution); err != nil {
 		fmt.Println(solution)
-		che := CustomError{
+		che := models.CustomError{
 			Number: 1,
 			Error:  err.Error(),
 		}
@@ -133,7 +139,7 @@ func (h HandlerTask) SendSolution(ctx echo.Context) error {
 
 	result, err := json.Marshal(solution)
 	if err != nil {
-		che := CustomError{
+		che := models.CustomError{
 			Number: 2,
 			Error:  err.Error(),
 		}
@@ -145,7 +151,7 @@ func (h HandlerTask) SendSolution(ctx echo.Context) error {
 	responseBody := bytes.NewBuffer(result)
 	resp, err := http.Post("http://95.163.214.80:8080/check_solution?api_key=secret_key_here", "application/json", responseBody)
 	if err != nil {
-		che := CustomError{
+		che := models.CustomError{
 			Number: 3,
 			Error:  err.Error(),
 		}
@@ -156,9 +162,8 @@ func (h HandlerTask) SendSolution(ctx echo.Context) error {
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
-
 	if err != nil {
-		che := CustomError{
+		che := models.CustomError{
 			Number: 4,
 			Error:  err.Error(),
 		}
