@@ -169,6 +169,6 @@ func (h HandlerTask) SendSolution(ctx echo.Context) error {
 	sb := string(body)
 	fmt.Printf(sb)
 
-	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-	return ctx.JSONBlob(http.StatusOK, result)
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(body)))
+	return ctx.JSONBlob(http.StatusOK, body)
 }
