@@ -18,7 +18,7 @@ func main() {
 	defer pgxManager.Close()
 
 	taskRepo := task.NewRepositoryTask(pgxManager)
-	taskUcase := task.NewUcaseTask(taskRepo)
+	taskUcase := task.NewUseCaseTask(taskRepo)
 	taskHandler := task.NewHandlerTask(taskUcase)
 
 	router := echo.New()
