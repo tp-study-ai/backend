@@ -78,7 +78,7 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 	sb := string(body)
 	fmt.Printf(sb)
 
-	err = json.Unmarshal(body, cheche)
+	err = json.Unmarshal(body, &cheche)
 	if err != nil {
 		return models.CheckSolutionUseCaseResponse{}, err
 	}
