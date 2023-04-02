@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	pgxManager, err := db.NewPostgresqlX()
+	pgxManager, err := db.NewPostgres()
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "error creating postgres agent"))
 	}

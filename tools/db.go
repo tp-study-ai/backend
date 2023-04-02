@@ -8,7 +8,7 @@ import (
 	_ "github.com/jackc/pgx/stdlib"
 )
 
-func NewPostgresqlX() (*pgx.ConnPool, error) {
+func NewPostgres() (*pgx.ConnPool, error) {
 	dsn := fmt.Sprintf("user=%s dbname=%s password=%s host=%s port=%d", "yutfut", "yutfut", "yutfut", "db", 5432)
 	//dsn := fmt.Sprintf("user=%s dbname=%s password=%s host=%s port=%d", "yutfut", "yutfut", "yutfut", "127.0.0.1", 5432)
 	conn, err := pgx.ParseConnectionString(dsn)

@@ -67,7 +67,7 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 	fmt.Println(che)
 
 	var Req = models.SourceCode{
-		Makefile: "solution: main.c\n\tgcc main.c -o solution\nrun: solution\n\t./solution",
+		Makefile: "solution: main.cpp\n\tg++ main.cpp -o solution\n\nrun: solution\n\t./solution",
 		Main:     UseCaseSolution.Solution,
 	}
 
