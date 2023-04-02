@@ -19,7 +19,7 @@ func (r *RepositoryTask) GetTask() (Task models.TaskResponse, err error) {
 		`select *
 		from "task"
 		where id = $1;`,
-		rand.Intn(3584 - 1) + 1,
+		rand.Intn(3584-1)+1,
 	).Scan(
 		&Task.Id,
 		&Task.Name,

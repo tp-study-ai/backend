@@ -43,20 +43,43 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 		Solution: solution.Solution,
 	}
 
+	Task, err := u.Repo.GetTaskById(solution.TaskId)
+	fmt.Println(Task.PrivateTests)
+	PrivateTestsLength := len(Task.PrivateTests) / 4
+	fmt.Println(PrivateTestsLength)
+	PrivateTestsBuffer := make([]string, 0)
+	for _, value := range Task.PrivateTests {
+		if value != "input" && value != "output" {
+			PrivateTestsBuffer = append(PrivateTestsBuffer, value)
+		}
+	}
+
+	fmt.Println(PrivateTestsBuffer)
+
+	che := make([][]string, 5)
+
+	for i := 0; i < 5; i++ {
+		che[i] = make([]string, 2)
+		che[i][0] = PrivateTestsBuffer[i*2]
+		che[i][1] = PrivateTestsBuffer[i*2+1]
+	}
+
+	fmt.Println(che)
+
 	var Req = models.SourceCode{
 		Makefile: "solution: main.c\n\tgcc main.c -o solution\nrun: solution\n\t./solution",
 		Main:     UseCaseSolution.Solution,
 	}
 
-	che := make([][]string, 2)
-	che[0] = make([]string, 2)
-	che[0][0] = "1 2"
-	che[0][1] = "3"
+	//che := make([][]string, 1)
+	//che[0] = make([]string, 2)
+	//che[0][0] = "1 2"
+	//che[0][1] = "3"
 
 	var SolutionReq = models.CheckSolution{
 		SourceCode:   Req,
 		Tests:        che,
-		BuildTimeout: 2,
+		BuildTimeout: 10,
 		TestTimeout:  6,
 	}
 
@@ -66,6 +89,7 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 	}
 
 	responseBody := bytes.NewBuffer(result)
+	//fmt.Println(responseBody)
 	resp, err := http.Post("http://95.163.214.80:8080/check_solution?api_key=secret_key_here", "application/json", responseBody)
 	if err != nil {
 		return models.CheckSolutionUseCaseResponse{}, err
@@ -75,8 +99,7 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 	if err != nil {
 		return models.CheckSolutionUseCaseResponse{}, err
 	}
-	sb := string(body)
-	fmt.Printf(sb)
+	fmt.Printf(string(body))
 
 	err = json.Unmarshal(body, &cheche)
 	if err != nil {
