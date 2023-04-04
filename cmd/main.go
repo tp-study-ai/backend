@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/conf"
 	"github.com/tp-study-ai/backend/internal/app/auth"
+	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
 	"github.com/tp-study-ai/backend/tools"
 	"github.com/tp-study-ai/backend/tools/authManager/jwtManager"
@@ -25,7 +26,9 @@ func main() {
 	taskUcase := task.NewUseCaseTask(taskRepo)
 	taskHandler := task.NewHandlerTask(taskUcase)
 
-	authHandler := auth.NewHandlerAuth(jwtManager)
+	authRepo := auth.NewRepositoryAuth(pgxManager)
+	authUcase := auth.NewUseCaseAuth(authRepo)
+	authHandler := auth.NewHandlerAuth(authUcase, jwtManager)
 
 	router := echo.New()
 
@@ -34,7 +37,8 @@ func main() {
 		AuthHandler: authHandler,
 	}
 
-	serverRouting.ConfigureRouting(router)
+	comonMw := middleware.NewCommonMiddleware(jwtManager)
+	serverRouting.ConfigureRouting(router, &comonMw)
 
 	httpServ := http.Server{
 		Addr:    ":8000",

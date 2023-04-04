@@ -1,12 +1,13 @@
 package authManager
 
-import "time"
-
-type UserId uint64
+import (
+	"github.com/tp-study-ai/backend/internal/app/models"
+	"time"
+)
 
 type TokenPayload struct {
-	Id  UserId    `valid:"userId, required"`
-	Exp time.Time `valid:"expired, required"`
+	Id  models.UserId `valid:"userId, required"`
+	Exp time.Time     `valid:"expired, required"`
 }
 
 const (
@@ -14,7 +15,7 @@ const (
 	expiresTitle = "expired"
 )
 
-func NewTokenPayload(id UserId) *TokenPayload {
+func NewTokenPayload(id models.UserId) *TokenPayload {
 	return &TokenPayload{
 		Id: id,
 	}
@@ -40,7 +41,7 @@ func MapToTokenPayload(payloadMap map[string]interface{}) *TokenPayload {
 	}
 	exp, _ := time.Parse(time.RFC3339, expStr)
 	return &TokenPayload{
-		Id:  UserId(payloadMap[idTitle].(float64)),
+		Id:  models.UserId(payloadMap[idTitle].(float64)),
 		Exp: exp,
 	}
 }

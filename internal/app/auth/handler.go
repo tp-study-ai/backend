@@ -2,6 +2,8 @@ package auth
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/pkg/errors"
+	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"github.com/tp-study-ai/backend/tools"
 	"github.com/tp-study-ai/backend/tools/authManager"
@@ -18,11 +20,13 @@ const (
 )
 
 type HandlerAuth struct {
+	UseCase     UseCase
 	AuthManager authManager.AuthManager
 }
 
-func NewHandlerAuth(authManager authManager.AuthManager) *HandlerAuth {
+func NewHandlerAuth(usecase UseCase, authManager authManager.AuthManager) *HandlerAuth {
 	return &HandlerAuth{
+		UseCase:     usecase,
 		AuthManager: authManager,
 	}
 }
@@ -43,13 +47,20 @@ type OK struct {
 }
 
 func (h HandlerAuth) Register(ctx echo.Context) error {
-	var reg models.Register
+	if middleware.GetUserFromCtx(ctx) != nil {
+		return tools.CustomError(ctx, errors.Errorf("пользователь уже зарегестрирован"), 0, "пользователь уже зарегестрирован")
+	}
+
+	var reg models.UserJson
 	err := ctx.Bind(&reg)
 	if err != nil {
 		return tools.CustomError(ctx, err, 1, "битый json на авторизацию")
 	}
 
-	// тут должен быть поход в usecase
+	UserId, err := h.UseCase.Register(&models.UserJson{Username: reg.Username, Password: reg.Password})
+	if err != nil || UserId == 0 {
+		return tools.CustomError(ctx, err, 2, "ошибка при регистрации")
+	}
 
 	token, err := h.AuthManager.CreateToken(authManager.NewTokenPayload(1)) // подставить id пользователя полученного из usecase
 	if err != nil {
