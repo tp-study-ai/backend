@@ -26,7 +26,7 @@ func NewHandlerTask(useCase UseCase) *HandlerTask {
 func (h HandlerTask) GetTask(ctx echo.Context) error {
 	task, err := h.UseCase.GetTask()
 	if err != nil {
-		fmt.Println(err.Error())
+		return tools.CustomError(ctx, err, 1, "GetTask")
 	}
 
 	task1 := models.Task{
@@ -63,7 +63,7 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 
 	task, err := h.UseCase.GetTaskById(int(che))
 	if err != nil {
-		fmt.Println(err.Error())
+		return tools.CustomError(ctx, err, 1, "GetTaskById")
 	}
 
 	task1 := models.Task{
@@ -94,13 +94,13 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 }
 
 func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
-	id := ctx.QueryParam("id")
-	fmt.Println("Param: ", id, " ", reflect.TypeOf(id))
-	che, _ := strconv.ParseInt(id, 10, 64)
+	page := ctx.QueryParam("page")
+	fmt.Println("Param: ", page, " ", reflect.TypeOf(page))
+	che, _ := strconv.ParseInt(page, 10, 64)
 
 	tasks, err := h.UseCase.GetTaskByLimit(int(che))
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "что-то сломалось")
+		return tools.CustomError(ctx, err, 1, "что-то сломалось GetTaskByLimit")
 	}
 
 	result, _ := json.Marshal(tasks)
@@ -111,14 +111,6 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 func (h HandlerTask) CheckSolution(ctx echo.Context) error {
 	var solution models.CheckSolutionRequest
 	if err := ctx.Bind(&solution); err != nil {
-		//fmt.Println(solution)
-		//che := models.CustomError{
-		//	Number: 1,
-		//	Error:  err.Error(),
-		//}
-		//result, _ := json.Marshal(che)
-		//ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-		//return ctx.JSONBlob(http.StatusInternalServerError, result)
 		return tools.CustomError(ctx, err, 1, "")
 	}
 
@@ -126,13 +118,7 @@ func (h HandlerTask) CheckSolution(ctx echo.Context) error {
 
 	result, err := json.Marshal(cheche)
 	if err != nil {
-		che := models.CustomError{
-			Number: 2,
-			Error:  err.Error(),
-		}
-		result, _ := json.Marshal(che)
-		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-		return ctx.JSONBlob(http.StatusInternalServerError, result)
+		return tools.CustomError(ctx, err, 2, "CheckSolution")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
