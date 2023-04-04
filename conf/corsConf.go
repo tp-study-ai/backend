@@ -9,6 +9,11 @@ func getCorsConfig() middleware.CORSConfig {
 	return middleware.CORSConfig{
 		AllowOrigins: []string{
 			"*",
+			"http://localhost:3000",
+			"https://www.study-ai.ru",
+			"https://study-ai.ru",
+			"http://146.185.208.233:80",
+			"https://146.185.208.233:433",
 		},
 		AllowCredentials: true,
 		//AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderXCSRFToken},
