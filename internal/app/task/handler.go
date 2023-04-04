@@ -112,7 +112,8 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 func (h HandlerTask) CheckSolution(ctx echo.Context) error {
 	var solution models.CheckSolutionRequest
 	if err := ctx.Bind(&solution); err != nil {
-		return tools.CustomError(ctx, err, 1, "")
+		//return tools.CustomError(ctx, err, 1, "")
+		return ctx.JSONBlob(http.StatusInternalServerError, nil)
 	}
 
 	testisResponse, err := h.UseCase.CheckSolution(solution)
