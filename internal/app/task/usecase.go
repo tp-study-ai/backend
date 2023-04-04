@@ -54,7 +54,7 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 		}
 	}
 
-	fmt.Println(1)
+	//fmt.Println(1)
 
 	che := make([][]string, PrivateTestsLength)
 
@@ -80,7 +80,7 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 		SourceCode:   Req,
 		Tests:        che,
 		BuildTimeout: 10,
-		TestTimeout:  32,
+		TestTimeout:  10,
 	}
 
 	fmt.Println(SolutionReq)
@@ -92,7 +92,7 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 
 	responseBody := bytes.NewBuffer(result)
 	//fmt.Println(responseBody)
-	resp, err := http.Post("http://95.163.214.80:8080/check_solution?api_key=secret_key_here", "application/json", responseBody)
+	resp, err := http.Post("http://146.185.208.233:8080/check_solution?api_key=secret_key_here", "application/json", responseBody)
 	if err != nil {
 		return models.CheckSolutionUseCaseResponse{}, err
 	}
