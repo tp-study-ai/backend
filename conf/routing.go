@@ -22,9 +22,8 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo) {
 
 	router.GET("/api/get_task", sh.TaskHandler.GetTask)
 	router.GET("/api/get_task_by_id", sh.TaskHandler.GetTaskById)
-	router.POST("/api/check_solution", sh.TaskHandler.CheckSolution)
-	router.POST("/api/my_send_solution", sh.TaskHandler.MySendSolution)
 	router.GET("/api/tasks_list", sh.TaskHandler.GetTaskByLimit)
+	router.POST("/api/check_solution", sh.TaskHandler.CheckSolution)
 
 	router.POST("/api/register", sh.AuthHandler.Register)
 }

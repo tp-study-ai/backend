@@ -1,13 +1,11 @@
 package task
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"github.com/tp-study-ai/backend/tools"
-	"io/ioutil"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -59,7 +57,10 @@ func (h HandlerTask) GetTask(ctx echo.Context) error {
 func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 	id := ctx.QueryParam("id")
 	fmt.Println("Param: ", id, " ", reflect.TypeOf(id))
-	che, _ := strconv.ParseInt(id, 10, 64)
+	che, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return tools.CustomError(ctx, err, 0, "ParseInt")
+	}
 
 	task, err := h.UseCase.GetTaskById(int(che))
 	if err != nil {
@@ -114,69 +115,13 @@ func (h HandlerTask) CheckSolution(ctx echo.Context) error {
 		return tools.CustomError(ctx, err, 1, "")
 	}
 
-	cheche, err := h.UseCase.CheckSolution(solution)
+	testisResponse, err := h.UseCase.CheckSolution(solution)
 
-	result, err := json.Marshal(cheche)
+	result, err := json.Marshal(testisResponse)
 	if err != nil {
 		return tools.CustomError(ctx, err, 2, "CheckSolution")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
-}
-
-func (h HandlerTask) MySendSolution(ctx echo.Context) error {
-	var solution models.SS123
-	solution.Tests = make([][]string, 0)
-
-	if err := ctx.Bind(&solution); err != nil {
-		fmt.Println(solution)
-		che := models.CustomError{
-			Number: 1,
-			Error:  err.Error(),
-		}
-		result, _ := json.Marshal(che)
-		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-		return ctx.JSONBlob(http.StatusInternalServerError, result)
-	}
-
-	result, err := json.Marshal(solution)
-	if err != nil {
-		che := models.CustomError{
-			Number: 2,
-			Error:  err.Error(),
-		}
-		result, _ := json.Marshal(che)
-		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-		return ctx.JSONBlob(http.StatusInternalServerError, result)
-	}
-
-	responseBody := bytes.NewBuffer(result)
-	resp, err := http.Post("http://95.163.214.80:8080/check_solution?api_key=secret_key_here", "application/json", responseBody)
-	if err != nil {
-		che := models.CustomError{
-			Number: 3,
-			Error:  err.Error(),
-		}
-		result, _ := json.Marshal(che)
-		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-		return ctx.JSONBlob(http.StatusInternalServerError, result)
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		che := models.CustomError{
-			Number: 4,
-			Error:  err.Error(),
-		}
-		result, _ := json.Marshal(che)
-		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-		return ctx.JSONBlob(http.StatusInternalServerError, result)
-	}
-	sb := string(body)
-	fmt.Printf(sb)
-
-	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(body)))
-	return ctx.JSONBlob(http.StatusOK, body)
 }
