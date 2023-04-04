@@ -8,13 +8,13 @@ type TaskResponse struct {
 	PrivateTests     []string `db:"private_tests"`
 	GeneratedTests   []string `db:"generated_tests"`
 	Difficulty       string   `db:"difficulty"`
-	CfContestId      string   `db:"cf_contest_id"`
+	CfContestId      int      `db:"cf_contest_id"`
 	CfIndex          string   `db:"cf_index"`
-	CfPoints         string   `db:"cf_points"`
-	CfRating         string   `db:"cf_rating"`
-	CfTags           string   `db:"cf_tags"`
+	CfPoints         float64  `db:"cf_points"`
+	CfRating         int      `db:"cf_rating"`
+	CfTags           []string `db:"cf_tags"`
 	TimeLimit        string   `db:"time_limit"`
-	MemoryLimitBytes string   `db:"memory_limit_bytes"`
+	MemoryLimitBytes int      `db:"memory_limit_bytes"`
 	Link             string   `db:"link"`
 	TaskRu           string   `db:"task_ru"`
 	Input            string   `db:"input"`
@@ -30,13 +30,13 @@ type Task struct {
 	PrivateTests     []string `json:"private_tests"`
 	GeneratedTests   []string `json:"generated_tests"`
 	Difficulty       string   `json:"difficulty"`
-	CfContestId      string   `json:"cf_contest_id"`
+	CfContestId      int      `json:"cf_contest_id"`
 	CfIndex          string   `json:"cf_index"`
-	CfPoints         string   `json:"cf_points"`
-	CfRating         string   `json:"cf_rating"`
-	CfTags           string   `json:"cf_tags"`
+	CfPoints         float64  `json:"cf_points"`
+	CfRating         int      `json:"cf_rating"`
+	CfTags           []string `json:"cf_tags"`
 	TimeLimit        string   `json:"time_limit"`
-	MemoryLimitBytes string   `json:"memory_limit_bytes"`
+	MemoryLimitBytes int      `json:"memory_limit_bytes"`
 	Link             string   `json:"link"`
 	TaskRu           string   `json:"task_ru"`
 	Input            string   `json:"input"`
@@ -60,7 +60,7 @@ type SS123 struct {
 
 type SourceCode struct {
 	Makefile string `json:"Makefile"`
-	Main     string `json:"main.c"`
+	Main     string `json:"main.cpp"`
 }
 
 type CheckSolution struct {
