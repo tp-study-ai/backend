@@ -54,11 +54,11 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 		}
 	}
 
-	fmt.Println(PrivateTestsBuffer)
+	fmt.Println(1)
 
-	che := make([][]string, 5)
+	che := make([][]string, PrivateTestsLength)
 
-	for i := 0; i < 5; i++ {
+	for i := 0; i < PrivateTestsLength; i++ {
 		che[i] = make([]string, 2)
 		che[i][0] = PrivateTestsBuffer[i*2]
 		che[i][1] = PrivateTestsBuffer[i*2+1]
@@ -80,8 +80,10 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 		SourceCode:   Req,
 		Tests:        che,
 		BuildTimeout: 10,
-		TestTimeout:  6,
+		TestTimeout:  32,
 	}
+
+	fmt.Println(SolutionReq)
 
 	result, err := json.Marshal(SolutionReq)
 	if err != nil {

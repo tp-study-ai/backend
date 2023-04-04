@@ -60,7 +60,7 @@ type SS123 struct {
 
 type SourceCode struct {
 	Makefile string `json:"Makefile"`
-	Main     string `json:"main.c"`
+	Main     string `json:"main.cpp"`
 }
 
 type CheckSolution struct {

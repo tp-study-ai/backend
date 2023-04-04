@@ -17,7 +17,7 @@ func NewRepositoryTask(db *pgx.ConnPool) *RepositoryTask {
 func (r *RepositoryTask) GetTask() (Task models.TaskResponse, err error) {
 	err = r.DB.QueryRow(
 		`select *
-		from "task"
+		from "tasks"
 		where id = $1;`,
 		rand.Intn(3584-1)+1,
 	).Scan(
@@ -70,7 +70,7 @@ func (r *RepositoryTask) GetTask() (Task models.TaskResponse, err error) {
 func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskResponse, err error) {
 	err = r.DB.QueryRow(
 		`select *
-		from "task"
+		from "tasks"
 		where id = $1;`,
 		id,
 	).Scan(

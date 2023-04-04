@@ -5,6 +5,8 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
 	"net/http"
+
+	echoMiddleware "github.com/labstack/echo/v4/middleware"
 )
 
 type ServerHandlers struct {
@@ -17,6 +19,7 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo) {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
 	}))
+	router.Use(echoMiddleware.CORSWithConfig(getCorsConfig()))
 
 	router.GET("/api/get_task", sh.TaskHandler.GetTask)
 	router.GET("/api/get_task_by_id", sh.TaskHandler.GetTaskById)
