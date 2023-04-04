@@ -56,9 +56,9 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 
 	//fmt.Println(1)
 
-	che := make([][]string, PrivateTestsLength)
+	che := make([][]string, 1)
 
-	for i := 0; i < PrivateTestsLength; i++ {
+	for i := 0; i < 1; i++ {
 		che[i] = make([]string, 2)
 		che[i][0] = PrivateTestsBuffer[i*2]
 		che[i][1] = PrivateTestsBuffer[i*2+1]
