@@ -15,11 +15,16 @@ func NewRepositoryTask(db *pgx.ConnPool) *RepositoryTask {
 }
 
 func (r *RepositoryTask) GetTask() (Task models.TaskResponse, err error) {
+	var count int
+	err = r.DB.QueryRow(
+		`select count(*) from "tasks"`,
+	).Scan(&count)
+
 	err = r.DB.QueryRow(
 		`select *
 		from "tasks"
 		where id = $1;`,
-		rand.Intn(3584-1)+1,
+		rand.Intn(count-1)+1,
 	).Scan(
 		&Task.Id,
 		&Task.Name,
@@ -41,29 +46,6 @@ func (r *RepositoryTask) GetTask() (Task models.TaskResponse, err error) {
 		&Task.Output,
 		&Task.Note,
 	)
-
-	//fmt.Println(Task)
-	//fmt.Println(
-	//	Task.Id,
-	//	Task.Name,
-	//	Task.Description,
-	//	Task.PublicTests,
-	//	Task.PrivateTests,
-	//	Task.GeneratedTests,
-	//	Task.Difficulty,
-	//	Task.CfContestId,
-	//	Task.CfIndex,
-	//	Task.CfPoints,
-	//	Task.CfRating,
-	//	Task.CfTags,
-	//	Task.TimeLimit,
-	//	Task.MemoryLimitBytes,
-	//	Task.Link,
-	//	Task.TaskRu,
-	//	Task.Input,
-	//	Task.Output,
-	//	Task.Note,
-	//)
 	return
 }
 
