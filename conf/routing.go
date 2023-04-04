@@ -6,6 +6,7 @@ import (
 	"github.com/tp-study-ai/backend/internal/app/auth"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
+	"net/http"
 )
 
 type ServerHandlers struct {
@@ -14,12 +15,12 @@ type ServerHandlers struct {
 }
 
 func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.CommonMiddleware) {
-	//router.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-	//	AllowOrigins: []string{"*"},
-	//	AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-	//	AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
-	//}))
-	router.Use(echoMiddleware.CORSWithConfig(getCorsConfig()))
+	router.Use(echoMiddleware.CORSWithConfig(echoMiddleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+	}))
+	//router.Use(echoMiddleware.CORSWithConfig(getCorsConfig()))
 	mwChain := []echo.MiddlewareFunc{
 		mw.AuthMiddleware,
 	}
