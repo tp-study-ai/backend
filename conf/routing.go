@@ -15,9 +15,11 @@ type ServerHandlers struct {
 
 func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.CommonMiddleware) {
 	router.Use(echoMiddleware.CORSWithConfig(echoMiddleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-		AllowMethods: []string{echo.GET, echo.POST},
+		AllowCredentials: true,
+		AllowOrigins:     []string{"*"},
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowMethods:     []string{echo.GET, echo.POST},
+		MaxAge:           86400,
 	}))
 	//router.Use(echoMiddleware.CORSWithConfig(getCorsConfig()))
 	mwChain := []echo.MiddlewareFunc{
@@ -28,6 +30,5 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	router.GET("/api/get_task_by_id", sh.TaskHandler.GetTaskById, mwChain...)
 	router.GET("/api/tasks_list", sh.TaskHandler.GetTaskByLimit, mwChain...)
 	router.POST("/api/check_solution", sh.TaskHandler.CheckSolution, mwChain...)
-
 	router.POST("/api/register", sh.AuthHandler.Register, mwChain...)
 }
