@@ -3,11 +3,13 @@ package conf
 import (
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
+	"github.com/tp-study-ai/backend/internal/app/auth"
 	"github.com/tp-study-ai/backend/internal/app/task"
 )
 
 type ServerHandlers struct {
 	TaskHandler *task.HandlerTask
+	AuthHandler *auth.HandlerAuth
 }
 
 func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo) {
@@ -22,4 +24,7 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo) {
 	router.GET("/api/get_task_by_id", sh.TaskHandler.GetTaskById)
 	router.POST("/api/check_solution", sh.TaskHandler.CheckSolution)
 	router.POST("/api/my_send_solution", sh.TaskHandler.MySendSolution)
+	router.GET("/api/tasks_list", sh.TaskHandler.GetTaskByLimit)
+
+	router.POST("/api/register", sh.AuthHandler.Register)
 }

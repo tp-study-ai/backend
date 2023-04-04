@@ -37,6 +37,45 @@ func (u *UseCaseTask) GetTaskById(id int) (Task models.TaskResponse, err error) 
 	return
 }
 
+func (u *UseCaseTask) GetTaskByLimit(id int) (*models.Tasks, error) {
+
+	tasks, err := u.Repo.GetTaskByLimit(id)
+
+	reqTasks := &models.Tasks{
+		Tasks: make([]models.Task, len(tasks.Tasks)),
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	for i, task := range tasks.Tasks {
+		reqTasks.Tasks[i] = models.Task{
+			Id:               task.Id,
+			Name:             task.Name,
+			Description:      task.Description,
+			PublicTests:      task.PublicTests,
+			PrivateTests:     task.PrivateTests,
+			GeneratedTests:   task.GeneratedTests,
+			Difficulty:       task.Difficulty,
+			CfContestId:      task.CfContestId,
+			CfIndex:          task.CfIndex,
+			CfPoints:         task.CfPoints,
+			CfRating:         task.CfRating,
+			CfTags:           task.CfTags,
+			TimeLimit:        task.TimeLimit,
+			MemoryLimitBytes: task.MemoryLimitBytes,
+			Link:             task.Link,
+			TaskRu:           task.TaskRu,
+			Input:            task.Input,
+			Output:           task.Output,
+			Note:             task.Note,
+		}
+	}
+
+	return reqTasks, nil
+}
+
 func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (cheche models.CheckSolutionUseCaseResponse, err error) {
 	var UseCaseSolution = models.CheckSolutionUseCase{
 		TaskId:   solution.TaskId,
@@ -54,8 +93,6 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 		}
 	}
 
-	//fmt.Println(1)
-
 	che := make([][]string, 1)
 
 	for i := 0; i < 1; i++ {
@@ -70,11 +107,6 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 		Makefile: "solution: main.cpp\n\tg++ main.cpp -o solution\n\nrun: solution\n\t./solution",
 		Main:     UseCaseSolution.Solution,
 	}
-
-	//che := make([][]string, 1)
-	//che[0] = make([]string, 2)
-	//che[0][0] = "1 2"
-	//che[0][1] = "3"
 
 	var SolutionReq = models.CheckSolution{
 		SourceCode:   Req,

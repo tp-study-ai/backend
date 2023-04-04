@@ -22,6 +22,10 @@ type TaskResponse struct {
 	Note             string   `db:"note"`
 }
 
+type TasksResponse struct {
+	Tasks []TaskResponse
+}
+
 type Task struct {
 	Id               int      `json:"id"`
 	Name             string   `json:"name"`
@@ -42,6 +46,10 @@ type Task struct {
 	Input            string   `json:"input"`
 	Output           string   `json:"output"`
 	Note             string   `json:"note"`
+}
+
+type Tasks struct {
+	Tasks []Task `json:"tasks"`
 }
 
 type SourceCode1 struct {
@@ -71,8 +79,9 @@ type CheckSolution struct {
 }
 
 type CustomError struct {
-	Number int    `json:"number"`
-	Error  string `json:"error"`
+	Number  int    `json:"number"`
+	Comment string `json:"comment"`
+	Error   string `json:"error"`
 }
 
 type CheckSolutionRequest struct {

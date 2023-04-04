@@ -96,3 +96,50 @@ func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskResponse, err erro
 	)
 	return
 }
+
+func (r *RepositoryTask) GetTaskByLimit(id int) (*models.TasksResponse, error) {
+	tasks := &models.TasksResponse{}
+
+	var newPostsData []interface{}
+	newPostsData = append(newPostsData, 20)
+	newPostsData = append(newPostsData, 20*id)
+
+	rows, err := r.DB.Query(`select * from "tasks" order by "id" limit $1 offset $2`, newPostsData...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var buff models.TaskResponse
+		err = rows.Scan(
+			&buff.Id,
+			&buff.Name,
+			&buff.Description,
+			&buff.PublicTests,
+			&buff.PrivateTests,
+			&buff.GeneratedTests,
+			&buff.Difficulty,
+			&buff.CfContestId,
+			&buff.CfIndex,
+			&buff.CfPoints,
+			&buff.CfRating,
+			&buff.CfTags,
+			&buff.TimeLimit,
+			&buff.MemoryLimitBytes,
+			&buff.Link,
+			&buff.TaskRu,
+			&buff.Input,
+			&buff.Output,
+			&buff.Note,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		tasks.Tasks = append(tasks.Tasks, buff)
+	}
+
+	return tasks, err
+}

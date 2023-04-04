@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/tp-study-ai/backend/internal/app/models"
+	"github.com/tp-study-ai/backend/tools"
 	"io/ioutil"
 	"net/http"
 	"reflect"
@@ -92,17 +93,33 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 	return ctx.JSONBlob(http.StatusOK, result)
 }
 
+func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
+	id := ctx.QueryParam("id")
+	fmt.Println("Param: ", id, " ", reflect.TypeOf(id))
+	che, _ := strconv.ParseInt(id, 10, 64)
+
+	tasks, err := h.UseCase.GetTaskByLimit(int(che))
+	if err != nil {
+		return tools.CustomError(ctx, err, 1, "что-то сломалось")
+	}
+
+	result, _ := json.Marshal(tasks)
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}
+
 func (h HandlerTask) CheckSolution(ctx echo.Context) error {
 	var solution models.CheckSolutionRequest
 	if err := ctx.Bind(&solution); err != nil {
-		fmt.Println(solution)
-		che := models.CustomError{
-			Number: 1,
-			Error:  err.Error(),
-		}
-		result, _ := json.Marshal(che)
-		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-		return ctx.JSONBlob(http.StatusInternalServerError, result)
+		//fmt.Println(solution)
+		//che := models.CustomError{
+		//	Number: 1,
+		//	Error:  err.Error(),
+		//}
+		//result, _ := json.Marshal(che)
+		//ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+		//return ctx.JSONBlob(http.StatusInternalServerError, result)
+		return tools.CustomError(ctx, err, 1, "")
 	}
 
 	cheche, err := h.UseCase.CheckSolution(solution)
