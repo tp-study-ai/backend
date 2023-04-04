@@ -83,8 +83,8 @@ func (r *RepositoryTask) GetTaskByLimit(id int) (*models.TasksResponse, error) {
 	tasks := &models.TasksResponse{}
 
 	var newPostsData []interface{}
-	newPostsData = append(newPostsData, 10)
-	newPostsData = append(newPostsData, 10*id)
+	newPostsData = append(newPostsData, 15)
+	newPostsData = append(newPostsData, 15*id)
 
 	rows, err := r.DB.Query(`select * from "tasks" order by "id" limit $1 offset $2`, newPostsData...)
 	if err != nil {
