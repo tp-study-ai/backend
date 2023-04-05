@@ -18,7 +18,7 @@ type TagsJson struct {
 //	En string
 //}
 
-type TaskResponse struct {
+type TaskDB struct {
 	Id               int              `db:"id"`
 	Name             string           `db:"name"`
 	Description      string           `db:"description"`
@@ -41,33 +41,33 @@ type TaskResponse struct {
 }
 
 type TasksResponse struct {
-	Tasks []TaskResponse
+	Tasks []TaskDB
 }
 
-type Task struct {
-	Id               int              `json:"id"`
-	Name             string           `json:"name"`
-	Description      string           `json:"description"`
-	PublicTests      []string         `json:"public_tests"`
-	PrivateTests     []string         `json:"private_tests"`
-	GeneratedTests   []string         `json:"generated_tests"`
-	Difficulty       int              `json:"difficulty"`
-	CfContestId      int              `json:"cf_contest_id"`
-	CfIndex          string           `json:"cf_index"`
-	CfPoints         float64          `json:"cf_points"`
-	CfRating         int              `json:"cf_rating"`
-	CfTags           pgtype.Int4Array `json:"cf_tags"`
-	TimeLimit        string           `json:"time_limit"`
-	MemoryLimitBytes int              `json:"memory_limit_bytes"`
-	Link             string           `json:"link"`
-	TaskRu           string           `json:"task_ru"`
-	Input            string           `json:"input"`
-	Output           string           `json:"output"`
-	Note             string           `json:"note"`
+type TaskJSON struct {
+	Id               int      `json:"id"`
+	Name             string   `json:"name"`
+	Description      string   `json:"description"`
+	PublicTests      []string `json:"public_tests"`
+	PrivateTests     []string `json:"private_tests"`
+	GeneratedTests   []string `json:"generated_tests"`
+	Difficulty       int      `json:"difficulty"`
+	CfContestId      int      `json:"cf_contest_id"`
+	CfIndex          string   `json:"cf_index"`
+	CfPoints         float64  `json:"cf_points"`
+	CfRating         int      `json:"cf_rating"`
+	CfTags           []int32  `json:"cf_tags"`
+	TimeLimit        string   `json:"time_limit"`
+	MemoryLimitBytes int      `json:"memory_limit_bytes"`
+	Link             string   `json:"link"`
+	TaskRu           string   `json:"task_ru"`
+	Input            string   `json:"input"`
+	Output           string   `json:"output"`
+	Note             string   `json:"note"`
 }
 
 type Tasks struct {
-	Tasks []Task `json:"tasks"`
+	Tasks []TaskJSON `json:"tasks"`
 }
 
 type SourceCode1 struct {

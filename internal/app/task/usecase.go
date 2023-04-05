@@ -19,8 +19,38 @@ func NewUseCaseTask(TaskRepo Repository) *UseCaseTask {
 	}
 }
 
-func (u *UseCaseTask) GetTask() (Task models.TaskResponse, err error) {
-	Task, err = u.Repo.GetTask()
+func (u *UseCaseTask) GetTask() (task models.TaskJSON, err error) {
+	Task, err := u.Repo.GetTask()
+
+	var che []int32
+
+	for i := 0; i < len(Task.CfTags.Elements); i++ {
+		che = append(che, Task.CfTags.Elements[i].Int)
+	}
+
+	fmt.Println(che)
+
+	task = models.TaskJSON{
+		Id:               Task.Id,
+		Name:             Task.Name,
+		Description:      Task.Description,
+		PublicTests:      Task.PublicTests,
+		PrivateTests:     Task.PrivateTests,
+		GeneratedTests:   Task.GeneratedTests,
+		Difficulty:       Task.Difficulty,
+		CfContestId:      Task.CfContestId,
+		CfIndex:          Task.CfIndex,
+		CfPoints:         Task.CfPoints,
+		CfRating:         Task.CfRating,
+		CfTags:           che,
+		TimeLimit:        Task.TimeLimit,
+		MemoryLimitBytes: Task.MemoryLimitBytes,
+		Link:             Task.Link,
+		TaskRu:           Task.TaskRu,
+		Input:            Task.Input,
+		Output:           Task.Output,
+		Note:             Task.Note,
+	}
 
 	if err != nil {
 		return
@@ -28,8 +58,38 @@ func (u *UseCaseTask) GetTask() (Task models.TaskResponse, err error) {
 	return
 }
 
-func (u *UseCaseTask) GetTaskById(id int) (Task models.TaskResponse, err error) {
-	Task, err = u.Repo.GetTaskById(id)
+func (u *UseCaseTask) GetTaskById(id int) (task models.TaskJSON, err error) {
+	Task, err := u.Repo.GetTaskById(id)
+
+	var che []int32
+
+	for i := 0; i < len(Task.CfTags.Elements); i++ {
+		che = append(che, Task.CfTags.Elements[i].Int)
+	}
+
+	fmt.Println(che)
+
+	task = models.TaskJSON{
+		Id:               Task.Id,
+		Name:             Task.Name,
+		Description:      Task.Description,
+		PublicTests:      Task.PublicTests,
+		PrivateTests:     Task.PrivateTests,
+		GeneratedTests:   Task.GeneratedTests,
+		Difficulty:       Task.Difficulty,
+		CfContestId:      Task.CfContestId,
+		CfIndex:          Task.CfIndex,
+		CfPoints:         Task.CfPoints,
+		CfRating:         Task.CfRating,
+		CfTags:           che,
+		TimeLimit:        Task.TimeLimit,
+		MemoryLimitBytes: Task.MemoryLimitBytes,
+		Link:             Task.Link,
+		TaskRu:           Task.TaskRu,
+		Input:            Task.Input,
+		Output:           Task.Output,
+		Note:             Task.Note,
+	}
 
 	if err != nil {
 		return
@@ -38,17 +98,23 @@ func (u *UseCaseTask) GetTaskById(id int) (Task models.TaskResponse, err error) 
 }
 
 func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Tasks, error) {
-
 	tasks, err := u.Repo.GetTaskByLimit(id, sort, tag)
 	if err != nil {
 		return nil, err
 	}
+
 	reqTasks := &models.Tasks{
-		Tasks: make([]models.Task, len(tasks.Tasks)),
+		Tasks: make([]models.TaskJSON, len(tasks.Tasks)),
 	}
 
 	for i, task := range tasks.Tasks {
-		reqTasks.Tasks[i] = models.Task{
+		var che []int32
+
+		for i := 0; i < len(task.CfTags.Elements); i++ {
+			che = append(che, task.CfTags.Elements[i].Int)
+		}
+
+		reqTasks.Tasks[i] = models.TaskJSON{
 			Id:               task.Id,
 			Name:             task.Name,
 			Description:      task.Description,
@@ -60,7 +126,7 @@ func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Ta
 			CfIndex:          task.CfIndex,
 			CfPoints:         task.CfPoints,
 			CfRating:         task.CfRating,
-			CfTags:           task.CfTags,
+			CfTags:           che,
 			TimeLimit:        task.TimeLimit,
 			MemoryLimitBytes: task.MemoryLimitBytes,
 			Link:             task.Link,

@@ -3,7 +3,7 @@ package task
 import "github.com/tp-study-ai/backend/internal/app/models"
 
 type Repository interface {
-	GetTask() (Task models.TaskResponse, err error)
-	GetTaskById(id int) (Task models.TaskResponse, err error)
+	GetTask() (Task models.TaskDB, err error)
+	GetTaskById(id int) (Task models.TaskDB, err error)
 	GetTaskByLimit(id int, sort string, tag []int) (*models.TasksResponse, error)
 }

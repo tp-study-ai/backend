@@ -28,29 +28,7 @@ func (h HandlerTask) GetTask(ctx echo.Context) error {
 		return tools.CustomError(ctx, err, 1, "GetTask")
 	}
 
-	task1 := models.Task{
-		Id:               task.Id,
-		Name:             task.Name,
-		Description:      task.Description,
-		PublicTests:      task.PublicTests,
-		PrivateTests:     task.PrivateTests,
-		GeneratedTests:   task.GeneratedTests,
-		Difficulty:       task.Difficulty,
-		CfContestId:      task.CfContestId,
-		CfIndex:          task.CfIndex,
-		CfPoints:         task.CfPoints,
-		CfRating:         task.CfRating,
-		CfTags:           task.CfTags,
-		TimeLimit:        task.TimeLimit,
-		MemoryLimitBytes: task.MemoryLimitBytes,
-		Link:             task.Link,
-		TaskRu:           task.TaskRu,
-		Input:            task.Input,
-		Output:           task.Output,
-		Note:             task.Note,
-	}
-
-	result, err := json.Marshal(task1)
+	result, err := json.Marshal(task)
 	if err != nil {
 		return tools.CustomError(ctx, err, 1, "GetTask")
 	}
@@ -71,29 +49,7 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 		return tools.CustomError(ctx, err, 1, "GetTaskById")
 	}
 
-	task1 := models.Task{
-		Id:               task.Id,
-		Name:             task.Name,
-		Description:      task.Description,
-		PublicTests:      task.PublicTests,
-		PrivateTests:     task.PrivateTests,
-		GeneratedTests:   task.GeneratedTests,
-		Difficulty:       task.Difficulty,
-		CfContestId:      task.CfContestId,
-		CfIndex:          task.CfIndex,
-		CfPoints:         task.CfPoints,
-		CfRating:         task.CfRating,
-		CfTags:           task.CfTags,
-		TimeLimit:        task.TimeLimit,
-		MemoryLimitBytes: task.MemoryLimitBytes,
-		Link:             task.Link,
-		TaskRu:           task.TaskRu,
-		Input:            task.Input,
-		Output:           task.Output,
-		Note:             task.Note,
-	}
-
-	result, err := json.Marshal(task1)
+	result, err := json.Marshal(task)
 	if err != nil {
 		return tools.CustomError(ctx, err, 1, "GetTaskById")
 	}
@@ -116,14 +72,6 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 	} else {
 		sort = ""
 	}
-
-	//tag := ctx.QueryParam("tags")
-	//fmt.Printf("Param: %s, %s\n", tag, reflect.TypeOf(page))
-	//tagInt, err := strconv.ParseInt(tag, 10, 64)
-	//if err != nil {
-	//	return tools.CustomError(ctx, err, 1, "Parse int")
-	//}
-	//fmt.Println(tagInt)
 
 	tags := ctx.QueryParam("tags")
 	fmt.Println(tags)

@@ -15,7 +15,7 @@ func NewRepositoryTask(db *pgx.ConnPool) *RepositoryTask {
 	return &RepositoryTask{DB: db}
 }
 
-func (r *RepositoryTask) GetTask() (Task models.TaskResponse, err error) {
+func (r *RepositoryTask) GetTask() (Task models.TaskDB, err error) {
 	var count int
 	err = r.DB.QueryRow(
 		`select count(*) from "tasks"`,
@@ -47,10 +47,11 @@ func (r *RepositoryTask) GetTask() (Task models.TaskResponse, err error) {
 		&Task.Output,
 		&Task.Note,
 	)
+
 	return
 }
 
-func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskResponse, err error) {
+func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskDB, err error) {
 	err = r.DB.QueryRow(
 		`select *
 		from "tasks"
@@ -77,6 +78,7 @@ func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskResponse, err erro
 		&Task.Output,
 		&Task.Note,
 	)
+
 	return
 }
 
@@ -115,7 +117,7 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int) (*models
 	defer rows.Close()
 
 	for rows.Next() {
-		var buff models.TaskResponse
+		var buff models.TaskDB
 		err = rows.Scan(
 			&buff.Id,
 			&buff.Name,
