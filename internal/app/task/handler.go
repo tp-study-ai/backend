@@ -109,17 +109,17 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 	}
 
 	tags := ctx.QueryParam("tags")
-	//fmt.Printf("tags: %s %s\n", tags, reflect.TypeOf(tags))
-	fmt.Println(tags[1 : len(tags)-1])
-	//var tags1 []string
-	tags1 := strings.Split(tags[1:len(tags)-1], ", ")
-	fmt.Println("list tags string", tags1)
 	var tagsInt []int64
-	for _, item := range tags1 {
-		tagInt, _ := strconv.ParseInt(item, 10, 64)
-		tagsInt = append(tagsInt, tagInt)
+	if len(tags) != 0 {
+		tags = tags[1 : len(tags)-1]
+		tags1 := strings.Split(tags[1:len(tags)-1], ", ")
+		fmt.Println("list tags string", tags1)
+		for _, item := range tags1 {
+			tagInt, _ := strconv.ParseInt(item, 10, 64)
+			tagsInt = append(tagsInt, tagInt)
+		}
+		fmt.Println(tagsInt)
 	}
-	fmt.Println(tagsInt)
 
 	tasks, err := h.UseCase.GetTaskByLimit(int(pageInt), sort)
 	if err != nil {
