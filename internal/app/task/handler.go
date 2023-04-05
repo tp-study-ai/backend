@@ -50,7 +50,10 @@ func (h HandlerTask) GetTask(ctx echo.Context) error {
 		Note:             task.Note,
 	}
 
-	result, _ := json.Marshal(task1)
+	result, err := json.Marshal(task1)
+	if err != nil {
+		return tools.CustomError(ctx, err, 1, "GetTask")
+	}
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
 }
@@ -90,7 +93,10 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 		Note:             task.Note,
 	}
 
-	result, _ := json.Marshal(task1)
+	result, err := json.Marshal(task1)
+	if err != nil {
+		return tools.CustomError(ctx, err, 1, "GetTaskById")
+	}
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
 }
@@ -98,7 +104,10 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 	page := ctx.QueryParam("page")
 	fmt.Printf("Param: %s, %s\n", page, reflect.TypeOf(page))
-	pageInt, _ := strconv.ParseInt(page, 10, 64)
+	pageInt, err := strconv.ParseInt(page, 10, 64)
+	if err != nil {
+		return tools.CustomError(ctx, err, 1, "Parse int")
+	}
 
 	sort := ctx.QueryParam("sort")
 	fmt.Printf("sort: %s %s\n", sort, reflect.TypeOf(sort))
@@ -126,7 +135,10 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 		return tools.CustomError(ctx, err, 1, "что-то сломалось GetTaskByLimit")
 	}
 
-	result, _ := json.Marshal(tasks)
+	result, err := json.Marshal(tasks)
+	if err != nil {
+		return tools.CustomError(ctx, err, 1, "Marshal")
+	}
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
 }
@@ -134,14 +146,14 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 func (h HandlerTask) CheckSolution(ctx echo.Context) error {
 	var solution models.CheckSolutionRequest
 	if err := ctx.Bind(&solution); err != nil {
-		return tools.CustomError(ctx, err, 1, "")
+		return tools.CustomError(ctx, err, 1, "CheckSolution Bind")
 	}
 
 	testisResponse, err := h.UseCase.CheckSolution(solution)
 
 	result, err := json.Marshal(testisResponse)
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "CheckSolution")
+		return tools.CustomError(ctx, err, 2, "CheckSolution Bind")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
