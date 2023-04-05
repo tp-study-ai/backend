@@ -25,7 +25,7 @@ type TaskResponse struct {
 	PublicTests      []string         `db:"public_tests"`
 	PrivateTests     []string         `db:"private_tests"`
 	GeneratedTests   []string         `db:"generated_tests"`
-	Difficulty       string           `db:"difficulty"`
+	Difficulty       int              `db:"difficulty"`
 	CfContestId      int              `db:"cf_contest_id"`
 	CfIndex          string           `db:"cf_index"`
 	CfPoints         float64          `db:"cf_points"`
@@ -51,7 +51,7 @@ type Task struct {
 	PublicTests      []string         `json:"public_tests"`
 	PrivateTests     []string         `json:"private_tests"`
 	GeneratedTests   []string         `json:"generated_tests"`
-	Difficulty       string           `json:"difficulty"`
+	Difficulty       int              `json:"difficulty"`
 	CfContestId      int              `json:"cf_contest_id"`
 	CfIndex          string           `json:"cf_index"`
 	CfPoints         float64          `json:"cf_points"`
