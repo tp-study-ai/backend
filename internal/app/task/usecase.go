@@ -37,9 +37,9 @@ func (u *UseCaseTask) GetTaskById(id int) (Task models.TaskResponse, err error) 
 	return
 }
 
-func (u *UseCaseTask) GetTaskByLimit(id int, sort string) (*models.Tasks, error) {
+func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Tasks, error) {
 
-	tasks, err := u.Repo.GetTaskByLimit(id, sort)
+	tasks, err := u.Repo.GetTaskByLimit(id, sort, tag)
 	if err != nil {
 		return nil, err
 	}

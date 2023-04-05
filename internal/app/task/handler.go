@@ -117,20 +117,34 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 		sort = ""
 	}
 
+	//tag := ctx.QueryParam("tags")
+	//fmt.Printf("Param: %s, %s\n", tag, reflect.TypeOf(page))
+	//tagInt, err := strconv.ParseInt(tag, 10, 64)
+	//if err != nil {
+	//	return tools.CustomError(ctx, err, 1, "Parse int")
+	//}
+	//fmt.Println(tagInt)
+
 	tags := ctx.QueryParam("tags")
-	var tagsInt []int64
+	fmt.Println(tags)
+	var tagsInt []int
 	if len(tags) != 0 {
 		tags = tags[1 : len(tags)-1]
-		tags1 := strings.Split(tags[1:len(tags)-1], ", ")
-		fmt.Println("list tags string", tags1)
-		for _, item := range tags1 {
-			tagInt, _ := strconv.ParseInt(item, 10, 64)
-			tagsInt = append(tagsInt, tagInt)
+		if len(tags) == 1 || len(tags) == 2 {
+			tagInt, _ := strconv.ParseInt(tags, 10, 64)
+			tagsInt = append(tagsInt, int(tagInt))
+		} else {
+			tags1 := strings.Split(tags, ",")
+			fmt.Println("list tags string", tags1)
+			for _, item := range tags1 {
+				tagInt, _ := strconv.ParseInt(item, 10, 64)
+				tagsInt = append(tagsInt, int(tagInt))
+			}
+			fmt.Println(tagsInt)
 		}
-		fmt.Println(tagsInt)
 	}
 
-	tasks, err := h.UseCase.GetTaskByLimit(int(pageInt), sort)
+	tasks, err := h.UseCase.GetTaskByLimit(int(pageInt), sort, tagsInt)
 	if err != nil {
 		return tools.CustomError(ctx, err, 1, "что-то сломалось GetTaskByLimit")
 	}

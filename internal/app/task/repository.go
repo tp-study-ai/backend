@@ -2,6 +2,7 @@ package task
 
 import (
 	"github.com/jackc/pgx"
+	"github.com/lib/pq"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"math/rand"
 )
@@ -79,7 +80,7 @@ func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskResponse, err erro
 	return
 }
 
-func (r *RepositoryTask) GetTaskByLimit(id int, sort string) (*models.TasksResponse, error) {
+func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int) (*models.TasksResponse, error) {
 	tasks := &models.TasksResponse{}
 
 	var newPostsData []interface{}
@@ -87,6 +88,11 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string) (*models.TasksRespo
 	newPostsData = append(newPostsData, 15*id)
 
 	sql := `select * from "tasks" `
+
+	if len(tag) != 0 {
+		sql = sql + `where $3 <@ (cf_tags)`
+		newPostsData = append(newPostsData, pq.Array(tag))
+	}
 
 	if sort == "" {
 		sql = sql + `order by "id"`
