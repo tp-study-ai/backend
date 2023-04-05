@@ -1,25 +1,43 @@
 package models
 
+import "github.com/jackc/pgx/pgtype"
+
+type TagJson struct {
+	TagsId int    `json:"tags_id"`
+	TagsRu string `json:"tags_ru"`
+	TagsEn string `json:"tags_en"`
+}
+
+type TagsJson struct {
+	Tags []TagJson `json:"tags"`
+}
+
+//type Tags struct {
+//	Id int
+//	Ru string
+//	En string
+//}
+
 type TaskResponse struct {
-	Id               int      `db:"id"`
-	Name             string   `db:"name"`
-	Description      string   `db:"description"`
-	PublicTests      []string `db:"public_tests"`
-	PrivateTests     []string `db:"private_tests"`
-	GeneratedTests   []string `db:"generated_tests"`
-	Difficulty       string   `db:"difficulty"`
-	CfContestId      int      `db:"cf_contest_id"`
-	CfIndex          string   `db:"cf_index"`
-	CfPoints         float64  `db:"cf_points"`
-	CfRating         int      `db:"cf_rating"`
-	CfTags           []string `db:"cf_tags"`
-	TimeLimit        string   `db:"time_limit"`
-	MemoryLimitBytes int      `db:"memory_limit_bytes"`
-	Link             string   `db:"link"`
-	TaskRu           string   `db:"task_ru"`
-	Input            string   `db:"input"`
-	Output           string   `db:"output"`
-	Note             string   `db:"note"`
+	Id               int              `db:"id"`
+	Name             string           `db:"name"`
+	Description      string           `db:"description"`
+	PublicTests      []string         `db:"public_tests"`
+	PrivateTests     []string         `db:"private_tests"`
+	GeneratedTests   []string         `db:"generated_tests"`
+	Difficulty       string           `db:"difficulty"`
+	CfContestId      int              `db:"cf_contest_id"`
+	CfIndex          string           `db:"cf_index"`
+	CfPoints         float64          `db:"cf_points"`
+	CfRating         int              `db:"cf_rating"`
+	CfTags           pgtype.Int4Array `db:"cf_tags"`
+	TimeLimit        string           `db:"time_limit"`
+	MemoryLimitBytes int              `db:"memory_limit_bytes"`
+	Link             string           `db:"link"`
+	TaskRu           string           `db:"task_ru"`
+	Input            string           `db:"input"`
+	Output           string           `db:"output"`
+	Note             string           `db:"note"`
 }
 
 type TasksResponse struct {
@@ -27,25 +45,25 @@ type TasksResponse struct {
 }
 
 type Task struct {
-	Id               int      `json:"id"`
-	Name             string   `json:"name"`
-	Description      string   `json:"description"`
-	PublicTests      []string `json:"public_tests"`
-	PrivateTests     []string `json:"private_tests"`
-	GeneratedTests   []string `json:"generated_tests"`
-	Difficulty       string   `json:"difficulty"`
-	CfContestId      int      `json:"cf_contest_id"`
-	CfIndex          string   `json:"cf_index"`
-	CfPoints         float64  `json:"cf_points"`
-	CfRating         int      `json:"cf_rating"`
-	CfTags           []string `json:"cf_tags"`
-	TimeLimit        string   `json:"time_limit"`
-	MemoryLimitBytes int      `json:"memory_limit_bytes"`
-	Link             string   `json:"link"`
-	TaskRu           string   `json:"task_ru"`
-	Input            string   `json:"input"`
-	Output           string   `json:"output"`
-	Note             string   `json:"note"`
+	Id               int              `json:"id"`
+	Name             string           `json:"name"`
+	Description      string           `json:"description"`
+	PublicTests      []string         `json:"public_tests"`
+	PrivateTests     []string         `json:"private_tests"`
+	GeneratedTests   []string         `json:"generated_tests"`
+	Difficulty       string           `json:"difficulty"`
+	CfContestId      int              `json:"cf_contest_id"`
+	CfIndex          string           `json:"cf_index"`
+	CfPoints         float64          `json:"cf_points"`
+	CfRating         int              `json:"cf_rating"`
+	CfTags           pgtype.Int4Array `json:"cf_tags"`
+	TimeLimit        string           `json:"time_limit"`
+	MemoryLimitBytes int              `json:"memory_limit_bytes"`
+	Link             string           `json:"link"`
+	TaskRu           string           `json:"task_ru"`
+	Input            string           `json:"input"`
+	Output           string           `json:"output"`
+	Note             string           `json:"note"`
 }
 
 type Tasks struct {

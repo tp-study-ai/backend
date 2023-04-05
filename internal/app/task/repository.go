@@ -79,14 +79,30 @@ func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskResponse, err erro
 	return
 }
 
-func (r *RepositoryTask) GetTaskByLimit(id int) (*models.TasksResponse, error) {
+func (r *RepositoryTask) GetTaskByLimit(id int, sort string) (*models.TasksResponse, error) {
 	tasks := &models.TasksResponse{}
 
 	var newPostsData []interface{}
 	newPostsData = append(newPostsData, 15)
 	newPostsData = append(newPostsData, 15*id)
 
-	rows, err := r.DB.Query(`select * from "tasks" order by "id" limit $1 offset $2`, newPostsData...)
+	sql := `select * from "tasks" `
+
+	if sort == "" {
+		sql = sql + `order by "id"`
+	}
+
+	if sort == "rating_up" {
+		sql = sql + `order by "cf_rating"`
+	}
+
+	if sort == "rating_down" {
+		sql = sql + `order by "cf_rating" desc`
+	}
+
+	sql = sql + ` limit $1 offset $2`
+
+	rows, err := r.DB.Query(sql, newPostsData...)
 	if err != nil {
 		return nil, err
 	}

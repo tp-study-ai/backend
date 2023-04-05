@@ -37,16 +37,14 @@ func (u *UseCaseTask) GetTaskById(id int) (Task models.TaskResponse, err error) 
 	return
 }
 
-func (u *UseCaseTask) GetTaskByLimit(id int) (*models.Tasks, error) {
+func (u *UseCaseTask) GetTaskByLimit(id int, sort string) (*models.Tasks, error) {
 
-	tasks, err := u.Repo.GetTaskByLimit(id)
-
-	reqTasks := &models.Tasks{
-		Tasks: make([]models.Task, len(tasks.Tasks)),
-	}
-
+	tasks, err := u.Repo.GetTaskByLimit(id, sort)
 	if err != nil {
 		return nil, err
+	}
+	reqTasks := &models.Tasks{
+		Tasks: make([]models.Task, len(tasks.Tasks)),
 	}
 
 	for i, task := range tasks.Tasks {
