@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
@@ -9,6 +11,7 @@ import (
 	"github.com/tp-study-ai/backend/tools/authManager"
 	"net"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -48,14 +51,15 @@ type OK struct {
 
 func (h HandlerAuth) Register(ctx echo.Context) error {
 	if middleware.GetUserFromCtx(ctx) != nil {
-		return tools.CustomError(ctx, errors.Errorf("пользователь уже зарегестрирован"), 0, "пользователь уже зарегестрирован")
+		return tools.CustomError(ctx, errors.Errorf("пользователь находится в системе"), 0, "пользователь уже зарегестрирован")
 	}
 
 	var reg models.UserJson
 	err := ctx.Bind(&reg)
-	if err != nil {
+	if err != nil || len(reg.Username) == 0 || len(reg.Password) == 0 {
 		return tools.CustomError(ctx, err, 1, "битый json на авторизацию")
 	}
+	fmt.Println(reg)
 
 	UserId, err := h.UseCase.Register(&models.UserJson{Username: reg.Username, Password: reg.Password})
 	if err != nil || UserId == 0 {
@@ -70,11 +74,66 @@ func (h HandlerAuth) Register(ctx echo.Context) error {
 	host, _, _ := net.SplitHostPort(ctx.Request().Host)
 	tokenCookie := createTokenCookie(token, host, h.AuthManager.GetEpiryTime())
 
+	ctx.SetCookie(tokenCookie)
+
 	var che = OK{
-		Message: "ok",
+		Message: "успешно зарегестрировались",
+	}
+
+	result, _ := json.Marshal(che)
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}
+
+func (h HandlerAuth) Login(ctx echo.Context) error {
+	if middleware.GetUserFromCtx(ctx) != nil {
+		return tools.CustomError(ctx, errors.Errorf("пользователь уже вошел в систему"), 0, "пользователь уже зарегестрирован")
+	}
+
+	var reg models.UserJson
+	err := ctx.Bind(&reg)
+	if err != nil || len(reg.Username) == 0 || len(reg.Password) == 0 {
+		return tools.CustomError(ctx, err, 1, "битый json на логин")
+	}
+
+	b, err := h.UseCase.Login(&models.UserJson{Username: reg.Username, Password: reg.Password})
+	if err != nil || b == false {
+		return tools.CustomError(ctx, err, 2, "ошибка при логине")
+	}
+
+	token, err := h.AuthManager.CreateToken(authManager.NewTokenPayload(1)) // подставить id пользователя полученного из usecase
+	if err != nil {
+		return tools.CustomError(ctx, err, 2, "отрыгнул jsw token или что то связанное с ним")
+	}
+
+	host, _, _ := net.SplitHostPort(ctx.Request().Host)
+	tokenCookie := createTokenCookie(token, host, h.AuthManager.GetEpiryTime())
+
+	var che = OK{
+		Message: "успешно вошли в систему",
 	}
 
 	ctx.SetCookie(tokenCookie)
-	return ctx.JSON(http.StatusOK, che)
-	//return ctx.JSONBlob(http.StatusOK, result)
+
+	result, _ := json.Marshal(che)
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}
+
+func (h HandlerAuth) Logout(ctx echo.Context) error {
+	if middleware.GetUserFromCtx(ctx) == nil {
+		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 2, "ошибка при логине")
+	}
+	host, _, _ := net.SplitHostPort(ctx.Request().Host)
+	resetTokenCookie := createTokenCookie("", host, -time.Hour)
+
+	ctx.SetCookie(resetTokenCookie)
+
+	var che = OK{
+		Message: "успешно вышли из системы",
+	}
+
+	result, _ := json.Marshal(che)
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
 }

@@ -3,12 +3,16 @@ package tools
 import (
 	"encoding/json"
 	"github.com/labstack/echo/v4"
+	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"net/http"
 	"strconv"
 )
 
 func CustomError(ctx echo.Context, err error, number int, comment string) error {
+	if err == nil {
+		err = errors.Errorf("")
+	}
 	che := models.CustomError{
 		Number:  number,
 		Comment: comment,
