@@ -128,9 +128,3 @@
 >
 > URL
 >> https://study-ai.ru/api/logout
->
-> REQUEST
->>{\
-> username\
-> password\
-> }
