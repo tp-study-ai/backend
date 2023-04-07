@@ -89,3 +89,48 @@
 > testsTotal\
 > lintSuccess\
 > }
+
+> описание:
+>>регистрация
+>
+> метод:
+>> POST
+>
+> URL
+>> https://study-ai.ru/api/register
+>
+> REQUEST
+>>{\
+> username\
+> password\
+> }
+
+> описание:
+>>авторизация
+>
+> метод:
+>> POST
+>
+> URL
+>> https://study-ai.ru/api/login
+>
+> REQUEST
+>>{\
+> username\
+> password\
+> }
+
+> описание:
+>>logout
+>
+> метод:
+>> POST
+>
+> URL
+>> https://study-ai.ru/api/logout
+>
+> REQUEST
+>>{\
+> username\
+> password\
+> }
