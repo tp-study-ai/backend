@@ -124,7 +124,7 @@
 >>logout
 >
 > метод:
->> POST
+>> GET
 >
 > URL
 >> https://study-ai.ru/api/logout
