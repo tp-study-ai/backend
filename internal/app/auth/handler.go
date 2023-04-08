@@ -40,6 +40,7 @@ func createTokenCookie(token string, domen string, exp time.Duration) *http.Cook
 		Domain:   domen,
 		Path:     "/",
 		SameSite: http.SameSiteNoneMode,
+		Secure:   true,
 	}
 }
 
