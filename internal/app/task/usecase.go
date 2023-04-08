@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"io/ioutil"
 	"net/http"
@@ -206,38 +205,38 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (model
 	if err != nil {
 		return models.CheckSolutionUseCaseResponse{}, err
 	}
-
-	//send := &models.SendTask{
-	//		ID:           0,
-	//		UserId:       0,
-	//		TaskId:       solution.TaskId,
-	//		CheckTime:    cheche.CheckTime,
-	//		BuildTime:    cheche.BuildTime,
-	//		CheckResult:  cheche.CheckResult,
-	//		CheckMessage: cheche.CheckMessage,
-	//		TestsPassed:  cheche.TestsPassed,
-	//		TestsTotal:   cheche.TestsTotal,
-	//		LintSuccess:  cheche.LintSuccess,
-	//		CodeText:     solution.Solution,
-	//	}
-
-	response1, err := u.Repo.SendTask(models.SendTask{
-		ID:           0,
-		UserId:       0,
-		TaskId:       solution.TaskId,
-		CheckTime:    cheche.CheckTime,
-		BuildTime:    cheche.BuildTime,
-		CheckResult:  cheche.CheckResult,
-		CheckMessage: cheche.CheckMessage,
-		TestsPassed:  cheche.TestsPassed,
-		TestsTotal:   cheche.TestsTotal,
-		LintSuccess:  cheche.LintSuccess,
-		CodeText:     solution.Solution,
-	})
-
-	if solution.TaskId != response1.TaskId || solution.Solution != response1.CodeText {
-		return models.CheckSolutionUseCaseResponse{}, errors.Errorf("")
-	}
+	//
+	////send := &models.SendTask{
+	////		ID:           0,
+	////		UserId:       0,
+	////		TaskId:       solution.TaskId,
+	////		CheckTime:    cheche.CheckTime,
+	////		BuildTime:    cheche.BuildTime,
+	////		CheckResult:  cheche.CheckResult,
+	////		CheckMessage: cheche.CheckMessage,
+	////		TestsPassed:  cheche.TestsPassed,
+	////		TestsTotal:   cheche.TestsTotal,
+	////		LintSuccess:  cheche.LintSuccess,
+	////		CodeText:     solution.Solution,
+	////	}
+	//
+	//response1, err := u.Repo.SendTask(models.SendTask{
+	//	ID:           0,
+	//	UserId:       0,
+	//	TaskId:       solution.TaskId,
+	//	CheckTime:    cheche.CheckTime,
+	//	BuildTime:    cheche.BuildTime,
+	//	CheckResult:  cheche.CheckResult,
+	//	CheckMessage: cheche.CheckMessage,
+	//	TestsPassed:  cheche.TestsPassed,
+	//	TestsTotal:   cheche.TestsTotal,
+	//	LintSuccess:  cheche.LintSuccess,
+	//	CodeText:     solution.Solution,
+	//})
+	//
+	//if solution.TaskId != response1.TaskId || solution.Solution != response1.CodeText {
+	//	return models.CheckSolutionUseCaseResponse{}, errors.Errorf("")
+	//}
 
 	return cheche, nil
 }
