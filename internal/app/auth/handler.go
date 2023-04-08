@@ -16,10 +16,7 @@ import (
 )
 
 const (
-	tokenCookieKey    = "token"
-	CSRFCookieName    = "_csrf"
-	avatarMaxSize     = 4000000
-	updateUserMaxSize = 1000
+	tokenCookieKey = "token"
 )
 
 type HandlerAuth struct {
@@ -42,6 +39,7 @@ func createTokenCookie(token string, domen string, exp time.Duration) *http.Cook
 		Expires:  time.Now().Add(exp),
 		Domain:   domen,
 		Path:     "/",
+		SameSite: http.SameSiteNoneMode,
 	}
 }
 
