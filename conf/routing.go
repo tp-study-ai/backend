@@ -16,7 +16,7 @@ type ServerHandlers struct {
 func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.CommonMiddleware) {
 	router.Use(echoMiddleware.CORSWithConfig(echoMiddleware.CORSConfig{
 		AllowCredentials: true,
-		AllowOrigins:     []string{"*"},
+		AllowOrigins:     []string{"https://study-ai.ru/"},
 		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 		AllowMethods:     []string{echo.GET, echo.POST},
 		MaxAge:           86400,
