@@ -99,21 +99,21 @@
 > URL
 >> https://study-ai.ru/api/register
 >
-> REQUEST
-> ```json
-> {
->   string `json:"username"`
->   string `json:"password"`
-> }
-> ```
+>> REQUEST
+>> ```json
+>> {
+>>   string `json:"username"`
+>>   string `json:"password"`
+>> }
+>> ```
 > 
-> RESPONSE
- >```json
-> {
->    int    `json:"id"`
->    string `json:"username"`
-> }
-> ```
+>> RESPONSE
+>>```json
+>> {
+>>    int    `json:"id"`
+>>    string `json:"username"`
+>> }
+>> ```
 
 > описание:
 >>авторизация
@@ -124,12 +124,21 @@
 > URL
 >> https://study-ai.ru/api/login
 >
-> ```json
-> {
->   string `json:"username"`
->   string `json:"password"`
-> }
-> ```
+>> REQUEST
+>> ```json
+>> {
+>>   string `json:"username"`
+>>   string `json:"password"`
+>> }
+>
+>> ```
+> > RESPONSE
+>>```json
+>> {
+>>    int    `json:"id"`
+>>    string `json:"username"`
+>> }
+>> ```
 
 > описание:
 >>logout
@@ -139,3 +148,10 @@
 >
 > URL
 >> https://study-ai.ru/api/logout
+> 
+>>  RESPONSE
+>> ```json
+>> {
+>>   string `json:"message"`
+>> }
+>>```
