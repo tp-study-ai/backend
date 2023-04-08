@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/models"
 )
@@ -16,34 +15,37 @@ func NewUseCaseAuth(TaskRepo Repository) *UseCaseAuth {
 	}
 }
 
-func (u *UseCaseAuth) Register(User *models.UserJson) (UserId models.UserId, err error) {
-	username, err := u.Repo.GetUser(&models.UserDB{Username: User.Username, Password: User.Password})
-	//fmt.Println(err.Error(), username, User.Username, User.Password)
-	if err == nil && username == User.Username {
-		fmt.Println(username)
-		return models.UserId(0), errors.Errorf("такой пользователь уже существует")
+func (u *UseCaseAuth) Register(User *models.UserJson) (*models.ResponseUserJson, error) {
+	User1, err := u.Repo.GetUser(&models.UserDB{Username: User.Username, Password: User.Password})
+	if err == nil && User1.Username == User.Username {
+		return nil, errors.Errorf("такой пользователь уже существует")
 	}
 
-	UserId, err = u.Repo.CreateUser(&models.UserDB{Username: User.Username, Password: User.Password})
+	User2, err := u.Repo.CreateUser(&models.UserDB{Username: User.Username, Password: User.Password})
 	if err != nil {
-		return models.UserId(0), err
+		return nil, err
 	}
-	return UserId, nil
+
+	if User.Username != User2.Username || User.Password != User2.Password {
+		return nil, errors.Errorf("некорректаня работа чего то там")
+	}
+
+	return &models.ResponseUserJson{Id: User2.Id, Username: User2.Username}, nil
 }
 
-func (u *UseCaseAuth) Login(User *models.UserJson) (bool, error) {
+func (u *UseCaseAuth) Login(User *models.UserJson) (*models.ResponseUserJson, error) {
 	User1, err := u.Repo.Login(&models.UserDB{Username: User.Username, Password: User.Password})
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 	if User1.Username == User.Username && User1.Password == User.Password {
-		return true, nil
+		return &models.ResponseUserJson{Id: User1.Id, Username: User1.Username}, nil
 	}
-	return false, errors.Errorf("username || password не верно")
+	return nil, errors.Errorf("username || password не верно")
 }
 
-func (u *UseCaseAuth) GetUserById(id int) (models.ResponseUserJson, error) {
-	user, err := u.Repo.GetUserByd(id)
+func (u *UseCaseAuth) GetUserById(id models.UserId) (models.ResponseUserJson, error) {
+	user, err := u.Repo.GetUserById(id)
 	if err != nil {
 		return models.ResponseUserJson{}, err
 	}

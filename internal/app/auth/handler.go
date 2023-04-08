@@ -2,7 +2,6 @@ package auth
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
@@ -53,19 +52,18 @@ func (h HandlerAuth) Register(ctx echo.Context) error {
 		return tools.CustomError(ctx, errors.Errorf("пользователь находится в системе"), 0, "пользователь уже зарегестрирован")
 	}
 
-	var reg models.UserJson
-	err := ctx.Bind(&reg)
-	if err != nil || len(reg.Username) == 0 || len(reg.Password) == 0 {
+	var UserRequest models.UserJson
+	err := ctx.Bind(&UserRequest)
+	if err != nil || len(UserRequest.Username) == 0 || len(UserRequest.Password) == 0 {
 		return tools.CustomError(ctx, err, 1, "битый json на авторизацию")
 	}
-	fmt.Println(reg)
 
-	UserId, err := h.UseCase.Register(&models.UserJson{Username: reg.Username, Password: reg.Password})
-	if err != nil || UserId == 0 {
+	User, err := h.UseCase.Register(&models.UserJson{Username: UserRequest.Username, Password: UserRequest.Password})
+	if err != nil {
 		return tools.CustomError(ctx, err, 2, "ошибка при регистрации")
 	}
 
-	token, err := h.AuthManager.CreateToken(authManager.NewTokenPayload(1)) // подставить id пользователя полученного из usecase
+	token, err := h.AuthManager.CreateToken(authManager.NewTokenPayload(User.Id)) // подставить id пользователя полученного из usecase
 	if err != nil {
 		return tools.CustomError(ctx, err, 2, "отрыгнул jsw token или что то связанное с ним")
 	}
@@ -75,11 +73,7 @@ func (h HandlerAuth) Register(ctx echo.Context) error {
 
 	ctx.SetCookie(tokenCookie)
 
-	var che = OK{
-		Message: "успешно зарегестрировались",
-	}
-
-	result, _ := json.Marshal(che)
+	result, _ := json.Marshal(User)
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
 }
@@ -89,18 +83,18 @@ func (h HandlerAuth) Login(ctx echo.Context) error {
 		return tools.CustomError(ctx, errors.Errorf("пользователь уже вошел в систему"), 0, "пользователь уже зарегестрирован")
 	}
 
-	var reg models.UserJson
-	err := ctx.Bind(&reg)
-	if err != nil || len(reg.Username) == 0 || len(reg.Password) == 0 {
+	var UserRequest models.UserJson
+	err := ctx.Bind(&UserRequest)
+	if err != nil || len(UserRequest.Username) == 0 || len(UserRequest.Password) == 0 {
 		return tools.CustomError(ctx, err, 1, "битый json на логин")
 	}
 
-	b, err := h.UseCase.Login(&models.UserJson{Username: reg.Username, Password: reg.Password})
-	if err != nil || b == false {
+	User, err := h.UseCase.Login(&models.UserJson{Username: UserRequest.Username, Password: UserRequest.Password})
+	if err != nil {
 		return tools.CustomError(ctx, err, 2, "ошибка при логине")
 	}
 
-	token, err := h.AuthManager.CreateToken(authManager.NewTokenPayload(1)) // подставить id пользователя полученного из usecase
+	token, err := h.AuthManager.CreateToken(authManager.NewTokenPayload(User.Id)) // подставить id пользователя полученного из usecase
 	if err != nil {
 		return tools.CustomError(ctx, err, 2, "отрыгнул jsw token или что то связанное с ним")
 	}
@@ -108,13 +102,9 @@ func (h HandlerAuth) Login(ctx echo.Context) error {
 	host, _, _ := net.SplitHostPort(ctx.Request().Host)
 	tokenCookie := createTokenCookie(token, host, h.AuthManager.GetEpiryTime())
 
-	var che = OK{
-		Message: "успешно вошли в систему",
-	}
-
 	ctx.SetCookie(tokenCookie)
 
-	result, _ := json.Marshal(che)
+	result, _ := json.Marshal(User)
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
 }
@@ -143,7 +133,7 @@ func (h HandlerAuth) GetUserById(ctx echo.Context) error {
 		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
 	}
 
-	user1, err := h.UseCase.GetUserById(int(user.Id))
+	user1, err := h.UseCase.GetUserById(user.Id)
 	if user == nil {
 		return tools.CustomError(ctx, err, 0, "ошибка при получении пользователя")
 	}

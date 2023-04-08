@@ -100,10 +100,20 @@
 >> https://study-ai.ru/api/register
 >
 > REQUEST
->>{\
-> username\
-> password\
+> ```json
+> {
+>   string `json:"username"`
+>   string `json:"password"`
 > }
+> ```
+> 
+> RESPONSE
+ >```json
+> {
+>    int    `json:"id"`
+>    string `json:"username"`
+> }
+> ```
 
 > описание:
 >>авторизация
@@ -114,11 +124,12 @@
 > URL
 >> https://study-ai.ru/api/login
 >
-> REQUEST
->>{\
-> username\
-> password\
+> ```json
+> {
+>   string `json:"username"`
+>   string `json:"password"`
 > }
+> ```
 
 > описание:
 >>logout

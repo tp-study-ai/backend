@@ -29,7 +29,7 @@ func (mw *CommonMiddleware) AuthMiddleware(next echo.HandlerFunc) echo.HandlerFu
 		//	return next(ctx)
 		//}
 
-		ctx.Set(UserCtxKey, UserCtx{Id: payload.Id})
+		ctx.Set(UserCtxKey, UserCtx{Id: models.UserId(payload.Id)})
 		return next(ctx)
 	}
 }
