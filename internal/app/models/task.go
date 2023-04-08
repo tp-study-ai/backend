@@ -121,3 +121,17 @@ type CheckSolutionUseCaseResponse struct {
 	TestsTotal   int     `json:"testsTotal"`
 	LintSuccess  bool    `json:"lintSuccess"`
 }
+
+type SendTask struct {
+	ID           int     `db:"id"`
+	UserId       int     `db:"user_id"`
+	TaskId       int     `db:"task_id"`
+	CheckTime    float64 `db:"check_time"`
+	BuildTime    float64 `db:"build_time"`
+	CheckResult  int     `db:"check_result"`
+	CheckMessage string  `db:"check_message"`
+	TestsPassed  int     `db:"tests_passed"`
+	TestsTotal   int     `db:"tests_total"`
+	LintSuccess  bool    `db:"lint_success"`
+	CodeText     string  `db:"code_text"`
+}

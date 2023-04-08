@@ -137,3 +137,19 @@ func (h HandlerAuth) Logout(ctx echo.Context) error {
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
 }
+
+func (h HandlerAuth) GetUserById(ctx echo.Context) error {
+	user := middleware.GetUserFromCtx(ctx)
+	if user == nil {
+		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
+	}
+
+	user1, err := h.UseCase.GetUserById(int(user.Id))
+	if user == nil {
+		return tools.CustomError(ctx, err, 0, "ошибка при получении пользователя")
+	}
+
+	result, _ := json.Marshal(user1)
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}

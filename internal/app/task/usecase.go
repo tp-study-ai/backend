@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"io/ioutil"
 	"net/http"
@@ -140,7 +141,7 @@ func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Ta
 	return reqTasks, nil
 }
 
-func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (cheche models.CheckSolutionUseCaseResponse, err error) {
+func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (models.CheckSolutionUseCaseResponse, error) {
 	var UseCaseSolution = models.CheckSolutionUseCase{
 		TaskId:   solution.TaskId,
 		Solution: solution.Solution,
@@ -199,9 +200,43 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 	}
 	fmt.Printf(string(body))
 
+	var cheche models.CheckSolutionUseCaseResponse
+
 	err = json.Unmarshal(body, &cheche)
 	if err != nil {
 		return models.CheckSolutionUseCaseResponse{}, err
+	}
+
+	//send := &models.SendTask{
+	//		ID:           0,
+	//		UserId:       0,
+	//		TaskId:       solution.TaskId,
+	//		CheckTime:    cheche.CheckTime,
+	//		BuildTime:    cheche.BuildTime,
+	//		CheckResult:  cheche.CheckResult,
+	//		CheckMessage: cheche.CheckMessage,
+	//		TestsPassed:  cheche.TestsPassed,
+	//		TestsTotal:   cheche.TestsTotal,
+	//		LintSuccess:  cheche.LintSuccess,
+	//		CodeText:     solution.Solution,
+	//	}
+
+	response1, err := u.Repo.SendTask(models.SendTask{
+		ID:           0,
+		UserId:       0,
+		TaskId:       solution.TaskId,
+		CheckTime:    cheche.CheckTime,
+		BuildTime:    cheche.BuildTime,
+		CheckResult:  cheche.CheckResult,
+		CheckMessage: cheche.CheckMessage,
+		TestsPassed:  cheche.TestsPassed,
+		TestsTotal:   cheche.TestsTotal,
+		LintSuccess:  cheche.LintSuccess,
+		CodeText:     solution.Solution,
+	})
+
+	if solution.TaskId != response1.TaskId || solution.Solution != response1.CodeText {
+		return models.CheckSolutionUseCaseResponse{}, errors.Errorf("")
 	}
 
 	return cheche, nil

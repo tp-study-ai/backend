@@ -41,3 +41,13 @@ func (u *UseCaseAuth) Login(User *models.UserJson) (bool, error) {
 	}
 	return false, errors.Errorf("username || password не верно")
 }
+
+func (u *UseCaseAuth) GetUserById(id int) (models.ResponseUserJson, error) {
+	user, err := u.Repo.GetUserByd(id)
+	if err != nil {
+		return models.ResponseUserJson{}, err
+	}
+
+	user1 := models.ResponseUserJson{Id: user.Id, Username: user.Username}
+	return user1, nil
+}

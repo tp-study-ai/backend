@@ -149,3 +149,18 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int) (*models
 
 	return tasks, err
 }
+
+func (r *RepositoryTask) SendTask(task models.SendTask) (task1 models.SendTask, err error) {
+	err = r.DB.QueryRow(
+		`INSERT INTO "send_task" (
+                         "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text"
+                         ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+                         RETURNING "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text" `,
+		task.UserId, task.TaskId, task.CheckTime, task.BuildTime, task.CheckResult, task.CheckMessage, task.TestsPassed, task.TestsTotal, task.LintSuccess, task.CodeText).Scan(
+		task1.ID, task1.UserId, task1.TaskId, task1.CheckTime, task1.BuildTime, task1.CheckResult, task1.CheckMessage, task1.TestsPassed, task1.TestsTotal, task1.LintSuccess, task1.CodeText,
+	)
+	if err != nil {
+		return models.SendTask{}, err
+	}
+	return
+}

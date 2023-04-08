@@ -13,6 +13,14 @@ func NewRepositoryAuth(db *pgx.ConnPool) *RepositoryAuth {
 	return &RepositoryAuth{DB: db}
 }
 
+func (r *RepositoryAuth) GetUserByd(id int) (user models.ResponseUserDb, err error) {
+	err = r.DB.QueryRow(`select "id", "username" from "users" where "id" = $1`, id).Scan(&user.Id, &user.Username)
+	if err != nil {
+		return models.ResponseUserDb{}, err
+	}
+	return
+}
+
 func (r *RepositoryAuth) GetUser(UserRequest *models.UserDB) (string, error) {
 	var username string
 	err := r.DB.QueryRow(`select "username" from "users" where "username" = $1 limit 1`, UserRequest.Username).Scan(&username)

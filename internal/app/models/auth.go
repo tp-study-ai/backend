@@ -17,3 +17,13 @@ type User struct {
 	Username string `db:"username"`
 	Password string `db:"password"`
 }
+
+type ResponseUserDb struct {
+	Id       int    `db:"id"`
+	Username string `db:"username"`
+}
+
+type ResponseUserJson struct {
+	Id       int    `json:"id"`
+	Username string `json:"username"`
+}
