@@ -112,10 +112,13 @@ func (h HandlerTask) CheckSolution(ctx echo.Context) error {
 	}
 
 	testisResponse, err := h.UseCase.CheckSolution(solution)
+	if err != nil {
+		return tools.CustomError(ctx, err, 2, "CheckSolution usecase")
+	}
 
 	result, err := json.Marshal(testisResponse)
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "CheckSolution Bind")
+		return tools.CustomError(ctx, err, 3, "CheckSolution Bind")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -123,56 +126,56 @@ func (h HandlerTask) CheckSolution(ctx echo.Context) error {
 }
 
 type Tags struct {
-	Id int
-	Ru string
-	En string
+	Id  int
+	Eng string
+	Rus string
 }
 
 func (h HandlerTask) GetTags(ctx echo.Context) error {
 	tags := models.TagsJson{}
 
 	MyTags := []Tags{
-		Tags{Id: 1, Ru: "*special", En: "*особая задача"},
-		Tags{Id: 2, Ru: "2-sat", En: "2-sat"},
-		Tags{Id: 3, Ru: "binary search", En: "бинарный поиск"},
-		Tags{Id: 4, Ru: "bitmasks", En: "битмаски"},
-		Tags{Id: 5, Ru: "brute force", En: "перебор"},
-		Tags{Id: 6, Ru: "chinese remainder theorem", En: "китайская теорема об остатках"},
-		Tags{Id: 7, Ru: "combinatorics", En: "комбинаторика"},
-		Tags{Id: 8, Ru: "constructive algorithms", En: "конструктив"},
-		Tags{Id: 9, Ru: "data structures", En: "структуры данных"},
-		Tags{Id: 10, Ru: "dfs and similar", En: "поиск в глубину и подобное"},
-		Tags{Id: 11, Ru: "divide and conquer", En: "разделяй и властвуй"},
-		Tags{Id: 12, Ru: "dp", En: "дп"},
-		Tags{Id: 13, Ru: "dsu", En: "системы непересекающихся множеств"},
-		Tags{Id: 14, Ru: "expression parsing", En: "разбор выражений"},
-		Tags{Id: 15, Ru: "fft", En: "быстрое преобразование Фурье"},
-		Tags{Id: 16, Ru: "flows", En: "потоки"},
-		Tags{Id: 17, Ru: "games", En: "игры"},
-		Tags{Id: 18, Ru: "geometry", En: "геометрия"},
-		Tags{Id: 19, Ru: "graph matchings", En: "паросочетания"},
-		Tags{Id: 20, Ru: "graphs", En: "графы"},
-		Tags{Id: 21, Ru: "greedy", En: "жадные алгоритмы"},
-		Tags{Id: 22, Ru: "hashing", En: "хэши"},
-		Tags{Id: 23, Ru: "implementation", En: "реализация"},
-		Tags{Id: 24, Ru: "interactive", En: "интерактив"},
-		Tags{Id: 25, Ru: "math", En: "математика"},
-		Tags{Id: 26, Ru: "matrices", En: "матрицы"},
-		Tags{Id: 27, Ru: "meet-in-the-middle", En: "meet-in-the-middle"},
-		Tags{Id: 28, Ru: "number theory", En: "теория чисел"},
-		Tags{Id: 29, Ru: "probabilities", En: "теория вероятностей"},
-		Tags{Id: 30, Ru: "schedules", En: "расписания"},
-		Tags{Id: 31, Ru: "shortest paths", En: "кратчайшие пути"},
-		Tags{Id: 32, Ru: "sortings", En: "сортировки"},
-		Tags{Id: 33, Ru: "string suffix structures", En: "строковые суфф. структуры"},
-		Tags{Id: 34, Ru: "strings", En: "строки"},
-		Tags{Id: 35, Ru: "ternary search", En: "тернарный поиск"},
-		Tags{Id: 36, Ru: "trees", En: "деревья"},
-		Tags{Id: 37, Ru: "two pointers", En: "два указателя"},
+		Tags{Id: 1, Eng: "*special", Rus: "*особая задача"},
+		Tags{Id: 2, Eng: "2-sat", Rus: "2-sat"},
+		Tags{Id: 3, Eng: "binary search", Rus: "бинарный поиск"},
+		Tags{Id: 4, Eng: "bitmasks", Rus: "битмаски"},
+		Tags{Id: 5, Eng: "brute force", Rus: "перебор"},
+		Tags{Id: 6, Eng: "chinese remainder theorem", Rus: "китайская теорема об остатках"},
+		Tags{Id: 7, Eng: "combinatorics", Rus: "комбинаторика"},
+		Tags{Id: 8, Eng: "constructive algorithms", Rus: "конструктив"},
+		Tags{Id: 9, Eng: "data structures", Rus: "структуры данных"},
+		Tags{Id: 10, Eng: "dfs and similar", Rus: "поиск в глубину и подобное"},
+		Tags{Id: 11, Eng: "divide and conquer", Rus: "разделяй и властвуй"},
+		Tags{Id: 12, Eng: "dp", Rus: "дп"},
+		Tags{Id: 13, Eng: "dsu", Rus: "системы непересекающихся множеств"},
+		Tags{Id: 14, Eng: "expression parsing", Rus: "разбор выражений"},
+		Tags{Id: 15, Eng: "fft", Rus: "быстрое преобразование Фурье"},
+		Tags{Id: 16, Eng: "flows", Rus: "потоки"},
+		Tags{Id: 17, Eng: "games", Rus: "игры"},
+		Tags{Id: 18, Eng: "geometry", Rus: "геометрия"},
+		Tags{Id: 19, Eng: "graph matchings", Rus: "паросочетания"},
+		Tags{Id: 20, Eng: "graphs", Rus: "графы"},
+		Tags{Id: 21, Eng: "greedy", Rus: "жадные алгоритмы"},
+		Tags{Id: 22, Eng: "hashing", Rus: "хэши"},
+		Tags{Id: 23, Eng: "implementation", Rus: "реализация"},
+		Tags{Id: 24, Eng: "interactive", Rus: "интерактив"},
+		Tags{Id: 25, Eng: "math", Rus: "математика"},
+		Tags{Id: 26, Eng: "matrices", Rus: "матрицы"},
+		Tags{Id: 27, Eng: "meet-in-the-middle", Rus: "meet-in-the-middle"},
+		Tags{Id: 28, Eng: "number theory", Rus: "теория чисел"},
+		Tags{Id: 29, Eng: "probabilities", Rus: "теория вероятностей"},
+		Tags{Id: 30, Eng: "schedules", Rus: "расписания"},
+		Tags{Id: 31, Eng: "shortest paths", Rus: "кратчайшие пути"},
+		Tags{Id: 32, Eng: "sortings", Rus: "сортировки"},
+		Tags{Id: 33, Eng: "string suffix structures", Rus: "строковые суфф. структуры"},
+		Tags{Id: 34, Eng: "strings", Rus: "строки"},
+		Tags{Id: 35, Eng: "ternary search", Rus: "тернарный поиск"},
+		Tags{Id: 36, Eng: "trees", Rus: "деревья"},
+		Tags{Id: 37, Eng: "two pointers", Rus: "два указателя"},
 	}
 
 	for _, item := range MyTags {
-		tags.Tags = append(tags.Tags, models.TagJson{TagsId: item.Id, TagsRu: item.Ru, TagsEn: item.En})
+		tags.Tags = append(tags.Tags, models.TagJson{TagsId: item.Id, TagsEn: item.Eng, TagsRu: item.Rus})
 	}
 
 	result, err := json.Marshal(tags)

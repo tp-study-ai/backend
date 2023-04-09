@@ -140,16 +140,13 @@ func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Ta
 	return reqTasks, nil
 }
 
-func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (models.CheckSolutionUseCaseResponse, error) {
-	var UseCaseSolution = models.CheckSolutionUseCase{
-		TaskId:   solution.TaskId,
-		Solution: solution.Solution,
+func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (*models.CheckSolutionUseCaseResponse, error) {
+	Task, err := u.Repo.GetTaskById(solution.TaskId)
+	if err != nil {
+		return nil, err
 	}
 
-	Task, err := u.Repo.GetTaskById(solution.TaskId)
-	fmt.Println(Task.PrivateTests)
 	PrivateTestsLength := len(Task.PrivateTests) / 4
-	fmt.Println(PrivateTestsLength)
 	PrivateTestsBuffer := make([]string, 0)
 	for _, value := range Task.PrivateTests {
 		if value != "input" && value != "output" {
@@ -157,86 +154,70 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (model
 		}
 	}
 
-	che := make([][]string, 1)
+	tests := make([][]string, PrivateTestsLength)
 
-	for i := 0; i < 1; i++ {
-		che[i] = make([]string, 2)
-		che[i][0] = PrivateTestsBuffer[i*2]
-		che[i][1] = PrivateTestsBuffer[i*2+1]
-	}
-
-	fmt.Println(che)
-
-	var Req = models.SourceCode{
-		Makefile: "solution: main.cpp\n\tg++ main.cpp -o solution\n\nrun: solution\n\t./solution",
-		Main:     UseCaseSolution.Solution,
+	for i := 0; i < PrivateTestsLength; i++ {
+		tests[i] = make([]string, 2)
+		tests[i][0] = PrivateTestsBuffer[i*2]
+		tests[i][1] = PrivateTestsBuffer[i*2+1]
 	}
 
 	var SolutionReq = models.CheckSolution{
-		SourceCode:   Req,
-		Tests:        che,
+		SourceCode: models.SourceCode{
+			Makefile: "solution: main.cpp\n\tg++ main.cpp -o solution\n\nrun: solution\n\t./solution",
+			Main:     solution.Solution,
+		},
+		Tests:        tests,
 		BuildTimeout: 10,
-		TestTimeout:  10,
+		TestTimeout:  1,
 	}
 
 	fmt.Println(SolutionReq)
 
 	result, err := json.Marshal(SolutionReq)
 	if err != nil {
-		return models.CheckSolutionUseCaseResponse{}, err
+		return nil, err
 	}
 
-	responseBody := bytes.NewBuffer(result)
-	//fmt.Println(responseBody)
-	resp, err := http.Post("http://146.185.208.233:8080/check_solution?api_key=secret_key_here", "application/json", responseBody)
+	req := bytes.NewBuffer(result)
+	resp, err := http.Post("http://146.185.208.233:8080/check_solution?api_key=secret_key_here", "application/json", req)
 	if err != nil {
-		return models.CheckSolutionUseCaseResponse{}, err
+		return nil, err
 	}
+
+	fmt.Println(resp)
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return models.CheckSolutionUseCaseResponse{}, err
+		return nil, err
 	}
+
 	fmt.Printf(string(body))
+	TestisResponse := &models.CheckSolutionUseCaseResponse{}
 
-	var cheche models.CheckSolutionUseCaseResponse
-
-	err = json.Unmarshal(body, &cheche)
+	err = json.Unmarshal(body, &TestisResponse)
 	if err != nil {
-		return models.CheckSolutionUseCaseResponse{}, err
+		return nil, err
 	}
-	//
-	////send := &models.SendTask{
-	////		ID:           0,
-	////		UserId:       0,
-	////		TaskId:       solution.TaskId,
-	////		CheckTime:    cheche.CheckTime,
-	////		BuildTime:    cheche.BuildTime,
-	////		CheckResult:  cheche.CheckResult,
-	////		CheckMessage: cheche.CheckMessage,
-	////		TestsPassed:  cheche.TestsPassed,
-	////		TestsTotal:   cheche.TestsTotal,
-	////		LintSuccess:  cheche.LintSuccess,
-	////		CodeText:     solution.Solution,
-	////	}
-	//
-	//response1, err := u.Repo.SendTask(models.SendTask{
-	//	ID:           0,
-	//	UserId:       0,
-	//	TaskId:       solution.TaskId,
-	//	CheckTime:    cheche.CheckTime,
-	//	BuildTime:    cheche.BuildTime,
-	//	CheckResult:  cheche.CheckResult,
-	//	CheckMessage: cheche.CheckMessage,
-	//	TestsPassed:  cheche.TestsPassed,
-	//	TestsTotal:   cheche.TestsTotal,
-	//	LintSuccess:  cheche.LintSuccess,
-	//	CodeText:     solution.Solution,
-	//})
-	//
-	//if solution.TaskId != response1.TaskId || solution.Solution != response1.CodeText {
-	//	return models.CheckSolutionUseCaseResponse{}, errors.Errorf("")
-	//}
 
-	return cheche, nil
+	fmt.Println(TestisResponse)
+
+	_, err = u.Repo.SendTask(&models.SendTask{
+		ID:           0,
+		UserId:       0,
+		TaskId:       solution.TaskId,
+		CheckTime:    TestisResponse.CheckTime,
+		BuildTime:    TestisResponse.BuildTime,
+		CheckResult:  TestisResponse.CheckResult,
+		CheckMessage: TestisResponse.CheckMessage,
+		TestsPassed:  TestisResponse.TestsPassed,
+		TestsTotal:   TestisResponse.TestsTotal,
+		LintSuccess:  TestisResponse.LintSuccess,
+		CodeText:     solution.Solution,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return TestisResponse, nil
 }

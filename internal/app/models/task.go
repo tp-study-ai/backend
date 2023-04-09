@@ -4,19 +4,13 @@ import "github.com/jackc/pgx/pgtype"
 
 type TagJson struct {
 	TagsId int    `json:"tags_id"`
-	TagsRu string `json:"tags_ru"`
 	TagsEn string `json:"tags_en"`
+	TagsRu string `json:"tags_ru"`
 }
 
 type TagsJson struct {
 	Tags []TagJson `json:"tags"`
 }
-
-//type Tags struct {
-//	Id int
-//	Ru string
-//	En string
-//}
 
 type TaskDB struct {
 	Id               int              `db:"id"`
@@ -122,16 +116,19 @@ type CheckSolutionUseCaseResponse struct {
 	LintSuccess  bool    `json:"lintSuccess"`
 }
 
+type SendTaskId uint64
+
 type SendTask struct {
-	ID           int     `db:"id"`
-	UserId       int     `db:"user_id"`
-	TaskId       int     `db:"task_id"`
-	CheckTime    float64 `db:"check_time"`
-	BuildTime    float64 `db:"build_time"`
-	CheckResult  int     `db:"check_result"`
-	CheckMessage string  `db:"check_message"`
-	TestsPassed  int     `db:"tests_passed"`
-	TestsTotal   int     `db:"tests_total"`
-	LintSuccess  bool    `db:"lint_success"`
-	CodeText     string  `db:"code_text"`
+	ID           SendTaskId `db:"id"`
+	UserId       int        `db:"user_id"`
+	TaskId       int        `db:"task_id"`
+	CheckTime    float64    `db:"check_time"`
+	BuildTime    float64    `db:"build_time"`
+	CheckResult  int        `db:"check_result"`
+	CheckMessage string     `db:"check_message"`
+	TestsPassed  int        `db:"tests_passed"`
+	TestsTotal   int        `db:"tests_total"`
+	LintSuccess  bool       `db:"lint_success"`
+	CodeText     string     `db:"code_text"`
+	Date         string     `db:"date"`
 }
