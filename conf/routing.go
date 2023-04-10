@@ -6,7 +6,6 @@ import (
 	"github.com/tp-study-ai/backend/internal/app/auth"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
-	"net/http"
 )
 
 type ServerHandlers struct {
@@ -22,7 +21,6 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 		AllowMethods:     []string{echo.GET, echo.POST},
 		MaxAge:           86400,
 	}))
-	//router.Use(echoMiddleware.CORSWithConfig(getCorsConfig()))
 	mwChain := []echo.MiddlewareFunc{
 		mw.AuthMiddleware,
 	}
