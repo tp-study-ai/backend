@@ -6,6 +6,7 @@ import (
 	"github.com/tp-study-ai/backend/internal/app/auth"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
+	"net/http"
 )
 
 type ServerHandlers struct {
