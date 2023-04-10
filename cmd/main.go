@@ -4,30 +4,41 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/conf"
+	"github.com/tp-study-ai/backend/internal/app/auth"
+	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
 	"github.com/tp-study-ai/backend/tools"
+	"github.com/tp-study-ai/backend/tools/authManager/jwtManager"
 	"log"
 	"net/http"
 )
 
 func main() {
-	pgxManager, err := db.NewPostgres()
+	pgxManager, err := tools.NewPostgres()
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "error creating postgres agent"))
 	}
 	defer pgxManager.Close()
 
+	jwtManager := jwtManager.NewJwtManager()
+
 	taskRepo := task.NewRepositoryTask(pgxManager)
 	taskUcase := task.NewUseCaseTask(taskRepo)
 	taskHandler := task.NewHandlerTask(taskUcase)
+
+	authRepo := auth.NewRepositoryAuth(pgxManager)
+	authUcase := auth.NewUseCaseAuth(authRepo)
+	authHandler := auth.NewHandlerAuth(authUcase, jwtManager)
 
 	router := echo.New()
 
 	serverRouting := conf.ServerHandlers{
 		TaskHandler: taskHandler,
+		AuthHandler: authHandler,
 	}
 
-	serverRouting.ConfigureRouting(router)
+	comonMw := middleware.NewCommonMiddleware(jwtManager)
+	serverRouting.ConfigureRouting(router, &comonMw)
 
 	httpServ := http.Server{
 		Addr:    ":8000",

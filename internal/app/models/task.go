@@ -1,40 +1,56 @@
 package models
 
-type TaskResponse struct {
-	Id               int      `db:"id"`
-	Name             string   `db:"name"`
-	Description      string   `db:"description"`
-	PublicTests      []string `db:"public_tests"`
-	PrivateTests     []string `db:"private_tests"`
-	GeneratedTests   []string `db:"generated_tests"`
-	Difficulty       string   `db:"difficulty"`
-	CfContestId      int      `db:"cf_contest_id"`
-	CfIndex          string   `db:"cf_index"`
-	CfPoints         float64  `db:"cf_points"`
-	CfRating         int      `db:"cf_rating"`
-	CfTags           []string `db:"cf_tags"`
-	TimeLimit        string   `db:"time_limit"`
-	MemoryLimitBytes int      `db:"memory_limit_bytes"`
-	Link             string   `db:"link"`
-	TaskRu           string   `db:"task_ru"`
-	Input            string   `db:"input"`
-	Output           string   `db:"output"`
-	Note             string   `db:"note"`
+import "github.com/jackc/pgx/pgtype"
+
+type TagJson struct {
+	TagsId int    `json:"tags_id"`
+	TagsEn string `json:"tags_en"`
+	TagsRu string `json:"tags_ru"`
 }
 
-type Task struct {
+type TagsJson struct {
+	Tags []TagJson `json:"tags"`
+}
+
+type TaskDB struct {
+	Id               int              `db:"id"`
+	Name             string           `db:"name"`
+	Description      string           `db:"description"`
+	PublicTests      []string         `db:"public_tests"`
+	PrivateTests     []string         `db:"private_tests"`
+	GeneratedTests   []string         `db:"generated_tests"`
+	Difficulty       int              `db:"difficulty"`
+	CfContestId      int              `db:"cf_contest_id"`
+	CfIndex          string           `db:"cf_index"`
+	CfPoints         float64          `db:"cf_points"`
+	CfRating         int              `db:"cf_rating"`
+	CfTags           pgtype.Int4Array `db:"cf_tags"`
+	TimeLimit        string           `db:"time_limit"`
+	MemoryLimitBytes int              `db:"memory_limit_bytes"`
+	Link             string           `db:"link"`
+	TaskRu           string           `db:"task_ru"`
+	Input            string           `db:"input"`
+	Output           string           `db:"output"`
+	Note             string           `db:"note"`
+}
+
+type TasksResponse struct {
+	Tasks []TaskDB
+}
+
+type TaskJSON struct {
 	Id               int      `json:"id"`
 	Name             string   `json:"name"`
 	Description      string   `json:"description"`
 	PublicTests      []string `json:"public_tests"`
 	PrivateTests     []string `json:"private_tests"`
 	GeneratedTests   []string `json:"generated_tests"`
-	Difficulty       string   `json:"difficulty"`
+	Difficulty       int      `json:"difficulty"`
 	CfContestId      int      `json:"cf_contest_id"`
 	CfIndex          string   `json:"cf_index"`
 	CfPoints         float64  `json:"cf_points"`
 	CfRating         int      `json:"cf_rating"`
-	CfTags           []string `json:"cf_tags"`
+	CfTags           []int32  `json:"cf_tags"`
 	TimeLimit        string   `json:"time_limit"`
 	MemoryLimitBytes int      `json:"memory_limit_bytes"`
 	Link             string   `json:"link"`
@@ -42,6 +58,10 @@ type Task struct {
 	Input            string   `json:"input"`
 	Output           string   `json:"output"`
 	Note             string   `json:"note"`
+}
+
+type Tasks struct {
+	Tasks []TaskJSON `json:"tasks"`
 }
 
 type SourceCode1 struct {
@@ -71,8 +91,9 @@ type CheckSolution struct {
 }
 
 type CustomError struct {
-	Number int    `json:"number"`
-	Error  string `json:"error"`
+	Number  int    `json:"number"`
+	Comment string `json:"comment"`
+	Error   string `json:"error"`
 }
 
 type CheckSolutionRequest struct {
@@ -93,4 +114,21 @@ type CheckSolutionUseCaseResponse struct {
 	TestsPassed  int     `json:"testsPassed"`
 	TestsTotal   int     `json:"testsTotal"`
 	LintSuccess  bool    `json:"lintSuccess"`
+}
+
+type SendTaskId uint64
+
+type SendTask struct {
+	ID           SendTaskId `db:"id"`
+	UserId       int        `db:"user_id"`
+	TaskId       int        `db:"task_id"`
+	CheckTime    float64    `db:"check_time"`
+	BuildTime    float64    `db:"build_time"`
+	CheckResult  int        `db:"check_result"`
+	CheckMessage string     `db:"check_message"`
+	TestsPassed  int        `db:"tests_passed"`
+	TestsTotal   int        `db:"tests_total"`
+	LintSuccess  bool       `db:"lint_success"`
+	CodeText     string     `db:"code_text"`
+	Date         string     `db:"date"`
 }

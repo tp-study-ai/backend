@@ -19,8 +19,38 @@ func NewUseCaseTask(TaskRepo Repository) *UseCaseTask {
 	}
 }
 
-func (u *UseCaseTask) GetTask() (Task models.TaskResponse, err error) {
-	Task, err = u.Repo.GetTask()
+func (u *UseCaseTask) GetTask() (task models.TaskJSON, err error) {
+	Task, err := u.Repo.GetTask()
+
+	var che []int32
+
+	for i := 0; i < len(Task.CfTags.Elements); i++ {
+		che = append(che, Task.CfTags.Elements[i].Int)
+	}
+
+	fmt.Println(che)
+
+	task = models.TaskJSON{
+		Id:               Task.Id,
+		Name:             Task.Name,
+		Description:      Task.Description,
+		PublicTests:      Task.PublicTests,
+		PrivateTests:     Task.PrivateTests,
+		GeneratedTests:   Task.GeneratedTests,
+		Difficulty:       Task.Difficulty,
+		CfContestId:      Task.CfContestId,
+		CfIndex:          Task.CfIndex,
+		CfPoints:         Task.CfPoints,
+		CfRating:         Task.CfRating,
+		CfTags:           che,
+		TimeLimit:        Task.TimeLimit,
+		MemoryLimitBytes: Task.MemoryLimitBytes,
+		Link:             Task.Link,
+		TaskRu:           Task.TaskRu,
+		Input:            Task.Input,
+		Output:           Task.Output,
+		Note:             Task.Note,
+	}
 
 	if err != nil {
 		return
@@ -28,8 +58,38 @@ func (u *UseCaseTask) GetTask() (Task models.TaskResponse, err error) {
 	return
 }
 
-func (u *UseCaseTask) GetTaskById(id int) (Task models.TaskResponse, err error) {
-	Task, err = u.Repo.GetTaskById(id)
+func (u *UseCaseTask) GetTaskById(id int) (task models.TaskJSON, err error) {
+	Task, err := u.Repo.GetTaskById(id)
+
+	var che []int32
+
+	for i := 0; i < len(Task.CfTags.Elements); i++ {
+		che = append(che, Task.CfTags.Elements[i].Int)
+	}
+
+	fmt.Println(che)
+
+	task = models.TaskJSON{
+		Id:               Task.Id,
+		Name:             Task.Name,
+		Description:      Task.Description,
+		PublicTests:      Task.PublicTests,
+		PrivateTests:     Task.PrivateTests,
+		GeneratedTests:   Task.GeneratedTests,
+		Difficulty:       Task.Difficulty,
+		CfContestId:      Task.CfContestId,
+		CfIndex:          Task.CfIndex,
+		CfPoints:         Task.CfPoints,
+		CfRating:         Task.CfRating,
+		CfTags:           che,
+		TimeLimit:        Task.TimeLimit,
+		MemoryLimitBytes: Task.MemoryLimitBytes,
+		Link:             Task.Link,
+		TaskRu:           Task.TaskRu,
+		Input:            Task.Input,
+		Output:           Task.Output,
+		Note:             Task.Note,
+	}
 
 	if err != nil {
 		return
@@ -37,16 +97,56 @@ func (u *UseCaseTask) GetTaskById(id int) (Task models.TaskResponse, err error) 
 	return
 }
 
-func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (cheche models.CheckSolutionUseCaseResponse, err error) {
-	var UseCaseSolution = models.CheckSolutionUseCase{
-		TaskId:   solution.TaskId,
-		Solution: solution.Solution,
+func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Tasks, error) {
+	tasks, err := u.Repo.GetTaskByLimit(id, sort, tag)
+	if err != nil {
+		return nil, err
 	}
 
+	reqTasks := &models.Tasks{
+		Tasks: make([]models.TaskJSON, len(tasks.Tasks)),
+	}
+
+	for i, task := range tasks.Tasks {
+		var che []int32
+
+		for i := 0; i < len(task.CfTags.Elements); i++ {
+			che = append(che, task.CfTags.Elements[i].Int)
+		}
+
+		reqTasks.Tasks[i] = models.TaskJSON{
+			Id:               task.Id,
+			Name:             task.Name,
+			Description:      task.Description,
+			PublicTests:      task.PublicTests,
+			PrivateTests:     task.PrivateTests,
+			GeneratedTests:   task.GeneratedTests,
+			Difficulty:       task.Difficulty,
+			CfContestId:      task.CfContestId,
+			CfIndex:          task.CfIndex,
+			CfPoints:         task.CfPoints,
+			CfRating:         task.CfRating,
+			CfTags:           che,
+			TimeLimit:        task.TimeLimit,
+			MemoryLimitBytes: task.MemoryLimitBytes,
+			Link:             task.Link,
+			TaskRu:           task.TaskRu,
+			Input:            task.Input,
+			Output:           task.Output,
+			Note:             task.Note,
+		}
+	}
+
+	return reqTasks, nil
+}
+
+func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (*models.CheckSolutionUseCaseResponse, error) {
 	Task, err := u.Repo.GetTaskById(solution.TaskId)
-	fmt.Println(Task.PrivateTests)
+	if err != nil {
+		return nil, err
+	}
+
 	PrivateTestsLength := len(Task.PrivateTests) / 4
-	fmt.Println(PrivateTestsLength)
 	PrivateTestsBuffer := make([]string, 0)
 	for _, value := range Task.PrivateTests {
 		if value != "input" && value != "output" {
@@ -54,59 +154,70 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (chech
 		}
 	}
 
-	//fmt.Println(1)
+	tests := make([][]string, PrivateTestsLength)
 
-	che := make([][]string, 1)
-
-	for i := 0; i < 1; i++ {
-		che[i] = make([]string, 2)
-		che[i][0] = PrivateTestsBuffer[i*2]
-		che[i][1] = PrivateTestsBuffer[i*2+1]
+	for i := 0; i < PrivateTestsLength; i++ {
+		tests[i] = make([]string, 2)
+		tests[i][0] = PrivateTestsBuffer[i*2]
+		tests[i][1] = PrivateTestsBuffer[i*2+1]
 	}
-
-	fmt.Println(che)
-
-	var Req = models.SourceCode{
-		Makefile: "solution: main.cpp\n\tg++ main.cpp -o solution\n\nrun: solution\n\t./solution",
-		Main:     UseCaseSolution.Solution,
-	}
-
-	//che := make([][]string, 1)
-	//che[0] = make([]string, 2)
-	//che[0][0] = "1 2"
-	//che[0][1] = "3"
 
 	var SolutionReq = models.CheckSolution{
-		SourceCode:   Req,
-		Tests:        che,
+		SourceCode: models.SourceCode{
+			Makefile: "solution: main.cpp\n\tg++ main.cpp -o solution\n\nrun: solution\n\t./solution",
+			Main:     solution.Solution,
+		},
+		Tests:        tests,
 		BuildTimeout: 10,
-		TestTimeout:  10,
+		TestTimeout:  1,
 	}
 
 	fmt.Println(SolutionReq)
 
 	result, err := json.Marshal(SolutionReq)
 	if err != nil {
-		return models.CheckSolutionUseCaseResponse{}, err
+		return nil, err
 	}
 
-	responseBody := bytes.NewBuffer(result)
-	//fmt.Println(responseBody)
-	resp, err := http.Post("http://146.185.208.233:8080/check_solution?api_key=secret_key_here", "application/json", responseBody)
+	req := bytes.NewBuffer(result)
+	resp, err := http.Post("http://146.185.208.233:8080/check_solution?api_key=secret_key_here", "application/json", req)
 	if err != nil {
-		return models.CheckSolutionUseCaseResponse{}, err
+		return nil, err
 	}
+
+	fmt.Println(resp)
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return models.CheckSolutionUseCaseResponse{}, err
+		return nil, err
 	}
+
 	fmt.Printf(string(body))
+	TestisResponse := &models.CheckSolutionUseCaseResponse{}
 
-	err = json.Unmarshal(body, &cheche)
+	err = json.Unmarshal(body, &TestisResponse)
 	if err != nil {
-		return models.CheckSolutionUseCaseResponse{}, err
+		return nil, err
 	}
 
-	return cheche, nil
+	fmt.Println(TestisResponse)
+
+	_, err = u.Repo.SendTask(&models.SendTask{
+		ID:           0,
+		UserId:       0,
+		TaskId:       solution.TaskId,
+		CheckTime:    TestisResponse.CheckTime,
+		BuildTime:    TestisResponse.BuildTime,
+		CheckResult:  TestisResponse.CheckResult,
+		CheckMessage: TestisResponse.CheckMessage,
+		TestsPassed:  TestisResponse.TestsPassed,
+		TestsTotal:   TestisResponse.TestsTotal,
+		LintSuccess:  TestisResponse.LintSuccess,
+		CodeText:     solution.Solution,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return TestisResponse, nil
 }
