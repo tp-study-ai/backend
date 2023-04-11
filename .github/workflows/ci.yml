@@ -114,7 +114,7 @@ jobs:
             df -h
             rm .env
             touch .env
-            echo VERSION=${GITHUB_SHA::8} >> .env
+            echo BACK_VERSION=${GITHUB_SHA::8} >> .env
             sudo docker-compose up -d
             df -h
 
