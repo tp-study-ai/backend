@@ -19,16 +19,58 @@ func NewUseCaseTask(TaskRepo Repository) *UseCaseTask {
 	}
 }
 
+var TagDict = map[int][]string{
+	1:  {"*special", "*особая задача"},
+	2:  {"2-sat", "2-sat"},
+	3:  {"binary search", "бинарный поиск"},
+	4:  {"bitmasks", "битмаски"},
+	5:  {"brute force", "перебор"},
+	6:  {"chinese remainder theorem", "китайская теорема об остатках"},
+	7:  {"combinatorics", "комбинаторика"},
+	8:  {"constructive algorithms", "конструктив"},
+	9:  {"data structures", "структуры данных"},
+	10: {"dfs and similar", "поиск в глубину и подобное"},
+	11: {"divide and conquer", "разделяй и властвуй"},
+	12: {"dp", "дп"},
+	13: {"dsu", "системы непересекающихся множеств"},
+	14: {"expression parsing", "разбор выражений"},
+	15: {"fft", "быстрое преобразование Фурье"},
+	16: {"flows", "потоки"},
+	17: {"games", "игры"},
+	18: {"geometry", "геометрия"},
+	19: {"graph matchings", "паросочетания"},
+	20: {"graphs", "графы"},
+	21: {"greedy", "жадные алгоритмы"},
+	22: {"hashing", "хэши"},
+	23: {"implementation", "реализация"},
+	24: {"interactive", "интерактив"},
+	25: {"math", "математика"},
+	26: {"matrices", "матрицы"},
+	27: {"meet-in-the-middle", "meet-in-the-middle"},
+	28: {"number theory", "теория чисел"},
+	29: {"probabilities", "теория вероятностей"},
+	30: {"schedules", "расписания"},
+	31: {"shortest paths", "кратчайшие пути"},
+	32: {"sortings", "сортировки"},
+	33: {"string suffix structures", "строковые суфф. структуры"},
+	34: {"strings", "строки"},
+	35: {"ternary search", "тернарный поиск"},
+	36: {"trees", "деревья"},
+	37: {"two pointers", "два указателя"},
+}
+
 func (u *UseCaseTask) GetTask() (task models.TaskJSON, err error) {
 	Task, err := u.Repo.GetTask()
 
-	var che []int32
+	var tagsId []int
+	var tagsRu []string
+	var tagsEn []string
 
 	for i := 0; i < len(Task.CfTags.Elements); i++ {
-		che = append(che, Task.CfTags.Elements[i].Int)
+		tagsId = append(tagsId, int(Task.CfTags.Elements[i].Int))
+		tagsRu = append(tagsRu, TagDict[tagsId[i]][0])
+		tagsEn = append(tagsEn, TagDict[tagsId[i]][1])
 	}
-
-	fmt.Println(che)
 
 	task = models.TaskJSON{
 		Id:               Task.Id,
@@ -42,7 +84,9 @@ func (u *UseCaseTask) GetTask() (task models.TaskJSON, err error) {
 		CfIndex:          Task.CfIndex,
 		CfPoints:         Task.CfPoints,
 		CfRating:         Task.CfRating,
-		CfTags:           che,
+		CfTagsID:         tagsId,
+		CfTagsRu:         tagsRu,
+		CfTagsEN:         tagsEn,
 		TimeLimit:        Task.TimeLimit,
 		MemoryLimitBytes: Task.MemoryLimitBytes,
 		Link:             Task.Link,
@@ -61,13 +105,15 @@ func (u *UseCaseTask) GetTask() (task models.TaskJSON, err error) {
 func (u *UseCaseTask) GetTaskById(id int) (task models.TaskJSON, err error) {
 	Task, err := u.Repo.GetTaskById(id)
 
-	var che []int32
+	var tagsId []int
+	var tagsRu []string
+	var tagsEn []string
 
 	for i := 0; i < len(Task.CfTags.Elements); i++ {
-		che = append(che, Task.CfTags.Elements[i].Int)
+		tagsId = append(tagsId, int(Task.CfTags.Elements[i].Int))
+		tagsRu = append(tagsRu, TagDict[tagsId[i]][0])
+		tagsEn = append(tagsEn, TagDict[tagsId[i]][1])
 	}
-
-	fmt.Println(che)
 
 	task = models.TaskJSON{
 		Id:               Task.Id,
@@ -81,7 +127,9 @@ func (u *UseCaseTask) GetTaskById(id int) (task models.TaskJSON, err error) {
 		CfIndex:          Task.CfIndex,
 		CfPoints:         Task.CfPoints,
 		CfRating:         Task.CfRating,
-		CfTags:           che,
+		CfTagsID:         tagsId,
+		CfTagsRu:         tagsRu,
+		CfTagsEN:         tagsEn,
 		TimeLimit:        Task.TimeLimit,
 		MemoryLimitBytes: Task.MemoryLimitBytes,
 		Link:             Task.Link,
@@ -108,10 +156,14 @@ func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Ta
 	}
 
 	for i, task := range tasks.Tasks {
-		var che []int32
+		var tagsId []int
+		var tagsRu []string
+		var tagsEn []string
 
 		for i := 0; i < len(task.CfTags.Elements); i++ {
-			che = append(che, task.CfTags.Elements[i].Int)
+			tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
+			tagsRu = append(tagsRu, TagDict[tagsId[i]][0])
+			tagsEn = append(tagsEn, TagDict[tagsId[i]][1])
 		}
 
 		reqTasks.Tasks[i] = models.TaskJSON{
@@ -126,7 +178,9 @@ func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Ta
 			CfIndex:          task.CfIndex,
 			CfPoints:         task.CfPoints,
 			CfRating:         task.CfRating,
-			CfTags:           che,
+			CfTagsID:         tagsId,
+			CfTagsRu:         tagsRu,
+			CfTagsEN:         tagsEn,
 			TimeLimit:        task.TimeLimit,
 			MemoryLimitBytes: task.MemoryLimitBytes,
 			Link:             task.Link,

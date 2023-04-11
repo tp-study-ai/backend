@@ -25,7 +25,7 @@ type TaskDB struct {
 	CfPoints         float64          `db:"cf_points"`
 	CfRating         int              `db:"cf_rating"`
 	CfTags           pgtype.Int4Array `db:"cf_tags"`
-	TimeLimit        string           `db:"time_limit"`
+	TimeLimit        float64          `db:"time_limit"`
 	MemoryLimitBytes int              `db:"memory_limit_bytes"`
 	Link             string           `db:"link"`
 	TaskRu           string           `db:"task_ru"`
@@ -50,8 +50,10 @@ type TaskJSON struct {
 	CfIndex          string   `json:"cf_index"`
 	CfPoints         float64  `json:"cf_points"`
 	CfRating         int      `json:"cf_rating"`
-	CfTags           []int32  `json:"cf_tags"`
-	TimeLimit        string   `json:"time_limit"`
+	CfTagsID         []int    `json:"cf_tags_ID"`
+	CfTagsRu         []string `json:"cf_tags_RU"`
+	CfTagsEN         []string `json:"cf_tags_en"`
+	TimeLimit        float64  `json:"time_limit"`
 	MemoryLimitBytes int      `json:"memory_limit_bytes"`
 	Link             string   `json:"link"`
 	TaskRu           string   `json:"task_ru"`
