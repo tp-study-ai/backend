@@ -43,8 +43,6 @@ type TaskJSON struct {
 	Name             string   `json:"name"`
 	Description      string   `json:"description"`
 	PublicTests      []string `json:"public_tests"`
-	PrivateTests     []string `json:"private_tests"`
-	GeneratedTests   []string `json:"generated_tests"`
 	Difficulty       int      `json:"difficulty"`
 	CfContestId      int      `json:"cf_contest_id"`
 	CfIndex          string   `json:"cf_index"`
