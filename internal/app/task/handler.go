@@ -58,6 +58,8 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 }
 
 func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
+	fmt.Println("che")
+
 	page := ctx.QueryParam("page")
 	fmt.Printf("Param: %s, %s\n", page, reflect.TypeOf(page))
 	pageInt, err := strconv.ParseInt(page, 10, 64)
@@ -70,6 +72,7 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 	if sort == "rating_up" || sort == "rating_down" || sort == "" {
 		fmt.Println("sort params is OK")
 	} else {
+		fmt.Println("sort")
 		sort = ""
 	}
 

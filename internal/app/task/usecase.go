@@ -66,10 +66,12 @@ func (u *UseCaseTask) GetTask() (task models.TaskJSON, err error) {
 	var tagsRu []string
 	var tagsEn []string
 
-	for i := 0; i < len(Task.CfTags.Elements); i++ {
-		tagsId = append(tagsId, int(Task.CfTags.Elements[i].Int))
-		tagsRu = append(tagsRu, TagDict[tagsId[i]][0])
-		tagsEn = append(tagsEn, TagDict[tagsId[i]][1])
+	if Task.CfTags.Elements[0].Int != 0 {
+		for i := 0; i < len(Task.CfTags.Elements); i++ {
+			tagsId = append(tagsId, int(Task.CfTags.Elements[i].Int))
+			tagsRu = append(tagsRu, TagDict[tagsId[i]][0])
+			tagsEn = append(tagsEn, TagDict[tagsId[i]][1])
+		}
 	}
 
 	task = models.TaskJSON{
@@ -108,11 +110,12 @@ func (u *UseCaseTask) GetTaskById(id int) (task models.TaskJSON, err error) {
 	var tagsId []int
 	var tagsRu []string
 	var tagsEn []string
-
-	for i := 0; i < len(Task.CfTags.Elements); i++ {
-		tagsId = append(tagsId, int(Task.CfTags.Elements[i].Int))
-		tagsRu = append(tagsRu, TagDict[tagsId[i]][0])
-		tagsEn = append(tagsEn, TagDict[tagsId[i]][1])
+	if Task.CfTags.Elements[0].Int != 0 {
+		for i := 0; i < len(Task.CfTags.Elements); i++ {
+			tagsId = append(tagsId, int(Task.CfTags.Elements[i].Int))
+			tagsRu = append(tagsRu, TagDict[tagsId[i]][0])
+			tagsEn = append(tagsEn, TagDict[tagsId[i]][1])
+		}
 	}
 
 	task = models.TaskJSON{
@@ -155,15 +158,23 @@ func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Ta
 		Tasks: make([]models.TaskJSON, len(tasks.Tasks)),
 	}
 
+	fmt.Println(tasks)
+
 	for i, task := range tasks.Tasks {
+		//fmt.Println(i)
 		var tagsId []int
 		var tagsRu []string
 		var tagsEn []string
 
-		for i := 0; i < len(task.CfTags.Elements); i++ {
-			tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
-			tagsRu = append(tagsRu, TagDict[tagsId[i]][0])
-			tagsEn = append(tagsEn, TagDict[tagsId[i]][1])
+		if task.CfTags.Elements[0].Int != 0 {
+			for j := 0; j < len(task.CfTags.Elements); j++ {
+				tagsId = append(tagsId, int(task.CfTags.Elements[j].Int))
+				//fmt.Println(tagsId)
+				tagsRu = append(tagsRu, TagDict[tagsId[j]][0])
+				//fmt.Println(tagsRu)
+				tagsEn = append(tagsEn, TagDict[tagsId[j]][1])
+				//fmt.Println(tagsEn)
+			}
 		}
 
 		reqTasks.Tasks[i] = models.TaskJSON{

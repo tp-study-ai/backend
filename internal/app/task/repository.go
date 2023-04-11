@@ -1,6 +1,7 @@
 package task
 
 import (
+	"fmt"
 	"github.com/jackc/pgx"
 	"github.com/lib/pq"
 	"github.com/tp-study-ai/backend/internal/app/models"
@@ -84,15 +85,16 @@ func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskDB, err error) {
 
 func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int) (*models.TasksResponse, error) {
 	tasks := &models.TasksResponse{}
+	fmt.Println("start")
 
 	var newPostsData []interface{}
 	newPostsData = append(newPostsData, 15)
 	newPostsData = append(newPostsData, 15*id)
 
-	sql := `select * from "tasks" `
+	sql := `select * from "tasks"`
 
 	if len(tag) != 0 {
-		sql = sql + `where $3 <@ (cf_tags)`
+		sql = sql + ` where $3 <@ (cf_tags)`
 		newPostsData = append(newPostsData, pq.Array(tag))
 	}
 
@@ -101,14 +103,16 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int) (*models
 	}
 
 	if sort == "rating_up" {
-		sql = sql + `order by "cf_rating"`
+		sql = sql + ` order by "cf_rating"`
 	}
 
 	if sort == "rating_down" {
-		sql = sql + `order by "cf_rating" desc`
+		sql = sql + ` order by "cf_rating" desc`
 	}
 
 	sql = sql + ` limit $1 offset $2`
+
+	fmt.Println(sql)
 
 	rows, err := r.DB.Query(sql, newPostsData...)
 	if err != nil {
