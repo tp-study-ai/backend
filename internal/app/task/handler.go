@@ -200,7 +200,7 @@ func (h HandlerTask) GetSimilar(ctx echo.Context) error {
 
 	result, err := json.Marshal(tasks)
 	if err != nil {
-		return tools.CustomError(ctx, err, 3, "CheckSolution Bind")
+		return tools.CustomError(ctx, err, 3, "GetSimilar Marshal")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))

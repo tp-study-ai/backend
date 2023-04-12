@@ -1,6 +1,79 @@
 ## api
 
 > описание:
+>> рекомендаций
+>
+> метод:
+>> POST
+>
+> URL:
+> > https://study-ai.ru/api/get_similar
+>
+>> REQUEST
+>>```json
+>>{
+>>  string `json:"source_code"`
+>>  string `json:"problem_url"`
+>>  int    `json:"rating"`
+>>  int    `json:"difficulty"`
+>>}
+>>```
+>
+>> REQUEST EXAMPLE
+>>```json
+>>{
+>>  "source_code": "#include <iostream>\n ...",    
+>>  "problem_url": "/contest/1900/problem/D",
+>>  "rating": 1900,
+>>  "difficulty": 2
+>>}
+>>```
+>
+>> RESPONSE
+>>```json
+>>{
+>>  "tasks": [
+>>        {
+>>            "id": 1,
+>>            "name": "name",
+>>            "description": "description",
+>>            "public_tests": [
+>>                "input",
+>>                "",
+>>                "output",
+>>                ""
+>>            ],
+>>            "difficulty": 1,
+>>            "cf_contest_id": 1,
+>>            "cf_index": "C",
+>>            "cf_points": 1,
+>>            "cf_rating": 1,
+>>            "cf_tags_ID": [
+>>                1
+>>            ],
+>>            "cf_tags_RU": [
+>>                "cf_tags_RU"
+>>            ],
+>>            "cf_tags_en": [
+>>                "cf_tags_en"
+>>            ],
+>>            "time_limit": 1,
+>>            "memory_limit_bytes": 1,
+>>            "link": "linku",
+>>            "task_ru": "task_ru",
+>>            "input": "input",
+>>            "output": "output",
+>>            "note": "note"
+>>        },
+>>        {
+>>            ...
+>>        },
+>>        ...
+>>    ]
+>>}
+>>```
+
+> описание:
 >> получение рандомной задачи
 >
 > метод:
