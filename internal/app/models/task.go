@@ -87,7 +87,7 @@ type CheckSolution struct {
 	SourceCode   SourceCode `json:"sourceCode"`
 	Tests        [][]string `json:"tests"`
 	BuildTimeout int        `json:"buildTimeout"`
-	TestTimeout  int        `json:"testTimeout"`
+	TestTimeout  float64    `json:"testTimeout"`
 }
 
 type CustomError struct {

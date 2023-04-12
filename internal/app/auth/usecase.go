@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/models"
 )
@@ -51,5 +52,6 @@ func (u *UseCaseAuth) GetUserById(id models.UserId) (models.ResponseUserJson, er
 	}
 
 	user1 := models.ResponseUserJson{Id: user.Id, Username: user.Username}
+	fmt.Println(user)
 	return user1, nil
 }

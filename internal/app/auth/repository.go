@@ -18,7 +18,7 @@ func (r *RepositoryAuth) GetUserById(id models.UserId) (*models.UserDB, error) {
 	err := r.DB.QueryRow(
 		`select "id", "username", "password" from "users" where "id" = $1`,
 		id,
-	).Scan(&UserResponse.Id, &UserResponse.Username)
+	).Scan(&UserResponse.Id, &UserResponse.Username, &UserResponse.Password)
 	if err != nil {
 		return nil, err
 	}

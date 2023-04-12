@@ -79,7 +79,7 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 	fmt.Println(tags)
 	var tagsInt []int
 	if len(tags) != 0 {
-		tags = tags[1 : len(tags)-1]
+		//tags = tags[1 : len(tags)-1]
 		if len(tags) == 1 || len(tags) == 2 {
 			tagInt, _ := strconv.ParseInt(tags, 10, 64)
 			tagsInt = append(tagsInt, int(tagInt))
