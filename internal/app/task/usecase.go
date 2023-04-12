@@ -280,3 +280,82 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (*mode
 
 	return TestisResponse, nil
 }
+
+func (u *UseCaseTask) GetSimilar(solution models.SimilarRequest) (*models.Tasks, error) {
+	solution.NRecs = 6
+	result, err := json.Marshal(solution)
+	if err != nil {
+		return nil, err
+	}
+
+	req := bytes.NewBuffer(result)
+	resp, err := http.Post("http://ml:9000/ml/get_similar", "application/json", req)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	//fmt.Println(body)
+
+	var TestisResponse []models.MlTaskResponse
+
+	err = json.Unmarshal(body, &TestisResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	//fmt.Println(TestisResponse)
+
+	Tasks := &models.Tasks{}
+
+	for i := 0; i < len(TestisResponse); i++ {
+		task, err1 := u.Repo.GetTaskByLink("https://codeforces.com" + TestisResponse[i].ProblemUrl + "?locale=ru")
+		if err1 != nil {
+			return nil, err1
+		}
+
+		var tagsId []int
+		var tagsRu []string
+		var tagsEn []string
+
+		if task.CfTags.Elements[0].Int != 0 {
+			for j := 0; j < len(task.CfTags.Elements); j++ {
+				tagsId = append(tagsId, int(task.CfTags.Elements[j].Int))
+				//fmt.Println(tagsId)
+				tagsRu = append(tagsRu, TagDict[tagsId[j]][0])
+				//fmt.Println(tagsRu)
+				tagsEn = append(tagsEn, TagDict[tagsId[j]][1])
+				//fmt.Println(tagsEn)
+			}
+		}
+
+		Tasks.Tasks = append(Tasks.Tasks, models.TaskJSON{
+			Id:               task.Id,
+			Name:             task.Name,
+			Description:      task.Description,
+			PublicTests:      task.PublicTests,
+			Difficulty:       task.Difficulty,
+			CfContestId:      task.CfContestId,
+			CfIndex:          task.CfIndex,
+			CfPoints:         task.CfPoints,
+			CfRating:         task.CfRating,
+			CfTagsID:         tagsId,
+			CfTagsRu:         tagsRu,
+			CfTagsEN:         tagsEn,
+			TimeLimit:        task.TimeLimit,
+			MemoryLimitBytes: task.MemoryLimitBytes,
+			Link:             task.Link,
+			TaskRu:           task.TaskRu,
+			Input:            task.Input,
+			Output:           task.Output,
+			Note:             task.Note,
+		})
+
+	}
+
+	return Tasks, err
+}

@@ -186,3 +186,23 @@ func (h HandlerTask) GetTags(ctx echo.Context) error {
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
 }
+
+func (h HandlerTask) GetSimilar(ctx echo.Context) error {
+	var che models.SimilarRequest
+	if err := ctx.Bind(&che); err != nil {
+		return tools.CustomError(ctx, err, 0, "GetSimilar Bind")
+	}
+
+	tasks, err := h.UseCase.GetSimilar(che)
+	if err != nil {
+		return tools.CustomError(ctx, err, 1, "GetSimilar usecase")
+	}
+
+	result, err := json.Marshal(tasks)
+	if err != nil {
+		return tools.CustomError(ctx, err, 3, "CheckSolution Bind")
+	}
+
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}

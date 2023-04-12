@@ -132,3 +132,23 @@ type SendTask struct {
 	CodeText     string     `db:"code_text"`
 	Date         string     `db:"date"`
 }
+
+type SimilarRequest struct {
+	SourceCode string `json:"source_code"`
+	ProblemUrl string `json:"problem_url"`
+	Rating     int    `json:"rating"`
+	Difficulty int    `json:"difficulty"`
+	NRecs      int    `json:"n_recs"`
+}
+
+type SimilarResponse struct{}
+
+type MlTaskResponse struct {
+	ProblemUrl string  `json:"problem_url"`
+	Rating     float64 `json:"rating"`
+	Tags       string  `json:"tags"`
+}
+
+type MlResponse struct {
+	Tasks []MlTaskResponse
+}

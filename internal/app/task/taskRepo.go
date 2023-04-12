@@ -7,4 +7,5 @@ type Repository interface {
 	GetTaskById(id int) (Task models.TaskDB, err error)
 	GetTaskByLimit(id int, sort string, tag []int) (*models.TasksResponse, error)
 	SendTask(task *models.SendTask) (*models.SendTask, error)
+	GetTaskByLink(link string) (Task models.TaskDB, err error)
 }

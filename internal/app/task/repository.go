@@ -170,3 +170,34 @@ func (r *RepositoryTask) SendTask(task *models.SendTask) (*models.SendTask, erro
 	}
 	return Task1, nil
 }
+
+func (r *RepositoryTask) GetTaskByLink(link string) (Task models.TaskDB, err error) {
+	err = r.DB.QueryRow(
+		`select *
+		from "tasks"
+		where link = $1;`,
+		link,
+	).Scan(
+		&Task.Id,
+		&Task.Name,
+		&Task.Description,
+		&Task.PublicTests,
+		&Task.PrivateTests,
+		&Task.GeneratedTests,
+		&Task.Difficulty,
+		&Task.CfContestId,
+		&Task.CfIndex,
+		&Task.CfPoints,
+		&Task.CfRating,
+		&Task.CfTags,
+		&Task.TimeLimit,
+		&Task.MemoryLimitBytes,
+		&Task.Link,
+		&Task.TaskRu,
+		&Task.Input,
+		&Task.Output,
+		&Task.Note,
+	)
+
+	return
+}
