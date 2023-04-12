@@ -63,14 +63,14 @@ func (u *UseCaseTask) GetTask() (task models.TaskJSON, err error) {
 	Task, err := u.Repo.GetTask()
 
 	var tagsId []int
-	var tagsRu []string
 	var tagsEn []string
+	var tagsRu []string
 
 	if Task.CfTags.Elements[0].Int != 0 {
 		for i := 0; i < len(Task.CfTags.Elements); i++ {
 			tagsId = append(tagsId, int(Task.CfTags.Elements[i].Int))
-			tagsRu = append(tagsRu, TagDict[tagsId[i]][0])
-			tagsEn = append(tagsEn, TagDict[tagsId[i]][1])
+			tagsEn = append(tagsEn, TagDict[tagsId[i]][0])
+			tagsRu = append(tagsRu, TagDict[tagsId[i]][1])
 		}
 	}
 
@@ -106,13 +106,14 @@ func (u *UseCaseTask) GetTaskById(id int) (task models.TaskJSON, err error) {
 	Task, err := u.Repo.GetTaskById(id)
 
 	var tagsId []int
-	var tagsRu []string
 	var tagsEn []string
+	var tagsRu []string
+
 	if Task.CfTags.Elements[0].Int != 0 {
 		for i := 0; i < len(Task.CfTags.Elements); i++ {
 			tagsId = append(tagsId, int(Task.CfTags.Elements[i].Int))
-			tagsRu = append(tagsRu, TagDict[tagsId[i]][0])
-			tagsEn = append(tagsEn, TagDict[tagsId[i]][1])
+			tagsEn = append(tagsEn, TagDict[tagsId[i]][0])
+			tagsRu = append(tagsRu, TagDict[tagsId[i]][1])
 		}
 	}
 
@@ -159,16 +160,16 @@ func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Ta
 	for i, task := range tasks.Tasks {
 		//fmt.Println(i)
 		var tagsId []int
-		var tagsRu []string
 		var tagsEn []string
+		var tagsRu []string
 
 		if task.CfTags.Elements[0].Int != 0 {
 			for j := 0; j < len(task.CfTags.Elements); j++ {
 				tagsId = append(tagsId, int(task.CfTags.Elements[j].Int))
 				//fmt.Println(tagsId)
-				tagsRu = append(tagsRu, TagDict[tagsId[j]][0])
+				tagsEn = append(tagsEn, TagDict[tagsId[j]][0])
 				//fmt.Println(tagsRu)
-				tagsEn = append(tagsEn, TagDict[tagsId[j]][1])
+				tagsRu = append(tagsRu, TagDict[tagsId[j]][1])
 				//fmt.Println(tagsEn)
 			}
 		}
@@ -319,16 +320,16 @@ func (u *UseCaseTask) GetSimilar(solution models.SimilarRequest) (*models.Tasks,
 		}
 
 		var tagsId []int
-		var tagsRu []string
 		var tagsEn []string
+		var tagsRu []string
 
 		if task.CfTags.Elements[0].Int != 0 {
 			for j := 0; j < len(task.CfTags.Elements); j++ {
 				tagsId = append(tagsId, int(task.CfTags.Elements[j].Int))
 				//fmt.Println(tagsId)
-				tagsRu = append(tagsRu, TagDict[tagsId[j]][0])
+				tagsEn = append(tagsEn, TagDict[tagsId[j]][0])
 				//fmt.Println(tagsRu)
-				tagsEn = append(tagsEn, TagDict[tagsId[j]][1])
+				tagsRu = append(tagsRu, TagDict[tagsId[j]][1])
 				//fmt.Println(tagsEn)
 			}
 		}
