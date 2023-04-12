@@ -31,6 +31,7 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	router.POST("/api/check_solution", sh.TaskHandler.CheckSolution, mwChain...)
 	router.GET("/api/get_tags", sh.TaskHandler.GetTags, mwChain...)
 	router.POST("/api/get_similar", sh.TaskHandler.GetSimilar, mwChain...)
+	router.GET("/api/get_send_tasks", sh.TaskHandler.GetSendTasks, mwChain...)
 
 	router.POST("/api/register", sh.AuthHandler.Register, mwChain...)
 	router.POST("/api/login", sh.AuthHandler.Login, mwChain...)

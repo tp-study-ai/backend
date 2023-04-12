@@ -201,3 +201,44 @@ func (r *RepositoryTask) GetTaskByLink(link string) (Task models.TaskDB, err err
 
 	return
 }
+
+func (r *RepositoryTask) GetSendTask(UserId int) (*models.SendTasks, error) {
+	Task1 := &models.SendTasks{}
+
+	var newPostsData []interface{}
+	newPostsData = append(newPostsData, UserId)
+	sql := `SELECT "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text", get_ru_date(date) 
+		FROM "send_task" where "user_id" = $1`
+
+	rows, err := r.DB.Query(sql, newPostsData...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var buff models.SendTask
+		err = rows.Scan(
+			&buff.ID,
+			&buff.UserId,
+			&buff.TaskId,
+			&buff.CheckTime,
+			&buff.BuildTime,
+			&buff.CheckResult,
+			&buff.CheckMessage,
+			&buff.TestsPassed,
+			&buff.TestsTotal,
+			&buff.LintSuccess,
+			&buff.CodeText,
+			&buff.Date,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		Task1.Tasks = append(Task1.Tasks, buff)
+	}
+
+	return Task1, nil
+}

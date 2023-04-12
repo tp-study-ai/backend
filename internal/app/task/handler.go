@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"github.com/pkg/errors"
+	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"github.com/tp-study-ai/backend/tools"
 	"net/http"
@@ -106,19 +108,24 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 }
 
 func (h HandlerTask) CheckSolution(ctx echo.Context) error {
+	user := middleware.GetUserFromCtx(ctx)
+	if user == nil {
+		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
+	}
+
 	var solution models.CheckSolutionRequest
 	if err := ctx.Bind(&solution); err != nil {
 		return tools.CustomError(ctx, err, 1, "CheckSolution Bind")
 	}
 
-	testisResponse, err := h.UseCase.CheckSolution(solution)
+	testisResponse, err := h.UseCase.CheckSolution(solution, int(user.Id))
 	if err != nil {
 		return tools.CustomError(ctx, err, 2, "CheckSolution usecase")
 	}
 
 	result, err := json.Marshal(testisResponse)
 	if err != nil {
-		return tools.CustomError(ctx, err, 3, "CheckSolution Bind")
+		return tools.CustomError(ctx, err, 3, "CheckSolution Marshal")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -201,6 +208,26 @@ func (h HandlerTask) GetSimilar(ctx echo.Context) error {
 	result, err := json.Marshal(tasks)
 	if err != nil {
 		return tools.CustomError(ctx, err, 3, "GetSimilar Marshal")
+	}
+
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}
+
+func (h HandlerTask) GetSendTasks(ctx echo.Context) error {
+	user := middleware.GetUserFromCtx(ctx)
+	if user == nil {
+		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
+	}
+
+	tasks, err := h.UseCase.GetSendTask(int(user.Id))
+	if err != nil {
+		return tools.CustomError(ctx, err, 1, "GetSendTasks usecase")
+	}
+
+	result, err := json.Marshal(tasks)
+	if err != nil {
+		return tools.CustomError(ctx, err, 2, "GetSendTasks Marshal")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))

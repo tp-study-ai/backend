@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"io/ioutil"
 	"net/http"
@@ -200,7 +201,7 @@ func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Ta
 	return reqTasks, nil
 }
 
-func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (*models.CheckSolutionUseCaseResponse, error) {
+func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest, userId int) (*models.CheckSolutionUseCaseResponse, error) {
 	Task, err := u.Repo.GetTaskById(solution.TaskId)
 	if err != nil {
 		return nil, err
@@ -232,7 +233,7 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (*mode
 		TestTimeout:  1,
 	}
 
-	fmt.Println(SolutionReq)
+	//fmt.Println(SolutionReq)
 
 	result, err := json.Marshal(SolutionReq)
 	if err != nil {
@@ -246,10 +247,13 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (*mode
 	}
 
 	fmt.Println(resp)
-
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.Status == "401 UNAUTHORIZED" {
+		return nil, errors.Errorf(string(body))
 	}
 
 	fmt.Printf(string(body))
@@ -264,7 +268,7 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest) (*mode
 
 	_, err = u.Repo.SendTask(&models.SendTask{
 		ID:           0,
-		UserId:       0,
+		UserId:       userId,
 		TaskId:       solution.TaskId,
 		CheckTime:    TestisResponse.CheckTime,
 		BuildTime:    TestisResponse.BuildTime,
@@ -359,4 +363,34 @@ func (u *UseCaseTask) GetSimilar(solution models.SimilarRequest) (*models.Tasks,
 	}
 
 	return Tasks, err
+}
+
+func (u *UseCaseTask) GetSendTask(UserId int) (*models.SendTasksJson, error) {
+	tasks, err := u.Repo.GetSendTask(UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	reqTasks := &models.SendTasksJson{
+		Tasks: make([]models.SendTaskJson, len(tasks.Tasks)),
+	}
+
+	for i, task := range tasks.Tasks {
+		reqTasks.Tasks[i] = models.SendTaskJson{
+			ID:           task.ID,
+			UserId:       task.UserId,
+			TaskId:       task.TaskId,
+			CheckTime:    task.CheckTime,
+			BuildTime:    task.BuildTime,
+			CheckResult:  task.CheckResult,
+			CheckMessage: task.CheckMessage,
+			TestsPassed:  task.TestsPassed,
+			TestsTotal:   task.TestsTotal,
+			LintSuccess:  task.LintSuccess,
+			CodeText:     task.CodeText,
+			Date:         task.Date,
+		}
+	}
+
+	return reqTasks, nil
 }

@@ -133,6 +133,29 @@ type SendTask struct {
 	Date         string     `db:"date"`
 }
 
+type SendTasks struct {
+	Tasks []SendTask
+}
+
+type SendTaskJson struct {
+	ID           SendTaskId `json:"id"`
+	UserId       int        `json:"user_id"`
+	TaskId       int        `json:"task_id"`
+	CheckTime    float64    `json:"check_time"`
+	BuildTime    float64    `json:"build_time"`
+	CheckResult  int        `json:"check_result"`
+	CheckMessage string     `json:"check_message"`
+	TestsPassed  int        `json:"tests_passed"`
+	TestsTotal   int        `json:"tests_total"`
+	LintSuccess  bool       `json:"lint_success"`
+	CodeText     string     `json:"code_text"`
+	Date         string     `json:"date"`
+}
+
+type SendTasksJson struct {
+	Tasks []SendTaskJson `json:"tasks"`
+}
+
 type SimilarRequest struct {
 	SourceCode string `json:"source_code"`
 	ProblemUrl string `json:"problem_url"`
