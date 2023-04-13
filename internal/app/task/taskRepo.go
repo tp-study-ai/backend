@@ -9,4 +9,8 @@ type Repository interface {
 	SendTask(task *models.SendTask) (*models.SendTask, error)
 	GetTaskByLink(link string) (Task models.TaskDB, err error)
 	GetSendTask(UserId int) (*models.SendTasks, error)
+	LikeTask(like models.LikeDb) (err error)
+	GetLike(like models.LikeDb) (*models.LikeDb, error)
+	GetLikes(UserId models.UserId) (*models.LikesDb, error)
+	DeleteLike(like models.LikeDb) (err error)
 }

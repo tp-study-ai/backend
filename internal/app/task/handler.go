@@ -233,3 +233,87 @@ func (h HandlerTask) GetSendTasks(ctx echo.Context) error {
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
 }
+
+func (h HandlerTask) LikeTask(ctx echo.Context) error {
+	user := middleware.GetUserFromCtx(ctx)
+	if user == nil {
+		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
+	}
+
+	fmt.Println("Id users:", user.Id)
+
+	var like models.LikeJson
+	if err := ctx.Bind(&like); err != nil {
+		return tools.CustomError(ctx, err, 1, "CheckSolution Bind")
+	}
+
+	fmt.Println("like", like)
+
+	err := h.UseCase.LikeTask(models.LikeJson{UserId: user.Id, TaskId: like.TaskId})
+	if err != nil {
+		return tools.CustomError(ctx, err, 1, "GetSimilar usecase")
+	}
+	result, err := json.Marshal(models.Message{
+		Message: "лайк поставлен",
+	})
+	if err != nil {
+		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+	}
+
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}
+
+func (h HandlerTask) DeleteLike(ctx echo.Context) error {
+	user := middleware.GetUserFromCtx(ctx)
+	if user == nil {
+		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
+	}
+
+	fmt.Println("Id users:", user.Id)
+
+	var like models.LikeJson
+	if err := ctx.Bind(&like); err != nil {
+		return tools.CustomError(ctx, err, 1, "CheckSolution Bind")
+	}
+
+	fmt.Println("like", like)
+
+	err := h.UseCase.DeleteLike(models.LikeJson{UserId: user.Id, TaskId: like.TaskId})
+	if err != nil {
+		return tools.CustomError(ctx, err, 1, "GetSimilar usecase")
+	}
+	result, err := json.Marshal(models.Message{
+		Message: "лайк удален",
+	})
+	if err != nil {
+		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+	}
+
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}
+
+func (h HandlerTask) GetLikeTasks(ctx echo.Context) error {
+	user := middleware.GetUserFromCtx(ctx)
+	if user == nil {
+		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
+	}
+
+	fmt.Println(user.Id)
+
+	tasks, err := h.UseCase.GetLikeTask(user.Id)
+	if err != nil {
+		return tools.CustomError(ctx, err, 1, "GetLikeTasks usecase")
+	}
+
+	fmt.Println(tasks)
+
+	result, err := json.Marshal(tasks)
+	if err != nil {
+		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+	}
+
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}

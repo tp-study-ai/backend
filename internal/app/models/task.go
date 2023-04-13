@@ -64,6 +64,12 @@ type Tasks struct {
 	Tasks []TaskJSON `json:"tasks"`
 }
 
+type LikeTasks struct {
+	CountTasks  int        `json:"count_tasks"`
+	TasksIdList []int      `json:"tasks_id_list"`
+	Tasks       []TaskJSON `json:"tasks"`
+}
+
 type SourceCode1 struct {
 	Makefile string `json:"Makefile"`
 	Main     string `json:"main.c"`
@@ -174,4 +180,23 @@ type MlTaskResponse struct {
 
 type MlResponse struct {
 	Tasks []MlTaskResponse
+}
+
+type LikeDb struct {
+	Id     int    `db:"id"`
+	UserId UserId `db:"user_id"`
+	TaskId int    `db:"task_id"`
+}
+
+type LikesDb struct {
+	Likes []LikeDb
+}
+
+type LikeJson struct {
+	UserId UserId `json:"user_id"`
+	TaskId int    `json:"task_id"`
+}
+
+type Message struct {
+	Message string `json:"message"`
 }

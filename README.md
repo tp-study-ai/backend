@@ -1,4 +1,119 @@
-## api
+# api
+
+## Like
+
+> описание:
+>> поставить лайк задаче
+>
+> метод:
+>> POST
+>
+> URL:
+>> http://127.0.0.1:8000/api/like_task
+>
+>> REQUEST EXAMPLE
+>>```json
+>>{
+>>  "task_id": 41
+>>}
+>>```
+>
+>> RESPONSE
+>>```json
+>>{
+>>  "message": "лайк поставлен"
+>>}
+>>```
+
+> описание:
+>> поставить лайк задаче
+>
+> метод:
+>> POST
+>
+> URL:
+>> http://127.0.0.1:8000/api/delete_like
+>
+>> REQUEST EXAMPLE
+>>```json
+>>{
+>>  "task_id": 41
+>>}
+>>```
+>
+>> RESPONSE
+>>```json
+>>{
+>>  "message": "лайк удален"
+>>}
+>>```
+
+> описание:
+>> поставить лайк задаче
+>
+> метод:
+>> GET
+>
+> URL:
+>> http://127.0.0.1:8000/api/get_like_tasks
+>
+>> RESPONSE
+>>```json
+>>{
+>>  
+>>    "count_tasks": 1,
+>>    "tasks_id_list": [
+>>        41
+>>    ],
+>>    "tasks": [
+>>        {
+>>            "id": 41,
+>>            "name": "505_B. Mr. Kitayuta's Colorful Graph",
+>>            "description": "description",
+>>            "public_tests": [
+>>                "input",
+>>                "output"
+>>            ],
+>>            "difficulty": 8,
+>>            "cf_contest_id": 505,
+>>            "cf_index": "B",
+>>            "cf_points": 1000,
+>>            "cf_rating": 1400,
+>>            "cf_tags_ID": [
+>>                10,
+>>                12,
+>>                13,
+>>                20
+>>            ],
+>>            "cf_tags_RU": [
+>>                "поиск в глубину и подобное",
+>>                "дп",
+>>                "системы непересекающихся множеств",
+>>                "графы"
+>>            ],
+>>            "cf_tags_en": [
+>>                "dfs and similar",
+>>                "dp",
+>>                "dsu",
+>>                "graphs"
+>>            ],
+>>            "time_limit": 1,
+>>            "memory_limit_bytes": 1,
+>>            "link": "link",
+>>            "task_ru": "task_ru",
+>>            "input": "input",
+>>            "output": "output",
+>>            "note": "note"
+>>        },
+>>        {
+>>            ...
+>>        }
+>>        ...
+>>    ]
+>>}
+>>```
+
+# Tasks
 
 > описание:
 >> получение посылок
