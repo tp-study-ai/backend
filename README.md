@@ -235,25 +235,39 @@
 >> RESPONSE 
 >>```json
 >>{
->>  int      `json:"id"`
->>  string   `json:"name"`
->>  string   `json:"description"`
->>  []string `json:"public_tests"`
->>  []string `json:"private_tests"`
->>  []string `json:"generated_tests"`
->>  int      `json:"difficulty"`
->>  int      `json:"cf_contest_id"`
->>  string   `json:"cf_index"`
->>  float64  `json:"cf_points"`
->>  int      `json:"cf_rating"`
->>  []int32  `json:"cf_tags"`
->>  string   `json:"time_limit"`
->>  int      `json:"memory_limit_bytes"`
->>  string   `json:"link"`
->>  string   `json:"task_ru"`
->>  string   `json:"input"`
->>  string   `json:"output"`
->>  string   `json:"note"`
+>>  "id": 1,
+>>  "name": "name",
+>>  "description": "description",
+>>  "public_tests": [
+>>      "input",
+>>      "2\nM\nXS\nXS\nM\n",
+>>      "output",
+>>      "0\n"
+>>  ],
+>>  "difficulty": 7,
+>>  "cf_contest_id": 1000,
+>>  "cf_index": "A",
+>>  "cf_points": 0,
+>>  "cf_rating": 1200,
+>>  "cf_tags_ID": [
+>>      21,
+>>      23
+>>  ],
+>>  "cf_tags_RU": [
+>>      "жадные алгоритмы",
+>>      "реализация"
+>>  ],
+>>  "cf_tags_en": [
+>>      "greedy",
+>>      "implementation"
+>>  ],
+>>  "time_limit": 2,
+>>  "memory_limit_bytes": 256000000,
+>>  "link": "link",
+>>  "task_ru": "task_ru",
+>>  "input": "input",
+>>  "output": "output",
+>>  "note": "note"
 >>}
 >>```
 
@@ -264,30 +278,44 @@
 >> GET
 > 
 > URL
->> https://study-ai.ru/api/get_task_by_id
+>> https://study-ai.ru/api/get_task_by_id?id=1
 >
 >> RESPONSE
 >>```json
 >>{
->>  int      `json:"id"`
->>  string   `json:"name"`
->>  string   `json:"description"`
->>  []string `json:"public_tests"`
->>  []string `json:"private_tests"`
->>  []string `json:"generated_tests"`
->>  int      `json:"difficulty"`
->>  int      `json:"cf_contest_id"`
->>  string   `json:"cf_index"`
->>  float64  `json:"cf_points"`
->>  int      `json:"cf_rating"`
->>  []int32  `json:"cf_tags"`
->>  string   `json:"time_limit"`
->>  int      `json:"memory_limit_bytes"`
->>  string   `json:"link"`
->>  string   `json:"task_ru"`
->>  string   `json:"input"`
->>  string   `json:"output"`
->>  string   `json:"note"`
+>>  "id": 1,
+>>  "name": "name",
+>>  "description": "description",
+>>  "public_tests": [
+>>      "input",
+>>      "2\nM\nXS\nXS\nM\n",
+>>      "output",
+>>      "0\n"
+>>  ],
+>>  "difficulty": 7,
+>>  "cf_contest_id": 1000,
+>>  "cf_index": "A",
+>>  "cf_points": 0,
+>>  "cf_rating": 1200,
+>>  "cf_tags_ID": [
+>>      21,
+>>      23
+>>  ],
+>>  "cf_tags_RU": [
+>>      "жадные алгоритмы",
+>>      "реализация"
+>>  ],
+>>  "cf_tags_en": [
+>>      "greedy",
+>>      "implementation"
+>>  ],
+>>  "time_limit": 2,
+>>  "memory_limit_bytes": 256000000,
+>>  "link": "link",
+>>  "task_ru": "task_ru",
+>>  "input": "input",
+>>  "output": "output",
+>>  "note": "note"
 >>}
 >>```
 
@@ -303,21 +331,21 @@
 >> REQUEST
 >>```json
 >>{
->>  int    `json:"task_id"`
->>  string `json:"solution"`
+>>  "task_id": 48,
+>>  "solution": "#include <iostream> ..."
 >>}
 >>```
 > 
 >> RESPONSE
 >>```json
 >>{
->>  float64 `json:"checkTime"`
->>  float64 `json:"buildTime"`
->>  int     `json:"checkResult"`
->>  string  `json:"checkMessage"`
->>  int     `json:"testsPassed"`
->>  int     `json:"testsTotal"`
->>  bool    `json:"lintSuccess"`
+>>  "checkTime": 0.622,
+>>  "buildTime": 0,
+>>  "checkResult": 3,
+>>  "checkMessage": "main.cpp:8:29: warning: ...",
+>>  "testsPassed": 0,
+>>  "testsTotal": 31,
+>>  "lintSuccess": false
 >>}
 >>```
 
