@@ -1,7 +1,0 @@
-User=BACK_USER
-Dbname=${{ secrets.BACK_DBNAME }}
-Password=${{ secrets.BACK_PASSWORD }}
-Host=${{ secrets.BACK_HOST }}
-Port=${{ secrets.BACK_PORT }}
-testis=${{ secrets.BACK_TESTIS }}
-ml=${{ secrets.BACK_ML }}
