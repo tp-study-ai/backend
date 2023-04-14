@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/conf"
@@ -30,6 +31,7 @@ func main() {
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "error reading config"))
 	}
+	fmt.Println(config)
 
 	pgxManager, err := tools.NewPostgres(config)
 	if err != nil {
