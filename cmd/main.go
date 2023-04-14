@@ -13,7 +13,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 )
 
 func main() {
@@ -32,7 +31,7 @@ func main() {
 		Db.Dbname = os.Getenv("Dbname")
 		Db.Password = os.Getenv("Password")
 		Db.Host = os.Getenv("Host")
-		Db.Port, _ = strconv.ParseInt(os.Getenv("Port"), 10, 64)
+		Db.Port = os.Getenv("Port")
 		Secret1 = os.Getenv("testis")
 		Secret2 = os.Getenv("ml")
 	} else {
