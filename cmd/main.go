@@ -21,7 +21,7 @@ func main() {
 	if false {
 		configPath = flag.String("config", "./tools/conf.toml", "path to config file")
 	} else {
-		configPath = flag.String("config", "./tools/prod.toml", "path to config file")
+		configPath = flag.String("config", "./tools/prod.yml", "path to config file")
 	}
 	flag.Parse()
 
