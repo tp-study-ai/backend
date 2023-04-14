@@ -1,4 +1,4 @@
-User=${{ secrets.BACK_USER }}
+User=BACK_USER
 Dbname=${{ secrets.BACK_DBNAME }}
 Password=${{ secrets.BACK_PASSWORD }}
 Host=${{ secrets.BACK_HOST }}
