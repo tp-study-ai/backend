@@ -118,8 +118,9 @@ func (h HandlerTask) CheckSolution(ctx echo.Context) error {
 		return tools.CustomError(ctx, err, 1, "CheckSolution Bind")
 	}
 
+	test := &models.CheckSolutionUseCaseResponse{}
 	testisResponse, err := h.UseCase.CheckSolution(solution, int(user.Id))
-	if err != nil {
+	if err != nil || testisResponse == test {
 		return tools.CustomError(ctx, err, 2, "CheckSolution usecase")
 	}
 

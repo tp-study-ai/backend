@@ -215,8 +215,6 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest, userId
 		PrivateTestsLength = int(300 / Task.TimeLimit)
 	}
 
-	fmt.Println(PrivateTestsLength)
-
 	tests := make([][]string, PrivateTestsLength)
 
 	for i := 0; i < PrivateTestsLength; i++ {
@@ -235,8 +233,6 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest, userId
 		TestTimeout:  Task.TimeLimit,
 	}
 
-	//fmt.Println(SolutionReq)
-
 	result, err := json.Marshal(SolutionReq)
 	if err != nil {
 		return nil, err
@@ -248,7 +244,6 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest, userId
 		return nil, err
 	}
 
-	fmt.Println(resp)
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
@@ -258,15 +253,12 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest, userId
 		return nil, errors.Errorf(string(body))
 	}
 
-	fmt.Printf(string(body))
 	TestisResponse := &models.CheckSolutionUseCaseResponse{}
 
 	err = json.Unmarshal(body, &TestisResponse)
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println(TestisResponse)
 
 	_, err = u.Repo.SendTask(&models.SendTask{
 		ID:           0,
