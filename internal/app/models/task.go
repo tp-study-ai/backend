@@ -64,6 +64,11 @@ type Tasks struct {
 	Tasks []TaskJSON `json:"tasks"`
 }
 
+type TasksPagination struct {
+	TaskCount int        `json:"task_count"`
+	Tasks     []TaskJSON `json:"tasks"`
+}
+
 type LikeTasks struct {
 	CountTasks  int        `json:"count_tasks"`
 	TasksIdList []int      `json:"tasks_id_list"`

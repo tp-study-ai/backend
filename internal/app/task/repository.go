@@ -83,19 +83,24 @@ func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskDB, err error) {
 	return
 }
 
-func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int) (*models.TasksResponse, error) {
+func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int) (*models.TasksResponse, int, error) {
 	tasks := &models.TasksResponse{}
-	fmt.Println("start")
+
+	var ForTaskCount []interface{}
+	var TaskCount int
 
 	var newPostsData []interface{}
 	newPostsData = append(newPostsData, 15)
 	newPostsData = append(newPostsData, 15*id)
 
 	sql := `select * from "tasks"`
+	sqlCount := `select count(*) from "tasks"`
 
 	if len(tag) != 0 {
 		sql = sql + ` where $3 <@ (cf_tags)`
+		sqlCount = sqlCount + ` where $1 <@ (cf_tags)`
 		newPostsData = append(newPostsData, pq.Array(tag))
+		ForTaskCount = append(ForTaskCount, pq.Array(tag))
 	}
 
 	if sort == "" {
@@ -112,11 +117,14 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int) (*models
 
 	sql = sql + ` limit $1 offset $2`
 
-	fmt.Println(sql)
+	err := r.DB.QueryRow(sqlCount, ForTaskCount...).Scan(&TaskCount)
+	if err != nil {
+		return nil, 0, err
+	}
 
 	rows, err := r.DB.Query(sql, newPostsData...)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	defer rows.Close()
 
@@ -145,13 +153,13 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int) (*models
 		)
 
 		if err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 
 		tasks.Tasks = append(tasks.Tasks, buff)
 	}
 
-	return tasks, err
+	return tasks, TaskCount, nil
 }
 
 func (r *RepositoryTask) SendTask(task *models.SendTask) (*models.SendTask, error) {

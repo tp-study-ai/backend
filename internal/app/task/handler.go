@@ -61,22 +61,22 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 
 func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 	page := ctx.QueryParam("page")
-	fmt.Printf("Param: %s, %s\n", page, reflect.TypeOf(page))
+	//fmt.Printf("Param: %s, %s\n", page, reflect.TypeOf(page))
 	pageInt, err := strconv.ParseInt(page, 10, 64)
 	if err != nil {
 		return tools.CustomError(ctx, err, 1, "Parse int")
 	}
 
 	sort := ctx.QueryParam("sort")
-	fmt.Printf("sort: %s %s\n", sort, reflect.TypeOf(sort))
+	//fmt.Printf("sort: %s %s\n", sort, reflect.TypeOf(sort))
 	if sort == "rating_up" || sort == "rating_down" || sort == "" {
-		fmt.Println("sort params is OK")
+		//fmt.Println("sort params is OK")
 	} else {
 		sort = ""
 	}
 
 	tags := ctx.QueryParam("tags")
-	fmt.Println(tags)
+	//fmt.Println(tags)
 	var tagsInt []int
 	if len(tags) != 0 {
 		//tags = tags[1 : len(tags)-1]
@@ -85,12 +85,12 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 			tagsInt = append(tagsInt, int(tagInt))
 		} else {
 			tags1 := strings.Split(tags, ",")
-			fmt.Println("list tags string", tags1)
+			//fmt.Println("list tags string", tags1)
 			for _, item := range tags1 {
 				tagInt, _ := strconv.ParseInt(item, 10, 64)
 				tagsInt = append(tagsInt, int(tagInt))
 			}
-			fmt.Println(tagsInt)
+			//fmt.Println(tagsInt)
 		}
 	}
 
@@ -101,7 +101,7 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 
 	result, err := json.Marshal(tasks)
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "Marshal")
+		return tools.CustomError(ctx, err, 2, "Marshal")
 	}
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)

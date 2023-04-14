@@ -146,20 +146,19 @@ func (u *UseCaseTask) GetTaskById(id int) (task models.TaskJSON, err error) {
 	return
 }
 
-func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Tasks, error) {
-	tasks, err := u.Repo.GetTaskByLimit(id, sort, tag)
+func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.TasksPagination, error) {
+	tasks, taskCount, err := u.Repo.GetTaskByLimit(id, sort, tag)
 	if err != nil {
 		return nil, err
 	}
 
-	reqTasks := &models.Tasks{
+	reqTasks := &models.TasksPagination{
 		Tasks: make([]models.TaskJSON, len(tasks.Tasks)),
 	}
 
-	fmt.Println(tasks)
+	reqTasks.TaskCount = taskCount
 
 	for i, task := range tasks.Tasks {
-		//fmt.Println(i)
 		var tagsId []int
 		var tagsEn []string
 		var tagsRu []string
@@ -167,11 +166,8 @@ func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.Ta
 		if task.CfTags.Elements[0].Int != 0 {
 			for j := 0; j < len(task.CfTags.Elements); j++ {
 				tagsId = append(tagsId, int(task.CfTags.Elements[j].Int))
-				//fmt.Println(tagsId)
 				tagsEn = append(tagsEn, TagDict[tagsId[j]][0])
-				//fmt.Println(tagsRu)
 				tagsRu = append(tagsRu, TagDict[tagsId[j]][1])
-				//fmt.Println(tagsEn)
 			}
 		}
 

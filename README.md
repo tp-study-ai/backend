@@ -320,6 +320,77 @@
 >>```
 
 > описание:
+>> сортировка задач
+>
+> метод:
+>> GET
+>
+> URL
+>> http://127.0.0.1:8000/api/tasks_list?page=0&sort=rating_up&tags=1
+>
+>> PARAMS  
+>> page\
+>> sort
+>> * rating_up рэйтинг по возрастанию
+>> * rating_down рэйтинг по убыванию
+>> * во всех остальных случаях сортирует по id\
+>>
+>> tags
+>> * 1
+>> * 1,2
+> 
+>> RESPONSE
+>>```json
+>>{
+>>  "task_count": 284,
+>>  "tasks": [
+>>      {
+>>          "id": 4655,
+>>          "name": "1170_F. Wheels",
+>>          "description": "Polycarp has n wheels and a car with m slots for wheels. The initial pressure in the i-th wheel is a_i.\n\nPolycarp's goal is to take exactly m wheels among the given n wheels and equalize the pressure in them (then he can put these wheels in a car and use it for driving). In one minute he can decrease or increase the pressure in any (single) wheel by 1. He can increase the pressure no more than k times in total because it is hard to pump up wheels.\n\nHelp Polycarp and say what is the minimum number of minutes he needs to spend to equalize the pressure of at least m wheels among the given n wheels.\n\nInput\n\nThe first line of the input contains three integers n, m and k (1 ≤ m ≤ n ≤ 2 ⋅ 10^5, 0 ≤ k ≤ 10^9) — the number of wheels, the number of slots for wheels in a car and the number of times Polycarp can increase by 1 the pressure in a wheel.\n\nThe second line of the input contains n integers a_1, a_2, ..., a_n (1 ≤ a_i ≤ 10^9), where a_i is the pressure in the i-th wheel.\n\nOutput\n\nPrint one integer — the minimum number of minutes Polycarp needs to spend to equalize the pressure in at least m wheels among the given n wheels.\n\nExamples\n\nInput\n\n\n6 6 7\n6 15 16 20 1 5\n\n\nOutput\n\n\n39\n\n\nInput\n\n\n6 3 1\n4 8 15 16 23 42\n\n\nOutput\n\n\n8\n\n\nInput\n\n\n5 4 0\n5 5 5 4 5\n\n\nOutput\n\n\n0",
+>>          "public_tests": [
+>>              "input",
+>>              "6 6 7\n6 15 16 20 1 5\n",
+>>              "output",
+>>              "\n39\n"
+>>          ],
+>>          "difficulty": 12,
+>>          "cf_contest_id": 1170,
+>>          "cf_index": "F",
+>>          "cf_points": 0,
+>>          "cf_rating": 0,
+>>          "cf_tags_ID": [
+>>              1,
+>>              3,
+>>              21
+>>          ],
+>>          "cf_tags_RU": [
+>>              "*особая задача",
+>>              "бинарный поиск",
+>>              "жадные алгоритмы"
+>>          ],
+>>          "cf_tags_en": [
+>>              "*special",
+>>              "binary search",
+>>              "greedy"
+>>          ],
+>>          "time_limit": 3,
+>>          "memory_limit_bytes": 256000000,
+>>          "link": "https://codeforces.com/contest/1170/problem/F?locale=ru",
+>>          "task_ru": "",
+>>          "input": "",
+>>          "output": "",
+>>          "note": ""
+>>      },
+>>      {
+>>          ...
+>>      },
+>>      ... 
+>>  ]  
+>>}
+>>```
+
+> описание:
 >>отправка решения задачи
 >
 > метод:
