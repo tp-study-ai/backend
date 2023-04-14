@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
@@ -28,12 +29,19 @@ func main() {
 		log.Print("Find .env ")
 
 		Db.User = os.Getenv("User")
+		fmt.Println(Db.User)
 		Db.Dbname = os.Getenv("Dbname")
+		fmt.Println(Db.Dbname)
 		Db.Password = os.Getenv("Password")
+		fmt.Println(Db.Password)
 		Db.Host = os.Getenv("Host")
+		fmt.Println(Db.Host)
 		Db.Port = os.Getenv("Port")
+		fmt.Println(Db.Port)
 		Secret1 = os.Getenv("testis")
+		fmt.Println(Secret1)
 		Secret2 = os.Getenv("ml")
+		fmt.Println(Secret2)
 	} else {
 		if err := godotenv.Load(".env.prod"); err != nil {
 			log.Print("No .env.prod file found")
@@ -41,12 +49,19 @@ func main() {
 		log.Print("Find .env.prod ")
 
 		Db.User = os.Getenv("User")
+		fmt.Println(Db.User)
 		Db.Dbname = os.Getenv("Dbname")
+		fmt.Println(Db.Dbname)
 		Db.Password = os.Getenv("Password")
+		fmt.Println(Db.Password)
 		Db.Host = os.Getenv("Host")
+		fmt.Println(Db.Host)
 		Db.Port = os.Getenv("Port")
+		fmt.Println(Db.Port)
 		Secret1 = os.Getenv("testis")
+		fmt.Println(Secret1)
 		Secret2 = os.Getenv("ml")
+		fmt.Println(Secret2)
 	}
 
 	pgxManager, err := tools.NewPostgres(Db)
