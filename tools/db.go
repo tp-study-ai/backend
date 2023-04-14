@@ -13,11 +13,11 @@ type DB struct {
 	Dbname   string
 	Password string
 	Host     string
-	Port     int64
+	Port     string
 }
 
 func NewPostgres(dbConf *DB) (*pgx.ConnPool, error) {
-	dsn := fmt.Sprintf("user=%s dbname=%s password=%s host=%s port=%d", dbConf.User, dbConf.Dbname, dbConf.Password, dbConf.Host, int(dbConf.Port))
+	dsn := fmt.Sprintf("user=%s dbname=%s password=%s host=%s port=%d", dbConf.User, dbConf.Dbname, dbConf.Password, dbConf.Host, dbConf.Port)
 	conn, err := pgx.ParseConnectionString(dsn)
 	if err != nil {
 		log.Fatalln("cant parse config", err)
