@@ -16,14 +16,6 @@ import (
 	"strconv"
 )
 
-//User=yutfut
-//Dbname=yutfut
-//Password=yutfut
-//Host=127.0.0.1
-//Port=5432
-//testis=http://146.185.208.233:8080/check_solution?api_key=secret_key_here
-//ml=http://ml:9000/ml/get_similar
-
 func main() {
 	Db := &tools.DB{}
 
