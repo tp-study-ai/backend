@@ -20,5 +20,3 @@
 
 docker-compose.yml
 .env
-
-tools/conf.toml
