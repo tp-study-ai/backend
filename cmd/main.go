@@ -1,8 +1,7 @@
 package main
 
 import (
-	"fmt"
-	"github.com/joho/godotenv"
+	"flag"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/conf"
@@ -13,58 +12,26 @@ import (
 	"github.com/tp-study-ai/backend/tools/authManager/jwtManager"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
-	Db := &tools.DB{}
-
-	var Secret1 string
-	var Secret2 string
+	var configPath *string
 
 	if false {
-		if err := godotenv.Load(".env"); err != nil {
-			log.Print("No .env file found")
-		}
-		log.Print("Find .env ")
-
-		Db.User = os.Getenv("User")
-		fmt.Println(Db.User)
-		Db.Dbname = os.Getenv("Dbname")
-		fmt.Println(Db.Dbname)
-		Db.Password = os.Getenv("Password")
-		fmt.Println(Db.Password)
-		Db.Host = os.Getenv("Host")
-		fmt.Println(Db.Host)
-		Db.Port = os.Getenv("Port")
-		fmt.Println(Db.Port)
-		Secret1 = os.Getenv("testis")
-		fmt.Println(Secret1)
-		Secret2 = os.Getenv("ml")
-		fmt.Println(Secret2)
+		configPath = flag.String("config", "./tools/conf.toml", "path to config file")
 	} else {
-		if err := godotenv.Load(".env.prod"); err != nil {
-			log.Print("No .env.prod file found")
-		}
-		log.Print("Find .env.prod ")
+		configPath = flag.String("config", "./tools/prod.toml", "path to config file")
+	}
+	flag.Parse()
 
-		Db.User = os.Getenv("User")
-		fmt.Println(Db.User)
-		Db.Dbname = os.Getenv("Dbname")
-		fmt.Println(Db.Dbname)
-		Db.Password = os.Getenv("Password")
-		fmt.Println(Db.Password)
-		Db.Host = os.Getenv("Host")
-		fmt.Println(Db.Host)
-		Db.Port = os.Getenv("Port")
-		fmt.Println(Db.Port)
-		Secret1 = os.Getenv("testis")
-		fmt.Println(Secret1)
-		Secret2 = os.Getenv("ml")
-		fmt.Println(Secret2)
+	config := tools.NewConfig()
+
+	err := tools.ReadConfigFile(*configPath, config)
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "error reading config"))
 	}
 
-	pgxManager, err := tools.NewPostgres(Db)
+	pgxManager, err := tools.NewPostgres(config)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "error creating postgres agent"))
 	}
@@ -73,7 +40,7 @@ func main() {
 	jwtManager := jwtManager.NewJwtManager()
 
 	taskRepo := task.NewRepositoryTask(pgxManager)
-	taskUcase := task.NewUseCaseTask(taskRepo, Secret1, Secret2)
+	taskUcase := task.NewUseCaseTask(taskRepo, config.Testis, config.Ml)
 	taskHandler := task.NewHandlerTask(taskUcase)
 
 	authRepo := auth.NewRepositoryAuth(pgxManager)
