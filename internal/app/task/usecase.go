@@ -11,12 +11,16 @@ import (
 )
 
 type UseCaseTask struct {
-	Repo Repository
+	Repo    Repository
+	Secret1 string
+	Secret2 string
 }
 
-func NewUseCaseTask(TaskRepo Repository) *UseCaseTask {
+func NewUseCaseTask(TaskRepo Repository, secret string, secret1 string) *UseCaseTask {
 	return &UseCaseTask{
-		Repo: TaskRepo,
+		Repo:    TaskRepo,
+		Secret1: secret,
+		Secret2: secret1,
 	}
 }
 
@@ -239,7 +243,7 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest, userId
 	}
 
 	req := bytes.NewBuffer(result)
-	resp, err := http.Post("http://146.185.208.233:8080/check_solution?api_key=secret_key_here", "application/json", req)
+	resp, err := http.Post(u.Secret1, "application/json", req)
 	if err != nil {
 		return nil, err
 	}
@@ -288,7 +292,7 @@ func (u *UseCaseTask) GetSimilar(solution models.SimilarRequest) (*models.Tasks,
 	}
 
 	req := bytes.NewBuffer(result)
-	resp, err := http.Post("http://ml:9000/ml/get_similar", "application/json", req)
+	resp, err := http.Post(u.Secret2, "application/json", req)
 	if err != nil {
 		return nil, err
 	}
@@ -324,11 +328,8 @@ func (u *UseCaseTask) GetSimilar(solution models.SimilarRequest) (*models.Tasks,
 		if task.CfTags.Elements[0].Int != 0 {
 			for j := 0; j < len(task.CfTags.Elements); j++ {
 				tagsId = append(tagsId, int(task.CfTags.Elements[j].Int))
-				//fmt.Println(tagsId)
 				tagsEn = append(tagsEn, TagDict[tagsId[j]][0])
-				//fmt.Println(tagsRu)
 				tagsRu = append(tagsRu, TagDict[tagsId[j]][1])
-				//fmt.Println(tagsEn)
 			}
 		}
 
@@ -412,7 +413,6 @@ func (u *UseCaseTask) DeleteLike(like models.LikeJson) (err error) {
 
 func (u *UseCaseTask) GetLikeTask(UserId models.UserId) (*models.LikeTasks, error) {
 	likes, err := u.Repo.GetLikes(UserId)
-	fmt.Println(likes)
 	if err != nil {
 		return nil, err
 	}

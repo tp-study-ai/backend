@@ -8,9 +8,17 @@ import (
 	_ "github.com/jackc/pgx/stdlib"
 )
 
-func NewPostgres() (*pgx.ConnPool, error) {
-	dsn := fmt.Sprintf("user=%s dbname=%s password=%s host=%s port=%d", "yutfut", "yutfut", "yutfut", "db", 5432)
-	//dsn := fmt.Sprintf("user=%s dbname=%s password=%s host=%s port=%d", "yutfut", "yutfut", "yutfut", "127.0.0.1", 5432)
+type DB struct {
+	User     string
+	Dbname   string
+	Password string
+	Host     string
+	Port     int64
+}
+
+func NewPostgres(dbConf *DB) (*pgx.ConnPool, error) {
+	//dsn := fmt.Sprintf("user=%s dbname=%s password=%s host=%s port=%d", "yutfut", "yutfut", "yutfut", "db", 5432)
+	dsn := fmt.Sprintf("user=%s dbname=%s password=%s host=%s port=%d", dbConf.User, dbConf.Dbname, dbConf.Password, dbConf.Host, dbConf.Port)
 	conn, err := pgx.ParseConnectionString(dsn)
 	if err != nil {
 		log.Fatalln("cant parse config", err)

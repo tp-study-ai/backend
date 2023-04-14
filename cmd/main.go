@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/conf"
@@ -11,10 +12,53 @@ import (
 	"github.com/tp-study-ai/backend/tools/authManager/jwtManager"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 )
 
+//User=yutfut
+//Dbname=yutfut
+//Password=yutfut
+//Host=127.0.0.1
+//Port=5432
+//testis=http://146.185.208.233:8080/check_solution?api_key=secret_key_here
+//ml=http://ml:9000/ml/get_similar
+
 func main() {
-	pgxManager, err := tools.NewPostgres()
+	Db := &tools.DB{}
+
+	var Secret1 string
+	var Secret2 string
+
+	if false {
+		if err := godotenv.Load(".env"); err != nil {
+			log.Print("No .env file found")
+		}
+		log.Print("Find .env ")
+
+		Db.User = os.Getenv("User")
+		Db.Dbname = os.Getenv("Dbname")
+		Db.Password = os.Getenv("Password")
+		Db.Host = os.Getenv("Host")
+		Db.Port, _ = strconv.ParseInt(os.Getenv("Port"), 10, 64)
+		Secret1 = os.Getenv("testis")
+		Secret2 = os.Getenv("ml")
+	} else {
+		if err := godotenv.Load(".env.prod"); err != nil {
+			log.Print("No .env.prod file found")
+		}
+		log.Print("Find .env.prod ")
+
+		Db.User = os.Getenv("User")
+		Db.Dbname = os.Getenv("Dbname")
+		Db.Password = os.Getenv("Password")
+		Db.Host = os.Getenv("Host")
+		Db.Port, _ = strconv.ParseInt(os.Getenv("Port"), 10, 64)
+		Secret1 = os.Getenv("testis")
+		Secret2 = os.Getenv("ml")
+	}
+
+	pgxManager, err := tools.NewPostgres(Db)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "error creating postgres agent"))
 	}
@@ -23,7 +67,7 @@ func main() {
 	jwtManager := jwtManager.NewJwtManager()
 
 	taskRepo := task.NewRepositoryTask(pgxManager)
-	taskUcase := task.NewUseCaseTask(taskRepo)
+	taskUcase := task.NewUseCaseTask(taskRepo, Secret1, Secret2)
 	taskHandler := task.NewHandlerTask(taskUcase)
 
 	authRepo := auth.NewRepositoryAuth(pgxManager)
