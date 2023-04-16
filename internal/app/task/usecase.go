@@ -318,7 +318,8 @@ func (u *UseCaseTask) GetSimilar(solution models.SimilarRequest) (*models.Tasks,
 	for i := 0; i < len(TestisResponse); i++ {
 		task, err1 := u.Repo.GetTaskByLink("https://codeforces.com" + TestisResponse[i].ProblemUrl + "?locale=ru")
 		if err1 != nil {
-			return nil, err1
+			continue
+			//return nil, err1
 		}
 
 		var tagsId []int
