@@ -8,6 +8,7 @@ import (
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 type UseCaseTask struct {
@@ -472,4 +473,19 @@ func (u *UseCaseTask) GetLikeTask(UserId models.UserId) (*models.LikeTasks, erro
 	}
 
 	return tasks, nil
+}
+
+func (u *UseCaseTask) GetCountTaskOfDate(id int) (*models.Days, error) {
+	now := time.Now()
+	days := &models.Days{}
+	for i := 0; i < 60; i++ {
+		task, err := u.Repo.GetCountTaskOfDate(id, now)
+		if err != nil {
+			return nil, err
+		}
+		days.Days = append(days.Days, task)
+		now = now.Add(-24 * time.Hour)
+	}
+
+	return days, nil
 }

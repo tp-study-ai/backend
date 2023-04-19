@@ -6,6 +6,7 @@ import (
 	"github.com/lib/pq"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"math/rand"
+	"time"
 )
 
 type RepositoryTask struct {
@@ -310,4 +311,16 @@ func (r *RepositoryTask) GetLikes(UserId models.UserId) (*models.LikesDb, error)
 	}
 
 	return Likes, nil
+}
+
+func (r *RepositoryTask) GetCountTaskOfDate(id int, day time.Time) (int, error) {
+	var countTask int
+	sql := `select count(*) from send_task where "user_id" = $1 and $2 < date::date + interval '3 hours' and date::date + interval '3 hours' < $3;`
+	err := r.DB.QueryRow(sql, id, day.Format("2006-01-02"), day.Add(+24*time.Hour).Format("2006-01-02")).Scan(
+		&countTask,
+	)
+	if err != nil {
+		return 0, err
+	}
+	return countTask, nil
 }

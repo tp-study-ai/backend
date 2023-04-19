@@ -318,3 +318,25 @@ func (h HandlerTask) GetLikeTasks(ctx echo.Context) error {
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
 }
+
+func (h HandlerTask) GetCountTaskOfDate(ctx echo.Context) error {
+	user := middleware.GetUserFromCtx(ctx)
+	if user == nil {
+		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
+	}
+
+	fmt.Println(user.Id)
+
+	days, err := h.UseCase.GetCountTaskOfDate(int(user.Id))
+	if err != nil {
+		return tools.CustomError(ctx, err, 0, "ошибка получения задачи")
+	}
+
+	result, err := json.Marshal(days)
+	if err != nil {
+		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+	}
+
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}

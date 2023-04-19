@@ -1,6 +1,9 @@
 package task
 
-import "github.com/tp-study-ai/backend/internal/app/models"
+import (
+	"github.com/tp-study-ai/backend/internal/app/models"
+	"time"
+)
 
 type Repository interface {
 	GetTask() (Task models.TaskDB, err error)
@@ -13,4 +16,5 @@ type Repository interface {
 	GetLike(like models.LikeDb) (*models.LikeDb, error)
 	GetLikes(UserId models.UserId) (*models.LikesDb, error)
 	DeleteLike(like models.LikeDb) (err error)
+	GetCountTaskOfDate(id int, day time.Time) (int, error)
 }

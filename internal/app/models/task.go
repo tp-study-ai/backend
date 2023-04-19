@@ -130,18 +130,18 @@ type CheckSolutionUseCaseResponse struct {
 type SendTaskId uint64
 
 type SendTask struct {
-	ID           SendTaskId `db:"id"`
-	UserId       int        `db:"user_id"`
-	TaskId       int        `db:"task_id"`
-	CheckTime    float64    `db:"check_time"`
-	BuildTime    float64    `db:"build_time"`
-	CheckResult  int        `db:"check_result"`
-	CheckMessage string     `db:"check_message"`
-	TestsPassed  int        `db:"tests_passed"`
-	TestsTotal   int        `db:"tests_total"`
-	LintSuccess  bool       `db:"lint_success"`
-	CodeText     string     `db:"code_text"`
-	Date         string     `db:"date"`
+	ID           SendTaskId       `db:"id"`
+	UserId       int              `db:"user_id"`
+	TaskId       int              `db:"task_id"`
+	CheckTime    float64          `db:"check_time"`
+	BuildTime    float64          `db:"build_time"`
+	CheckResult  int              `db:"check_result"`
+	CheckMessage string           `db:"check_message"`
+	TestsPassed  int              `db:"tests_passed"`
+	TestsTotal   int              `db:"tests_total"`
+	LintSuccess  bool             `db:"lint_success"`
+	CodeText     string           `db:"code_text"`
+	Date         pgtype.Timestamp `db:"date"`
 }
 
 type SendTasks struct {
@@ -149,18 +149,18 @@ type SendTasks struct {
 }
 
 type SendTaskJson struct {
-	ID           SendTaskId `json:"id"`
-	UserId       int        `json:"user_id"`
-	TaskId       int        `json:"task_id"`
-	CheckTime    float64    `json:"check_time"`
-	BuildTime    float64    `json:"build_time"`
-	CheckResult  int        `json:"check_result"`
-	CheckMessage string     `json:"check_message"`
-	TestsPassed  int        `json:"tests_passed"`
-	TestsTotal   int        `json:"tests_total"`
-	LintSuccess  bool       `json:"lint_success"`
-	CodeText     string     `json:"code_text"`
-	Date         string     `json:"date"`
+	ID           SendTaskId       `json:"id"`
+	UserId       int              `json:"user_id"`
+	TaskId       int              `json:"task_id"`
+	CheckTime    float64          `json:"check_time"`
+	BuildTime    float64          `json:"build_time"`
+	CheckResult  int              `json:"check_result"`
+	CheckMessage string           `json:"check_message"`
+	TestsPassed  int              `json:"tests_passed"`
+	TestsTotal   int              `json:"tests_total"`
+	LintSuccess  bool             `json:"lint_success"`
+	CodeText     string           `json:"code_text"`
+	Date         pgtype.Timestamp `json:"date"`
 }
 
 type SendTasksJson struct {
@@ -204,4 +204,8 @@ type LikeJson struct {
 
 type Message struct {
 	Message string `json:"message"`
+}
+
+type Days struct {
+	Days []int `json:"days"`
 }
