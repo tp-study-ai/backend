@@ -168,7 +168,7 @@ func (r *RepositoryTask) SendTask(task *models.SendTask) (*models.SendTask, erro
 		`INSERT INTO "send_task" (
 			"user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text"
 			 ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
-	 RETURNING "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text", get_ru_date(date)`,
+	 RETURNING "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text", "date"`,
 		task.UserId, task.TaskId, task.CheckTime, task.BuildTime, task.CheckResult, task.CheckMessage, task.TestsPassed, task.TestsTotal, task.LintSuccess, task.CodeText,
 	).Scan(
 		&Task1.ID, &Task1.UserId, &Task1.TaskId, &Task1.CheckTime, &Task1.BuildTime, &Task1.CheckResult, &Task1.CheckMessage, &Task1.TestsPassed, &Task1.TestsTotal, &Task1.LintSuccess, &Task1.CodeText, &Task1.Date,
@@ -215,7 +215,7 @@ func (r *RepositoryTask) GetSendTask(UserId int) (*models.SendTasks, error) {
 
 	var newPostsData []interface{}
 	newPostsData = append(newPostsData, UserId)
-	sql := `SELECT "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text", date
+	sql := `SELECT "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text", "date"
 		FROM "send_task" where "user_id" = $1`
 
 	rows, err := r.DB.Query(sql, newPostsData...)
