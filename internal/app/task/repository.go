@@ -215,7 +215,7 @@ func (r *RepositoryTask) GetSendTask(UserId int) (*models.SendTasks, error) {
 
 	var newPostsData []interface{}
 	newPostsData = append(newPostsData, UserId)
-	sql := `SELECT "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text", get_ru_date(date) 
+	sql := `SELECT "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text", date
 		FROM "send_task" where "user_id" = $1`
 
 	rows, err := r.DB.Query(sql, newPostsData...)
