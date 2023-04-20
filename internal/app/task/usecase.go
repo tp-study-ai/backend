@@ -539,3 +539,11 @@ func (u *UseCaseTask) GetShockMode(id int) (*models.ShockMode, error) {
 
 	return shockMode, nil
 }
+
+func (u *UseCaseTask) GetDoneTask(id int) (*models.DoneTask, error) {
+	doneTask, err := u.Repo.GetDoneTask(id)
+	if err != nil {
+		return nil, err
+	}
+	return doneTask, nil
+}

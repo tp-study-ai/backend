@@ -15,4 +15,5 @@ type UseCase interface {
 	DeleteLike(like models.LikeJson) (err error)
 	GetCountTaskOfDate(id int) (*models.Days, error)
 	GetShockMode(id int) (*models.ShockMode, error)
+	GetDoneTask(id int) (*models.DoneTask, error)
 }

@@ -366,3 +366,32 @@ func (r *RepositoryTask) GetCountTaskOfDate(id int, day time.Time) (int, error) 
 	}
 	return countTask, nil
 }
+
+func (r *RepositoryTask) GetDoneTask(id int) (*models.DoneTask, error) {
+	doneTask := &models.DoneTask{}
+	var newPostsData []interface{}
+	newPostsData = append(newPostsData, id)
+
+	sql := `select DISTINCT task_id from send_task where user_id = $1 and "tests_passed" = "tests_total";`
+
+	rows, err := r.DB.Query(sql, newPostsData...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var buff int
+		err = rows.Scan(
+			&buff,
+		)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(buff)
+
+		doneTask.DoneTask = append(doneTask.DoneTask, buff)
+	}
+
+	return doneTask, nil
+}

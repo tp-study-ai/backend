@@ -18,4 +18,5 @@ type Repository interface {
 	GetLikes(UserId models.UserId) (*models.LikesDb, error)
 	DeleteLike(like models.LikeDb) (err error)
 	GetCountTaskOfDate(id int, day time.Time) (int, error)
+	GetDoneTask(id int) (*models.DoneTask, error)
 }
