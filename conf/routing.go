@@ -32,6 +32,7 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	router.GET("/api/get_tags", sh.TaskHandler.GetTags, mwChain...)
 	router.POST("/api/get_similar", sh.TaskHandler.GetSimilar, mwChain...)
 	router.GET("/api/get_send_tasks", sh.TaskHandler.GetSendTasks, mwChain...)
+	router.GET("/api/get_send_tasks_by_task_id", sh.TaskHandler.GetSendTaskByTaskId, mwChain...)
 	router.POST("/api/like_task", sh.TaskHandler.LikeTask, mwChain...)
 	router.POST("/api/delete_like", sh.TaskHandler.DeleteLike, mwChain...)
 	router.GET("/api/get_like_tasks", sh.TaskHandler.GetLikeTasks, mwChain...)

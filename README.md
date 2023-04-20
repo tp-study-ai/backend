@@ -203,6 +203,41 @@
 >>```
 
 > описание:
+>> получение посылок по id задачи
+>
+> метод:
+>> POST
+>
+> URL:
+> > https://study-ai.ru/api/get_send_tasks_by_task_id
+>
+>> RESPONSE
+>>```json
+>>{
+>>    "tasks": [
+>>        {
+>>            "id": 1,
+>>            "user_id": 1,
+>>            "task_id": 1,
+>>            "check_time": 1.002,
+>>            "build_time": 0,
+>>            "check_result": 6,
+>>            "check_message": "check_message",
+>>            "tests_passed": 0,
+>>            "tests_total": 31,
+>>            "lint_success": false,
+>>            "code_text": "#include <bits/stdc++.h> ...",
+>>            "date": "12 апреля 2023, 12:14"
+>>        },
+>>        {
+>>            ...
+>>        },
+>>        ...
+>>    ]
+>>}
+>>```
+
+> описание:
 >> рекомендаций
 >
 > метод:

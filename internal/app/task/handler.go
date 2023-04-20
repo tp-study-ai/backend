@@ -235,6 +235,33 @@ func (h HandlerTask) GetSendTasks(ctx echo.Context) error {
 	return ctx.JSONBlob(http.StatusOK, result)
 }
 
+func (h HandlerTask) GetSendTaskByTaskId(ctx echo.Context) error {
+	user := middleware.GetUserFromCtx(ctx)
+	if user == nil {
+		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
+	}
+
+	id := ctx.QueryParam("id")
+	fmt.Println("Param: ", id, " ", reflect.TypeOf(id))
+	taskId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return tools.CustomError(ctx, err, 0, "ParseInt")
+	}
+
+	tasks, err := h.UseCase.GetSendTaskByTaskId(int(user.Id), int(taskId))
+	if err != nil {
+		return tools.CustomError(ctx, err, 1, "GetSendTasks usecase")
+	}
+
+	result, err := json.Marshal(tasks)
+	if err != nil {
+		return tools.CustomError(ctx, err, 2, "GetSendTasks Marshal")
+	}
+
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}
+
 func (h HandlerTask) LikeTask(ctx echo.Context) error {
 	user := middleware.GetUserFromCtx(ctx)
 	if user == nil {

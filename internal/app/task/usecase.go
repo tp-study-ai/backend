@@ -392,6 +392,36 @@ func (u *UseCaseTask) GetSendTask(UserId int) (*models.SendTasksJson, error) {
 	return reqTasks, nil
 }
 
+func (u *UseCaseTask) GetSendTaskByTaskId(UserId int, TaskId int) (*models.SendTasksJson, error) {
+	tasks, err := u.Repo.GetSendTaskByTaskId(UserId, TaskId)
+	if err != nil {
+		return nil, err
+	}
+
+	reqTasks := &models.SendTasksJson{
+		Tasks: make([]models.SendTaskJson, len(tasks.Tasks)),
+	}
+
+	for i, task := range tasks.Tasks {
+		reqTasks.Tasks[i] = models.SendTaskJson{
+			ID:           task.ID,
+			UserId:       task.UserId,
+			TaskId:       task.TaskId,
+			CheckTime:    task.CheckTime,
+			BuildTime:    task.BuildTime,
+			CheckResult:  task.CheckResult,
+			CheckMessage: task.CheckMessage,
+			TestsPassed:  task.TestsPassed,
+			TestsTotal:   task.TestsTotal,
+			LintSuccess:  task.LintSuccess,
+			CodeText:     task.CodeText,
+			Date:         task.Date,
+		}
+	}
+
+	return reqTasks, nil
+}
+
 func (u *UseCaseTask) LikeTask(like models.LikeJson) (err error) {
 	_, err = u.Repo.GetLike(models.LikeDb{UserId: like.UserId, TaskId: like.TaskId})
 	if err == nil {

@@ -252,6 +252,48 @@ func (r *RepositoryTask) GetSendTask(UserId int) (*models.SendTasks, error) {
 	return Task1, nil
 }
 
+func (r *RepositoryTask) GetSendTaskByTaskId(UserId int, TaskId int) (*models.SendTasks, error) {
+	Task1 := &models.SendTasks{}
+
+	var newPostsData []interface{}
+	newPostsData = append(newPostsData, UserId)
+	newPostsData = append(newPostsData, TaskId)
+	sql := `SELECT "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text", "date"
+		FROM "send_task" where "user_id" = $1 and "task_id" = $2`
+
+	rows, err := r.DB.Query(sql, newPostsData...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var buff models.SendTask
+		err = rows.Scan(
+			&buff.ID,
+			&buff.UserId,
+			&buff.TaskId,
+			&buff.CheckTime,
+			&buff.BuildTime,
+			&buff.CheckResult,
+			&buff.CheckMessage,
+			&buff.TestsPassed,
+			&buff.TestsTotal,
+			&buff.LintSuccess,
+			&buff.CodeText,
+			&buff.Date,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		Task1.Tasks = append(Task1.Tasks, buff)
+	}
+
+	return Task1, nil
+}
+
 func (r *RepositoryTask) LikeTask(like models.LikeDb) (err error) {
 	fmt.Println("RepositoryTask", like)
 	sql := `insert into "likes" ("user_id", "task_id") values ($1, $2);`

@@ -9,6 +9,7 @@ type UseCase interface {
 	GetTaskByLimit(id int, sort string, tag []int) (*models.TasksPagination, error)
 	GetSimilar(solution models.SimilarRequest) (*models.Tasks, error)
 	GetSendTask(UserId int) (*models.SendTasksJson, error)
+	GetSendTaskByTaskId(UserId int, TaskId int) (*models.SendTasksJson, error)
 	LikeTask(like models.LikeJson) (err error)
 	GetLikeTask(UserId models.UserId) (*models.LikeTasks, error)
 	DeleteLike(like models.LikeJson) (err error)
