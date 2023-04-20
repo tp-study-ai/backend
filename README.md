@@ -432,13 +432,15 @@
 >> GET
 >
 > URL
->> http://127.0.0.1:8000/api/tasks_list?page=0&sort=rating_up&tags=1
+>> http://127.0.0.1:8000/api/tasks_list?page=0&min_rating=1000&max_rating=4000&sort=rating_up&tags=1,4
 >
 >> PARAMS  
 >> page\
 >> sort
 >> * rating_up рэйтинг по возрастанию
 >> * rating_down рэйтинг по убыванию
+>> * min_rating
+>> * max_rating
 >> * во всех остальных случаях сортирует по id\
 >>
 >> tags

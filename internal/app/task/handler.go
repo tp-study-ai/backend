@@ -70,9 +70,31 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 	sort := ctx.QueryParam("sort")
 	//fmt.Printf("sort: %s %s\n", sort, reflect.TypeOf(sort))
 	if sort == "rating_up" || sort == "rating_down" || sort == "" {
-		//fmt.Println("sort params is OK")
+		fmt.Println("sort params is OK")
 	} else {
 		sort = ""
+	}
+
+	minRating := ctx.QueryParam("min_rating")
+	var requestMinRatig int64
+	if minRating == "" {
+		requestMinRatig = 0
+	} else {
+		requestMinRatig, err = strconv.ParseInt(minRating, 10, 64)
+		if err != nil {
+			requestMinRatig = 0
+		}
+	}
+
+	maxRating := ctx.QueryParam("min_rating")
+	var requestMaxRatig int64
+	if minRating == "" {
+		requestMaxRatig = 0
+	} else {
+		requestMaxRatig, err = strconv.ParseInt(maxRating, 10, 64)
+		if err != nil {
+			requestMaxRatig = 0
+		}
 	}
 
 	tags := ctx.QueryParam("tags")
@@ -94,7 +116,7 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 		}
 	}
 
-	tasks, err := h.UseCase.GetTaskByLimit(int(pageInt), sort, tagsInt)
+	tasks, err := h.UseCase.GetTaskByLimit(int(pageInt), sort, tagsInt, int(requestMinRatig), int(requestMaxRatig))
 	if err != nil {
 		return tools.CustomError(ctx, err, 1, "что-то сломалось GetTaskByLimit")
 	}

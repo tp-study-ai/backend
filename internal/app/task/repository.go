@@ -84,7 +84,7 @@ func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskDB, err error) {
 	return
 }
 
-func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int) (*models.TasksResponse, int, error) {
+func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int, minRating int, maxRating int) (*models.TasksResponse, int, error) {
 	tasks := &models.TasksResponse{}
 
 	var ForTaskCount []interface{}
@@ -104,6 +104,56 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int) (*models
 		ForTaskCount = append(ForTaskCount, pq.Array(tag))
 	}
 
+	if minRating == 0 && maxRating == 0 {
+		fmt.Println("no rating")
+	} else {
+		if minRating > 0 && maxRating > 0 {
+			if len(tag) != 0 {
+				sql = sql + ` and $4 <= cf_rating and cf_rating <= $5`
+				newPostsData = append(newPostsData, minRating)
+				newPostsData = append(newPostsData, maxRating)
+				sqlCount = sqlCount + ` and $2 <= cf_rating and cf_rating <= $3`
+				ForTaskCount = append(ForTaskCount, minRating)
+				ForTaskCount = append(ForTaskCount, maxRating)
+			} else {
+				sql = sql + ` where $3 <= cf_rating and cf_rating <= $4`
+				newPostsData = append(newPostsData, minRating)
+				newPostsData = append(newPostsData, maxRating)
+				sqlCount = sqlCount + ` where $1 <= cf_rating and cf_rating <= $2`
+				ForTaskCount = append(ForTaskCount, minRating)
+				ForTaskCount = append(ForTaskCount, maxRating)
+			}
+		} else {
+			if minRating > 0 {
+				if len(tag) != 0 {
+					sql = sql + ` and $4 <= cf_rating`
+					newPostsData = append(newPostsData, minRating)
+					sqlCount = sqlCount + ` and $2 <= cf_rating`
+					ForTaskCount = append(ForTaskCount, minRating)
+				} else {
+					sql = sql + ` where $3 <= cf_rating`
+					newPostsData = append(newPostsData, minRating)
+					sqlCount = sqlCount + ` where $2 <= cf_rating`
+					ForTaskCount = append(ForTaskCount, minRating)
+				}
+			} else {
+				if maxRating > 0 {
+					if len(tag) != 0 {
+						sql = sql + ` and cf_rating <= $4`
+						newPostsData = append(newPostsData, maxRating)
+						sqlCount = sqlCount + ` and cf_rating <= $2`
+						ForTaskCount = append(ForTaskCount, maxRating)
+					} else {
+						sql = sql + ` where cf_rating <= $3`
+						newPostsData = append(newPostsData, maxRating)
+						sqlCount = sqlCount + ` where cf_rating <= $1`
+						ForTaskCount = append(ForTaskCount, maxRating)
+					}
+				}
+			}
+		}
+	}
+
 	if sort == "" {
 		sql = sql + `order by "id"`
 	}
@@ -117,6 +167,9 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int) (*models
 	}
 
 	sql = sql + ` limit $1 offset $2`
+
+	fmt.Println(sqlCount)
+	fmt.Println(sql)
 
 	err := r.DB.QueryRow(sqlCount, ForTaskCount...).Scan(&TaskCount)
 	if err != nil {

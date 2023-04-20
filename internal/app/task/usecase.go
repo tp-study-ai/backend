@@ -151,8 +151,8 @@ func (u *UseCaseTask) GetTaskById(id int) (task models.TaskJSON, err error) {
 	return
 }
 
-func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int) (*models.TasksPagination, error) {
-	tasks, taskCount, err := u.Repo.GetTaskByLimit(id, sort, tag)
+func (u *UseCaseTask) GetTaskByLimit(id int, sort string, tag []int, minRating int, maxRating int) (*models.TasksPagination, error) {
+	tasks, taskCount, err := u.Repo.GetTaskByLimit(id, sort, tag, minRating, maxRating)
 	if err != nil {
 		return nil, err
 	}
