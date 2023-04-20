@@ -209,3 +209,7 @@ type Message struct {
 type Days struct {
 	Days []int `json:"days"`
 }
+
+type ShockMode struct {
+	ShockMode int `json:"chock_mode"`
+}
