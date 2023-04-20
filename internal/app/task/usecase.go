@@ -513,7 +513,7 @@ func (u *UseCaseTask) GetCountTaskOfDate(id int) (*models.Days, error) {
 		if err != nil {
 			return nil, err
 		}
-		days.Days = append(days.Days, task)
+		days.Days = append(days.Days, models.Day{Day: now, Count: task})
 		now = now.Add(-24 * time.Hour)
 	}
 

@@ -1,6 +1,9 @@
 package models
 
-import "github.com/jackc/pgx/pgtype"
+import (
+	"github.com/jackc/pgx/pgtype"
+	"time"
+)
 
 type TagJson struct {
 	TagsId int    `json:"tags_id"`
@@ -206,8 +209,13 @@ type Message struct {
 	Message string `json:"message"`
 }
 
+type Day struct {
+	Day   time.Time `json:"day"`
+	Count int       `json:"count_task"`
+}
+
 type Days struct {
-	Days []int `json:"days"`
+	Days []Day `json:"days"`
 }
 
 type ShockMode struct {
