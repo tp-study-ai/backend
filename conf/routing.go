@@ -45,5 +45,6 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	router.POST("/api/login", sh.AuthHandler.Login, mwChain...)
 	router.GET("/api/logout", sh.AuthHandler.Logout, mwChain...)
 	router.GET("/api/get_user", sh.AuthHandler.GetUserById, mwChain...)
-
+	router.POST("/api/update_username", sh.AuthHandler.UpdateUsername, mwChain...)
+	router.POST("/api/update_password", sh.AuthHandler.UpdatePassword, mwChain...)
 }

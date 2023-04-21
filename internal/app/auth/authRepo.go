@@ -7,4 +7,6 @@ type Repository interface {
 	GetUser(UserRequest *models.UserDB) (*models.UserDB, error)
 	CreateUser(UserRequest *models.UserDB) (*models.UserDB, error)
 	Login(UserRequest *models.UserDB) (*models.UserDB, error)
+	UpdateUsername(UserRequest *models.UpdateUsernameDb) (*models.UserDB, error)
+	UpdatePassword(UserRequest *models.UpdatePasswordDb) (*models.UserDB, error)
 }

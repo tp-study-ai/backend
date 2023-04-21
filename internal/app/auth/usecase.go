@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/models"
 )
@@ -45,13 +44,39 @@ func (u *UseCaseAuth) Login(User *models.UserJson) (*models.ResponseUserJson, er
 	return nil, errors.Errorf("username || password не верно")
 }
 
-func (u *UseCaseAuth) GetUserById(id models.UserId) (models.ResponseUserJson, error) {
+func (u *UseCaseAuth) GetUserById(id models.UserId) (*models.ResponseUserJson, error) {
 	user, err := u.Repo.GetUserById(id)
 	if err != nil {
-		return models.ResponseUserJson{}, err
+		return nil, err
 	}
+	return &models.ResponseUserJson{Id: user.Id, Username: user.Username}, nil
+}
 
-	user1 := models.ResponseUserJson{Id: user.Id, Username: user.Username}
-	fmt.Println(user)
-	return user1, nil
+func (u *UseCaseAuth) UpdateUsername(UserRequest *models.UpdateUsernameJson) (*models.ResponseUserJson, error) {
+	UserResponse, err := u.Repo.UpdateUsername(
+		&models.UpdateUsernameDb{
+			Id:          UserRequest.Id,
+			Username:    UserRequest.Username,
+			NewUsername: UserRequest.NewUsername,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &models.ResponseUserJson{Id: UserResponse.Id, Username: UserResponse.Username}, nil
+}
+
+func (u *UseCaseAuth) UpdatePassword(UserRequest *models.UpdatePasswordJson) (*models.ResponseUserJson, error) {
+	UserResponse, err := u.Repo.UpdatePassword(
+		&models.UpdatePasswordDb{
+			Id:          UserRequest.Id,
+			Username:    UserRequest.Username,
+			OldPassword: UserRequest.OldPassword,
+			NewPassword: UserRequest.NewPassword,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &models.ResponseUserJson{Id: UserResponse.Id, Username: UserResponse.Username}, nil
 }

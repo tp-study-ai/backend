@@ -614,3 +614,58 @@
 >>    string `json:"username"`
 >> }
 >> ```
+
+> описание:
+>> обновление username
+>
+> метод:
+>> POST
+>
+> URL
+>> http://127.0.0.1:8000/api/update_username
+>> ```
+>
+>> REQUEST
+>> ```json
+>> {
+>>    "id": 1,
+>>    "username": "yutfut1",
+>>    "new_username": "yutfut2"
+>> }
+>> ```
+>
+>> RESPONSE
+>>```json
+>> {
+>>    "id": 1,
+>>    "username": "yutfut2"
+>> }
+>> ```
+
+> описание:
+>> обновление password
+>
+> метод:
+>> POST
+>
+> URL
+>> http://127.0.0.1:8000/api/update_password
+>> ```
+>
+>> REQUEST
+>> ```json
+>> {
+>>    "id": 1,
+>>    "username": "yutfut2",
+>>    "password": "yutfut1",
+>>    "new_password": "yutfut2"
+>> }
+>> ```
+>
+>> RESPONSE
+>>```json
+>> {
+>>    "id": 1,
+>>    "username": "yutfut2"
+>> }
+>> ```

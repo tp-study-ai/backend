@@ -60,3 +60,29 @@ func (r *RepositoryAuth) Login(UserRequest *models.UserDB) (*models.UserDB, erro
 	}
 	return UserResponse, nil
 }
+
+func (r *RepositoryAuth) UpdateUsername(UserRequest *models.UpdateUsernameDb) (*models.UserDB, error) {
+	UserResponse := &models.UserDB{}
+	sql := `UPDATE "users" SET "username" = $1 WHERE "username" = $2 and "id" = $3 RETURNING "id", "username", "password";`
+	err := r.DB.QueryRow(
+		sql,
+		UserRequest.NewUsername, UserRequest.Username, UserRequest.Id,
+	).Scan(&UserResponse.Id, &UserResponse.Username, &UserResponse.Password)
+	if err != nil {
+		return nil, err
+	}
+	return UserResponse, nil
+}
+
+func (r *RepositoryAuth) UpdatePassword(UserRequest *models.UpdatePasswordDb) (*models.UserDB, error) {
+	UserResponse := &models.UserDB{}
+	sql := `UPDATE "users" SET "password" = $1 WHERE "username" = $2 and "id" = $3 RETURNING "id", "username", "password";`
+	err := r.DB.QueryRow(
+		sql,
+		UserRequest.NewPassword, UserRequest.Username, UserRequest.Id,
+	).Scan(&UserResponse.Id, &UserResponse.Username, &UserResponse.Password)
+	if err != nil {
+		return nil, err
+	}
+	return UserResponse, nil
+}

@@ -18,7 +18,33 @@ type UserDB struct {
 	Password string `db:"password"`
 }
 
+type UpdateUsernameDb struct {
+	Id          UserId `db:"id"`
+	Username    string `db:"username"`
+	NewUsername string `db:"username"`
+}
+
+type UpdatePasswordDb struct {
+	Id          UserId `db:"id"`
+	Username    string `db:"username"`
+	OldPassword string `db:"password"`
+	NewPassword string `db:"password"`
+}
+
 type ResponseUserJson struct {
 	Id       UserId `json:"id"`
 	Username string `json:"username"`
+}
+
+type UpdateUsernameJson struct {
+	Id          UserId `json:"id"`
+	Username    string `json:"username"`
+	NewUsername string `json:"new_username"`
+}
+
+type UpdatePasswordJson struct {
+	Id          UserId `json:"id"`
+	Username    string `json:"username"`
+	OldPassword string `json:"password"`
+	NewPassword string `json:"new_password"`
 }
