@@ -420,8 +420,8 @@ func (r *RepositoryTask) GetCountTaskOfDate(id int, day time.Time) (int, error) 
 	return countTask, nil
 }
 
-func (r *RepositoryTask) GetDoneTask(id int) (*models.DoneTask, error) {
-	doneTask := &models.DoneTask{}
+func (r *RepositoryTask) GetDoneTask(id int) (*[]int, error) {
+	var doneTask []int
 	var newPostsData []interface{}
 	newPostsData = append(newPostsData, id)
 
@@ -443,8 +443,8 @@ func (r *RepositoryTask) GetDoneTask(id int) (*models.DoneTask, error) {
 		}
 		fmt.Println(buff)
 
-		doneTask.DoneTask = append(doneTask.DoneTask, buff)
+		doneTask = append(doneTask, buff)
 	}
 
-	return doneTask, nil
+	return &doneTask, nil
 }

@@ -224,5 +224,6 @@ type ShockMode struct {
 }
 
 type DoneTask struct {
-	DoneTask []int `json:"done_task"`
+	CountDoneTask int        `json:"count_done_task"`
+	DoneTask      []TaskJSON `json:"done_task"`
 }

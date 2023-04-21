@@ -110,6 +110,9 @@ func (u *UseCaseTask) GetTask() (task models.TaskJSON, err error) {
 
 func (u *UseCaseTask) GetTaskById(id int) (task models.TaskJSON, err error) {
 	Task, err := u.Repo.GetTaskById(id)
+	if err != nil {
+		return
+	}
 
 	var tagsId []int
 	var tagsEn []string
@@ -145,9 +148,6 @@ func (u *UseCaseTask) GetTaskById(id int) (task models.TaskJSON, err error) {
 		Note:             Task.Note,
 	}
 
-	if err != nil {
-		return
-	}
 	return
 }
 
@@ -563,9 +563,55 @@ func (u *UseCaseTask) GetShockMode(id int) (*models.ShockMode, error) {
 }
 
 func (u *UseCaseTask) GetDoneTask(id int) (*models.DoneTask, error) {
-	doneTask, err := u.Repo.GetDoneTask(id)
+	doneTask := &models.DoneTask{}
+	tasks, err := u.Repo.GetDoneTask(id)
 	if err != nil {
 		return nil, err
 	}
+
+	doneTask.CountDoneTask = len(*tasks)
+
+	for _, taskId := range *tasks {
+		var buff models.TaskDB
+		buff, err = u.Repo.GetTaskById(taskId)
+		if err != nil {
+			return nil, err
+		}
+
+		var tagsId []int
+		var tagsEn []string
+		var tagsRu []string
+
+		if buff.CfTags.Elements[0].Int != 0 {
+			for i := 0; i < len(buff.CfTags.Elements); i++ {
+				tagsId = append(tagsId, int(buff.CfTags.Elements[i].Int))
+				tagsEn = append(tagsEn, TagDict[tagsId[i]][0])
+				tagsRu = append(tagsRu, TagDict[tagsId[i]][1])
+			}
+		}
+
+		doneTask.DoneTask = append(doneTask.DoneTask, models.TaskJSON{
+			Id:               buff.Id,
+			Name:             buff.Name,
+			Description:      buff.Description,
+			PublicTests:      buff.PublicTests,
+			Difficulty:       buff.Difficulty,
+			CfContestId:      buff.CfContestId,
+			CfIndex:          buff.CfIndex,
+			CfPoints:         buff.CfPoints,
+			CfRating:         buff.CfRating,
+			CfTagsID:         tagsId,
+			CfTagsRu:         tagsRu,
+			CfTagsEN:         tagsEn,
+			TimeLimit:        buff.TimeLimit,
+			MemoryLimitBytes: buff.MemoryLimitBytes,
+			Link:             buff.Link,
+			TaskRu:           buff.TaskRu,
+			Input:            buff.Input,
+			Output:           buff.Output,
+			Note:             buff.Note,
+		})
+	}
+
 	return doneTask, nil
 }
