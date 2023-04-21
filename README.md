@@ -14,6 +14,7 @@
 >> RESPONSE
 >>```json
 >>{
+>>  "today": false,
 >>  "chock_mode": 2
 >>}
 >>```

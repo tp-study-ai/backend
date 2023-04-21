@@ -219,7 +219,8 @@ type Days struct {
 }
 
 type ShockMode struct {
-	ShockMode int `json:"chock_mode"`
+	Today     bool `json:"today"`
+	ShockMode int  `json:"chock_mode"`
 }
 
 type DoneTask struct {

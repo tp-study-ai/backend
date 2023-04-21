@@ -535,6 +535,28 @@ func (u *UseCaseTask) GetShockMode(id int) (*models.ShockMode, error) {
 		a += 1
 		now = now.Add(-24 * time.Hour)
 	}
+
+	if a != 0 {
+		shockMode.Today = true
+		shockMode.ShockMode = a
+		return shockMode, nil
+	} else {
+		fmt.Println()
+		now = now.Add(-24 * time.Hour)
+		for i := 0; i < 365; i++ {
+			count, err := u.Repo.GetCountTaskOfDate(id, now)
+			if err != nil {
+				return nil, err
+			}
+			if count == 0 {
+				break
+			}
+			a += 1
+			now = now.Add(-24 * time.Hour)
+		}
+	}
+
+	shockMode.Today = false
 	shockMode.ShockMode = a
 
 	return shockMode, nil
