@@ -36,15 +36,15 @@ type ResponseUserJson struct {
 	Username string `json:"username"`
 }
 
-type UpdateUsernameJson struct {
+//type UpdateUsernameJson struct {
+//	Id          UserId `json:"id"`
+//	Username    string `json:"username"`
+//	NewUsername string `json:"new_username"`
+//}
+
+type UpdateJson struct {
 	Id          UserId `json:"id"`
 	Username    string `json:"username"`
 	NewUsername string `json:"new_username"`
-}
-
-type UpdatePasswordJson struct {
-	Id          UserId `json:"id"`
-	Username    string `json:"username"`
-	OldPassword string `json:"password"`
 	NewPassword string `json:"new_password"`
 }

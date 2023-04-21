@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/models"
 )
@@ -52,31 +53,40 @@ func (u *UseCaseAuth) GetUserById(id models.UserId) (*models.ResponseUserJson, e
 	return &models.ResponseUserJson{Id: user.Id, Username: user.Username}, nil
 }
 
-func (u *UseCaseAuth) UpdateUsername(UserRequest *models.UpdateUsernameJson) (*models.ResponseUserJson, error) {
-	UserResponse, err := u.Repo.UpdateUsername(
-		&models.UpdateUsernameDb{
-			Id:          UserRequest.Id,
-			Username:    UserRequest.Username,
-			NewUsername: UserRequest.NewUsername,
-		},
-	)
-	if err != nil {
-		return nil, err
+func (u *UseCaseAuth) Update(UserRequest *models.UpdateJson) (*models.ResponseUserJson, error) {
+	fmt.Println(UserRequest.NewUsername)
+	if len(UserRequest.NewUsername) != 0 {
+		fmt.Println("nice")
+		UserResponse, err := u.Repo.UpdateUsername(
+			&models.UpdateUsernameDb{
+				Id:          UserRequest.Id,
+				Username:    UserRequest.Username,
+				NewUsername: UserRequest.NewUsername,
+			},
+		)
+		fmt.Println(err)
+		if err != nil {
+			return nil, err
+		}
+		if len(UserRequest.NewPassword) == 0 {
+			return &models.ResponseUserJson{Id: UserResponse.Id, Username: UserResponse.Username}, nil
+		}
 	}
-	return &models.ResponseUserJson{Id: UserResponse.Id, Username: UserResponse.Username}, nil
-}
 
-func (u *UseCaseAuth) UpdatePassword(UserRequest *models.UpdatePasswordJson) (*models.ResponseUserJson, error) {
-	UserResponse, err := u.Repo.UpdatePassword(
-		&models.UpdatePasswordDb{
-			Id:          UserRequest.Id,
-			Username:    UserRequest.Username,
-			OldPassword: UserRequest.OldPassword,
-			NewPassword: UserRequest.NewPassword,
-		},
-	)
-	if err != nil {
-		return nil, err
+	fmt.Println(UserRequest.NewPassword)
+	if len(UserRequest.NewPassword) != 0 {
+		fmt.Println("nice")
+		UserResponse, err := u.Repo.UpdatePassword(
+			&models.UpdatePasswordDb{
+				Id:          UserRequest.Id,
+				Username:    UserRequest.Username,
+				NewPassword: UserRequest.NewPassword,
+			},
+		)
+		if err != nil {
+			return nil, err
+		}
+		return &models.ResponseUserJson{Id: UserResponse.Id, Username: UserResponse.Username}, nil
 	}
-	return &models.ResponseUserJson{Id: UserResponse.Id, Username: UserResponse.Username}, nil
+	return nil, errors.Errorf("error")
 }

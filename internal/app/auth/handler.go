@@ -2,6 +2,7 @@ package auth
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
@@ -143,19 +144,21 @@ func (h HandlerAuth) GetUserById(ctx echo.Context) error {
 	return ctx.JSONBlob(http.StatusOK, result)
 }
 
-func (h HandlerAuth) UpdateUsername(ctx echo.Context) error {
+func (h HandlerAuth) Update(ctx echo.Context) error {
 	user := middleware.GetUserFromCtx(ctx)
 	if user == nil {
 		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
 	}
 
-	UserRequest := &models.UpdateUsernameJson{}
+	UserRequest := &models.UpdateJson{}
 	err := ctx.Bind(&UserRequest)
 	if err != nil {
 		return tools.CustomError(ctx, err, 1, "битый json на updateusername")
 	}
 
-	user1, err := h.UseCase.UpdateUsername(UserRequest)
+	fmt.Println(UserRequest)
+
+	user1, err := h.UseCase.Update(UserRequest)
 	if user == nil {
 		return tools.CustomError(ctx, err, 0, "ошибка при получении пользователя")
 	}
@@ -165,24 +168,24 @@ func (h HandlerAuth) UpdateUsername(ctx echo.Context) error {
 	return ctx.JSONBlob(http.StatusOK, result)
 }
 
-func (h HandlerAuth) UpdatePassword(ctx echo.Context) error {
-	user := middleware.GetUserFromCtx(ctx)
-	if user == nil {
-		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
-	}
-
-	UserRequest := &models.UpdatePasswordJson{}
-	err := ctx.Bind(&UserRequest)
-	if err != nil {
-		return tools.CustomError(ctx, err, 1, "битый json на updateusername")
-	}
-
-	user1, err := h.UseCase.UpdatePassword(UserRequest)
-	if err != nil {
-		return tools.CustomError(ctx, err, 0, "ошибка при обновлении пароля")
-	}
-
-	result, _ := json.Marshal(user1)
-	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-	return ctx.JSONBlob(http.StatusOK, result)
-}
+//func (h HandlerAuth) UpdatePassword(ctx echo.Context) error {
+//	user := middleware.GetUserFromCtx(ctx)
+//	if user == nil {
+//		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
+//	}
+//
+//	UserRequest := &models.UpdatePasswordJson{}
+//	err := ctx.Bind(&UserRequest)
+//	if err != nil {
+//		return tools.CustomError(ctx, err, 1, "битый json на updateusername")
+//	}
+//
+//	user1, err := h.UseCase.UpdatePassword(UserRequest)
+//	if err != nil {
+//		return tools.CustomError(ctx, err, 0, "ошибка при обновлении пароля")
+//	}
+//
+//	result, _ := json.Marshal(user1)
+//	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+//	return ctx.JSONBlob(http.StatusOK, result)
+//}
