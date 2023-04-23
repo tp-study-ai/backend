@@ -444,7 +444,6 @@ func (r *RepositoryTask) GetAllUserTask(id int) (*[]int, error) {
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(buff)
 
 		allTask = append(allTask, buff)
 	}
@@ -452,6 +451,7 @@ func (r *RepositoryTask) GetAllUserTask(id int) (*[]int, error) {
 	return &allTask, nil
 }
 
+// GetDoneTask получение всех задач которые пользователь решал удачно
 func (r *RepositoryTask) GetDoneTask(id int) (*[]int, error) {
 	var doneTask []int
 	var newPostsData []interface{}

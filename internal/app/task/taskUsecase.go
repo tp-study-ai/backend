@@ -16,4 +16,5 @@ type UseCase interface {
 	GetCountTaskOfDate(id int) (*models.Days, error)
 	GetShockMode(id int) (*models.ShockMode, error)
 	GetDoneTask(id int) (*models.DoneTask, error)
+	GetNotDoneTask(id int) (*models.DoneTask, error)
 }

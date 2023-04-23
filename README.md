@@ -114,6 +114,67 @@
 >>}
 >>```
 
+> описание:
+>> получение всех начатых задач задач
+>
+> метод:
+>> GET
+>
+> URL:
+>> http://127.0.0.1:8000/api/get_done_task
+>
+>> RESPONSE
+>>```json
+>>{
+>>  "count_done_task": 2,
+>>  "done_task": [
+>>        {
+>>            "id": 41,
+>>            "name": "505_B. Mr. Kitayuta's Colorful Graph",
+>>            "description": "description",
+>>            "public_tests": [
+>>                "input",
+>>                "output"
+>>            ],
+>>            "difficulty": 8,
+>>            "cf_contest_id": 505,
+>>            "cf_index": "B",
+>>            "cf_points": 1000,
+>>            "cf_rating": 1400,
+>>            "cf_tags_ID": [
+>>                10,
+>>                12,
+>>                13,
+>>                20
+>>            ],
+>>            "cf_tags_RU": [
+>>                "поиск в глубину и подобное",
+>>                "дп",
+>>                "системы непересекающихся множеств",
+>>                "графы"
+>>            ],
+>>            "cf_tags_en": [
+>>                "dfs and similar",
+>>                "dp",
+>>                "dsu",
+>>                "graphs"
+>>            ],
+>>            "time_limit": 1,
+>>            "memory_limit_bytes": 1,
+>>            "link": "link",
+>>            "task_ru": "task_ru",
+>>            "input": "input",
+>>            "output": "output",
+>>            "note": "note"
+>>        },
+>>        {
+>>            ...
+>>        }
+>>        ...
+>>    ]
+>>}
+>>```
+
 ## Like
 
 > описание:
