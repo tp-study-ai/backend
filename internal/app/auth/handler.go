@@ -150,6 +150,8 @@ func (h HandlerAuth) Update(ctx echo.Context) error {
 		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
 	}
 
+	fmt.Println(user)
+
 	UserRequest := &models.UpdateJson{}
 	err := ctx.Bind(&UserRequest)
 	if err != nil {
@@ -158,7 +160,7 @@ func (h HandlerAuth) Update(ctx echo.Context) error {
 
 	fmt.Println(UserRequest)
 
-	user1, err := h.UseCase.Update(UserRequest)
+	user1, err := h.UseCase.Update(UserRequest, user.Id)
 	if user == nil {
 		return tools.CustomError(ctx, err, 0, "ошибка при получении пользователя")
 	}

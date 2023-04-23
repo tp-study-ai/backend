@@ -53,14 +53,21 @@ func (u *UseCaseAuth) GetUserById(id models.UserId) (*models.ResponseUserJson, e
 	return &models.ResponseUserJson{Id: user.Id, Username: user.Username}, nil
 }
 
-func (u *UseCaseAuth) Update(UserRequest *models.UpdateJson) (*models.ResponseUserJson, error) {
+func (u *UseCaseAuth) Update(UserRequest *models.UpdateJson, UserId models.UserId) (*models.ResponseUserJson, error) {
+	Uuser, err := u.Repo.GetUserById(UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(Uuser)
+
 	fmt.Println(UserRequest.NewUsername)
 	if len(UserRequest.NewUsername) != 0 {
 		fmt.Println("nice")
 		UserResponse, err := u.Repo.UpdateUsername(
 			&models.UpdateUsernameDb{
-				Id:          UserRequest.Id,
-				Username:    UserRequest.Username,
+				Id:          Uuser.Id,
+				Username:    Uuser.Username,
 				NewUsername: UserRequest.NewUsername,
 			},
 		)
@@ -78,8 +85,8 @@ func (u *UseCaseAuth) Update(UserRequest *models.UpdateJson) (*models.ResponseUs
 		fmt.Println("nice")
 		UserResponse, err := u.Repo.UpdatePassword(
 			&models.UpdatePasswordDb{
-				Id:          UserRequest.Id,
-				Username:    UserRequest.Username,
+				Id:          Uuser.Id,
+				Username:    Uuser.Username,
 				NewPassword: UserRequest.NewPassword,
 			},
 		)

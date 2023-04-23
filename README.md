@@ -644,17 +644,17 @@
 >
 >> REQUEST
 >> ```json
->> {
->>   string `json:"username"`
->>   string `json:"password"`
->> }
+>>  {
+>>  "username": "yf",
+>>  "password": "yf"
+>>}
 >> ```
 > 
 >> RESPONSE
 >>```json
 >> {
->>    int    `json:"id"`
->>    string `json:"username"`
+>>  "id": 2,
+>>  "username": "yf"
 >> }
 >> ```
 
@@ -730,8 +730,6 @@
 >> REQUEST
 >> ```json
 >> {
->>    "id": 1,
->>    "username": "yutfut2",
 >>    "new_username": "yutfut2",
 >>    "new_password": "yutfut3"
 >> }

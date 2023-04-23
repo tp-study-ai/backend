@@ -43,8 +43,6 @@ type ResponseUserJson struct {
 //}
 
 type UpdateJson struct {
-	Id          UserId `json:"id"`
-	Username    string `json:"username"`
 	NewUsername string `json:"new_username"`
 	NewPassword string `json:"new_password"`
 }

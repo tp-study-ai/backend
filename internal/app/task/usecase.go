@@ -589,6 +589,8 @@ func (u *UseCaseTask) GetNotDoneTask(id int) (*models.DoneTask, error) {
 		}
 	}
 
+	fmt.Println("notDoneTask:", notDoneTask)
+
 	notDoneTaskResponse := &models.DoneTask{}
 	notDoneTaskResponse.CountDoneTask = len(notDoneTask)
 
