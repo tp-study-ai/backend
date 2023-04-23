@@ -1,4 +1,4 @@
-FROM golang:alpine as build
+FROM golang as build
 
 COPY . /project
 
