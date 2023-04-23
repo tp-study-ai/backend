@@ -314,7 +314,7 @@ func (r *RepositoryTask) GetSendTaskByTaskId(UserId int, TaskId int) (*models.Se
 	//sql := `SELECT "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text", "date"
 	//	FROM "send_task" where "user_id" = $1 and "task_id" = $2`
 
-	sql := `SELECT * FROM "send_task" where "user_id" = $1 and "task_id" = $2 order by "id" desc`
+	sql := `SELECT * FROM "send_task" where "user_id" = $1 and "task_id" = $2`
 
 	rows, err := r.DB.Query(sql, newPostsData...)
 	if err != nil {
