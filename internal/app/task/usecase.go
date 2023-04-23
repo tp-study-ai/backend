@@ -562,6 +562,10 @@ func (u *UseCaseTask) GetShockMode(id int) (*models.ShockMode, error) {
 	return shockMode, nil
 }
 
+func (u *UseCaseTask) GetNotDoneTask(id int) {
+	
+}
+
 func (u *UseCaseTask) GetDoneTask(id int) (*models.DoneTask, error) {
 	doneTask := &models.DoneTask{}
 	tasks, err := u.Repo.GetDoneTask(id)

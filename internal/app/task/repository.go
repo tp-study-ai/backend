@@ -311,8 +311,10 @@ func (r *RepositoryTask) GetSendTaskByTaskId(UserId int, TaskId int) (*models.Se
 	var newPostsData []interface{}
 	newPostsData = append(newPostsData, UserId)
 	newPostsData = append(newPostsData, TaskId)
-	sql := `SELECT "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text", "date"
-		FROM "send_task" where "user_id" = $1 and "task_id" = $2`
+	//sql := `SELECT "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text", "date"
+	//	FROM "send_task" where "user_id" = $1 and "task_id" = $2`
+
+	sql := `SELECT * FROM "send_task" where "user_id" = $1 and "task_id" = $2 order by "id" desc`
 
 	rows, err := r.DB.Query(sql, newPostsData...)
 	if err != nil {
@@ -418,6 +420,36 @@ func (r *RepositoryTask) GetCountTaskOfDate(id int, day time.Time) (int, error) 
 		return 0, err
 	}
 	return countTask, nil
+}
+
+// GetAllUserTask получение всех задач которые пользователь решал удачно или нет
+func (r *RepositoryTask) GetAllUserTask(id int) (*[]int, error) {
+	var allTask []int
+	var newPostsData []interface{}
+	newPostsData = append(newPostsData, id)
+
+	sql := `select DISTINCT task_id from send_task where user_id = $1;`
+
+	rows, err := r.DB.Query(sql, newPostsData...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var buff int
+		err = rows.Scan(
+			&buff,
+		)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(buff)
+
+		allTask = append(allTask, buff)
+	}
+
+	return &allTask, nil
 }
 
 func (r *RepositoryTask) GetDoneTask(id int) (*[]int, error) {
