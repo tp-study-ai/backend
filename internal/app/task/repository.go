@@ -499,3 +499,7 @@ func (r *RepositoryTask) SetDifficultyTask(difficulty models.DifficultyDb) error
 	_, err := r.DB.Query(sql, newPostsData...)
 	return err
 }
+
+//func (r * RepositoryTask) GetSetDifficultyTasks(UserId int) (*[]int, error) {
+//
+//}
