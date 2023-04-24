@@ -227,3 +227,15 @@ type DoneTask struct {
 	CountDoneTask int        `json:"count_done_task"`
 	DoneTask      []TaskJSON `json:"done_task"`
 }
+
+type DifficultyDb struct {
+	UserId     int `db:"user_id"`
+	TaskId     int `db:"task_id"`
+	Difficulty int `db:"difficulty"`
+}
+
+type DifficultyJson struct {
+	UserId     int `json:"user_id"`
+	TaskId     int `json:"task_id"`
+	Difficulty int `json:"difficulty"`
+}

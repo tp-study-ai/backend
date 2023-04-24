@@ -480,3 +480,7 @@ func (r *RepositoryTask) GetDoneTask(id int) (*[]int, error) {
 
 	return &doneTask, nil
 }
+
+func (r *RepositoryTask) SetEasyTask() (*[]int, error) {
+
+}
