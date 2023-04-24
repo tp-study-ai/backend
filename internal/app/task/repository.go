@@ -500,6 +500,51 @@ func (r *RepositoryTask) SetDifficultyTask(difficulty models.DifficultyDb) error
 	return err
 }
 
-//func (r * RepositoryTask) GetSetDifficultyTasks(UserId int) (*[]int, error) {
-//
-//}
+func (r *RepositoryTask) GetSetDifficultyTasks(UserId int) (*[]int, error) {
+	var doneTask []int
+	var newPostsData []interface{}
+	newPostsData = append(newPostsData, UserId)
+
+	sql := `SELECT "task_id" FROM "difficulty_task" WHERE "user_id" = $1`
+
+	rows, err := r.DB.Query(sql, newPostsData...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var buff int
+		err = rows.Scan(
+			&buff,
+		)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(buff)
+
+		doneTask = append(doneTask, buff)
+	}
+
+	return &doneTask, nil
+}
+
+func (r *RepositoryTask) GetSetDifficultyTask(UserId int, TaskId int) (*models.DifficultyDb, error) {
+	doneTask := &models.DifficultyDb{}
+	var newPostsData []interface{}
+	newPostsData = append(newPostsData, UserId)
+	newPostsData = append(newPostsData, TaskId)
+
+	sql := `SELECT "user_id", "task_id", "difficulty" FROM "difficulty_task" WHERE "user_id" = $1 and "task_id" = $2`
+
+	err := r.DB.QueryRow(sql, UserId, TaskId).Scan(
+		&doneTask.UserId,
+		&doneTask.TaskId,
+		&doneTask.Difficulty,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return doneTask, nil
+}

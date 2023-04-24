@@ -243,3 +243,16 @@ type DifficultyJson struct {
 	TaskId     int `json:"task_id"`
 	Difficulty int `json:"difficulty"`
 }
+
+type StoryItem struct {
+	ProblemUrl      string `json:"problem_url"`
+	Rating          int    `json:"rating"`
+	Tags            []int  `json:"tags"`
+	DifficultyMatch int    `json:"difficulty_match"`
+	Solved          bool   `json:"solved"`
+	NAttempts       int    `json:"n_attempts"`
+}
+type Story struct {
+	UserId int         `json:"user_id"`
+	Story  []StoryItem `json:"story"`
+}

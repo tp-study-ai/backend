@@ -21,4 +21,6 @@ type Repository interface {
 	GetAllUserTask(id int) (*[]int, error)
 	GetDoneTask(id int) (*[]int, error)
 	SetDifficultyTask(difficulty models.DifficultyDb) error
+	GetSetDifficultyTasks(UserId int) (*[]int, error)
+	GetSetDifficultyTask(UserId int, TaskId int) (*models.DifficultyDb, error)
 }

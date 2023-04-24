@@ -39,6 +39,7 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	router.GET("/api/get_done_task", sh.TaskHandler.GetDoneTask, mwChain...)
 	router.GET("/api/get_not_done_task", sh.TaskHandler.GetNotDoneTask, mwChain...)
 	router.POST("/api/set_difficulty", sh.TaskHandler.SetDifficultyTask, mwChain...)
+	router.GET("/api/recommendations", sh.TaskHandler.Recommendations, mwChain...)
 
 	router.GET("api/calendar", sh.TaskHandler.GetCountTaskOfDate, mwChain...)
 	router.GET("api/shock_mode", sh.TaskHandler.GetChockMode, mwChain...)
@@ -48,5 +49,4 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	router.GET("/api/logout", sh.AuthHandler.Logout, mwChain...)
 	router.GET("/api/get_user", sh.AuthHandler.GetUserById, mwChain...)
 	router.POST("/api/update", sh.AuthHandler.Update, mwChain...)
-	//router.POST("/api/update_password", sh.AuthHandler.UpdatePassword, mwChain...)
 }
