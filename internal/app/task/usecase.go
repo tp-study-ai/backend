@@ -518,7 +518,7 @@ func (u *UseCaseTask) GetLikeTask(UserId models.UserId) (*models.LikeTasks, erro
 func (u *UseCaseTask) GetCountTaskOfDate(id int) (*models.Days, error) {
 	now := time.Now()
 	days := &models.Days{}
-	for i := 0; i < 60; i++ {
+	for i := 0; i < 365; i++ {
 		task, err := u.Repo.GetCountTaskOfDate(id, now)
 		if err != nil {
 			return nil, err
