@@ -44,6 +44,8 @@ func (r *RepositoryTask) GetTask() (Task models.TaskDB, err error) {
 		&Task.TimeLimit,
 		&Task.MemoryLimitBytes,
 		&Task.Link,
+		&Task.ShortLink,
+		&Task.NameRu,
 		&Task.TaskRu,
 		&Task.Input,
 		&Task.Output,
@@ -75,6 +77,8 @@ func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskDB, err error) {
 		&Task.TimeLimit,
 		&Task.MemoryLimitBytes,
 		&Task.Link,
+		&Task.ShortLink,
+		&Task.NameRu,
 		&Task.TaskRu,
 		&Task.Input,
 		&Task.Output,
@@ -200,6 +204,8 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int, minRatin
 			&buff.TimeLimit,
 			&buff.MemoryLimitBytes,
 			&buff.Link,
+			&buff.ShortLink,
+			&buff.NameRu,
 			&buff.TaskRu,
 			&buff.Input,
 			&buff.Output,
@@ -255,6 +261,8 @@ func (r *RepositoryTask) GetTaskByLink(link string) (Task models.TaskDB, err err
 		&Task.TimeLimit,
 		&Task.MemoryLimitBytes,
 		&Task.Link,
+		&Task.TaskRu,
+		&Task.NameRu,
 		&Task.TaskRu,
 		&Task.Input,
 		&Task.Output,
@@ -481,6 +489,6 @@ func (r *RepositoryTask) GetDoneTask(id int) (*[]int, error) {
 	return &doneTask, nil
 }
 
-func (r *RepositoryTask) SetEasyTask() (*[]int, error) {
-
-}
+//func (r *RepositoryTask) SetEasyTask() (*[]int, error) {
+//
+//}

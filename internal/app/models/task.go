@@ -31,6 +31,8 @@ type TaskDB struct {
 	TimeLimit        float64          `db:"time_limit"`
 	MemoryLimitBytes int              `db:"memory_limit_bytes"`
 	Link             string           `db:"link"`
+	ShortLink        string           `db:"short_link"`
+	NameRu           string           `db:"name_ru"`
 	TaskRu           string           `db:"task_ru"`
 	Input            string           `db:"input"`
 	Output           string           `db:"output"`
@@ -57,6 +59,8 @@ type TaskJSON struct {
 	TimeLimit        float64  `json:"time_limit"`
 	MemoryLimitBytes int      `json:"memory_limit_bytes"`
 	Link             string   `json:"link"`
+	ShortLink        string   `json:"short_link"`
+	NameRu           string   `json:"name_ru"`
 	TaskRu           string   `json:"task_ru"`
 	Input            string   `json:"input"`
 	Output           string   `json:"output"`
