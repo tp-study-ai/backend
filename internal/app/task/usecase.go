@@ -706,3 +706,15 @@ func (u *UseCaseTask) GetDoneTask(id int) (*models.DoneTask, error) {
 
 	return doneTask, nil
 }
+
+func (u *UseCaseTask) SetDifficultyTask(difficulty models.DifficultyJson) error {
+	err := u.Repo.SetDifficultyTask(models.DifficultyDb{
+		UserId:     difficulty.UserId,
+		TaskId:     difficulty.TaskId,
+		Difficulty: difficulty.Difficulty,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -17,4 +17,5 @@ type UseCase interface {
 	GetShockMode(id int) (*models.ShockMode, error)
 	GetDoneTask(id int) (*models.DoneTask, error)
 	GetNotDoneTask(id int) (*models.DoneTask, error)
+	SetDifficultyTask(difficulty models.DifficultyJson) error
 }

@@ -489,6 +489,13 @@ func (r *RepositoryTask) GetDoneTask(id int) (*[]int, error) {
 	return &doneTask, nil
 }
 
-//func (r *RepositoryTask) SetEasyTask() (*[]int, error) {
-//
-//}
+func (r *RepositoryTask) SetDifficultyTask(difficulty models.DifficultyDb) error {
+	fmt.Println("difficulty", difficulty)
+	sql := `insert into "difficulty_task" ("user_id", "task_id", "difficulty") values ($1, $2, $3);`
+	var newPostsData []interface{}
+	newPostsData = append(newPostsData, difficulty.UserId)
+	newPostsData = append(newPostsData, difficulty.TaskId)
+	newPostsData = append(newPostsData, difficulty.Difficulty)
+	_, err := r.DB.Query(sql, newPostsData...)
+	return err
+}

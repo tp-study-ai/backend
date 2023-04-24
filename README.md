@@ -1,5 +1,34 @@
 # api
 
+## difficulty
+
+> описание:
+>> оценить сложность задачи
+>
+> метод:
+>> POST
+>
+> URL:
+>> http://127.0.0.1:8000/api/set_difficulty
+>
+>> -1 легко\
+>> 1 сложно
+> 
+>> REQUEST EXAMPLE
+>>```json
+>>{
+>>  "task_id": 41,
+>>  "difficulty": -1
+>>}
+>>```
+>
+>> RESPONSE
+>>```json
+>>{
+>>  "message": "оценка поставленна"
+>>}
+>>```
+
 ## chock mode
 
 > описание:

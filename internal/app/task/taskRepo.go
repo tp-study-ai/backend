@@ -20,4 +20,5 @@ type Repository interface {
 	GetCountTaskOfDate(id int, day time.Time) (int, error)
 	GetAllUserTask(id int) (*[]int, error)
 	GetDoneTask(id int) (*[]int, error)
+	SetDifficultyTask(difficulty models.DifficultyDb) error
 }

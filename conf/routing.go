@@ -38,6 +38,7 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	router.GET("/api/get_like_tasks", sh.TaskHandler.GetLikeTasks, mwChain...)
 	router.GET("/api/get_done_task", sh.TaskHandler.GetDoneTask, mwChain...)
 	router.GET("/api/get_not_done_task", sh.TaskHandler.GetNotDoneTask, mwChain...)
+	router.POST("/api/set_difficulty", sh.TaskHandler.SetDifficultyTask, mwChain...)
 
 	router.GET("api/calendar", sh.TaskHandler.GetCountTaskOfDate, mwChain...)
 	router.GET("api/shock_mode", sh.TaskHandler.GetChockMode, mwChain...)
