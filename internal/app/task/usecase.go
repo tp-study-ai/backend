@@ -724,15 +724,15 @@ func (u *UseCaseTask) SetDifficultyTask(difficulty models.DifficultyJson) error 
 func (u *UseCaseTask) Recommendations(UserId int) (*models.RecResponse, error) {
 	difficultyTask, err := u.Repo.GetSetDifficultyTasks(UserId)
 	fmt.Println("difficultyTask", difficultyTask)
-	if err != nil {
-		return nil, err
-	}
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	submissionTask, err := u.Repo.GetAllUserTask(UserId)
 	fmt.Println("submissionTask", submissionTask)
-	if err != nil {
-		return nil, err
-	}
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	var allTasks []int
 	if len(*difficultyTask) != 0 && len(*submissionTask) != 0 {

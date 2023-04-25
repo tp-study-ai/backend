@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jackc/pgx"
 	"github.com/lib/pq"
+	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"math/rand"
 	"time"
@@ -509,7 +510,8 @@ func (r *RepositoryTask) GetSetDifficultyTasks(UserId int) (*[]int, error) {
 
 	rows, err := r.DB.Query(sql, newPostsData...)
 	if err != nil {
-		return nil, err
+		//return nil, err
+		return nil, errors.Errorf("GetSetDifficultyTasks")
 	}
 	defer rows.Close()
 
@@ -543,7 +545,8 @@ func (r *RepositoryTask) GetSetDifficultyTask(UserId int, TaskId int) (*models.D
 		&doneTask.Difficulty,
 	)
 	if err != nil {
-		return nil, err
+		//return nil, err
+		return nil, errors.Errorf("GetSetDifficultyTask")
 	}
 
 	return doneTask, nil
