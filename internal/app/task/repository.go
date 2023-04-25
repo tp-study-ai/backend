@@ -521,7 +521,7 @@ func (r *RepositoryTask) GetSetDifficultyTasks(UserId int) (*[]int, error) {
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(buff)
+		//fmt.Println(buff)
 
 		doneTask = append(doneTask, buff)
 	}

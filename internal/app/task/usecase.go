@@ -723,31 +723,47 @@ func (u *UseCaseTask) SetDifficultyTask(difficulty models.DifficultyJson) error 
 
 func (u *UseCaseTask) Recommendations(UserId int) (*models.RecResponse, error) {
 	difficultyTask, err := u.Repo.GetSetDifficultyTasks(UserId)
+	fmt.Println("difficultyTask", difficultyTask)
 	if err != nil {
 		return nil, err
 	}
 
 	submissionTask, err := u.Repo.GetAllUserTask(UserId)
+	fmt.Println("submissionTask", submissionTask)
 	if err != nil {
 		return nil, err
 	}
 
 	var allTasks []int
-	for _, item1 := range *difficultyTask {
-		allTasks = append(allTasks, item1)
-	}
+	if len(*difficultyTask) != 0 && len(*submissionTask) != 0 {
+		for _, item1 := range *difficultyTask {
+			allTasks = append(allTasks, item1)
+		}
 
-	for _, at := range *submissionTask {
-		che := false
-		for _, dt := range *difficultyTask {
-			if at == dt {
-				che = true
+		for _, at := range *submissionTask {
+			che := false
+			for _, dt := range *difficultyTask {
+				if at == dt {
+					che = true
+				}
+			}
+			if che == false {
+				allTasks = append(allTasks, at)
 			}
 		}
-		if che == false {
-			allTasks = append(allTasks, at)
+	} else {
+		if len(*difficultyTask) != 0 {
+			for _, item1 := range *difficultyTask {
+				allTasks = append(allTasks, item1)
+			}
+		}
+		if len(*submissionTask) != 0 {
+			for _, item1 := range *submissionTask {
+				allTasks = append(allTasks, item1)
+			}
 		}
 	}
+
 	fmt.Println(difficultyTask)
 	fmt.Println(submissionTask)
 	fmt.Println(allTasks)
@@ -755,82 +771,84 @@ func (u *UseCaseTask) Recommendations(UserId int) (*models.RecResponse, error) {
 	story := &models.Story{}
 	story.UserId = UserId
 
-	for _, item := range allTasks {
-		//fmt.Println("nice")
-		//fmt.Println(item)
-		var buff models.StoryItem
-		task, err1 := u.Repo.GetTaskById(item)
-		if err1 != nil {
-			return nil, err1
-		}
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		var tagsId []int
-		if task.CfTags.Elements[0].Int != 0 {
-			for i := 0; i < len(task.CfTags.Elements); i++ {
-				tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
-			}
-		}
-
-		buff.Tags = tagsId
-
-		diff := false
-		for _, i := range *difficultyTask {
-			if i == item {
-				diff = true
-				break
-			}
-		}
-
-		if diff {
-			diffTask, err2 := u.Repo.GetSetDifficultyTask(UserId, item)
-			//fmt.Println(diffTask)
-			if err2 != nil {
-				return nil, err2
-			}
-			buff.DifficultyMatch = diffTask.Difficulty
-		} else {
-			buff.DifficultyMatch = 0
-		}
-
-		submis := false
-		for _, i := range *submissionTask {
-			if i == item {
-				submis = true
-				break
-			}
-		}
-
-		if submis {
-			submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
-			//fmt.Println(submisTask)
-			if err2 != nil {
-				return nil, err2
+	if len(allTasks) != 0 {
+		for _, item := range allTasks {
+			//fmt.Println("nice")
+			//fmt.Println(item)
+			var buff models.StoryItem
+			task, err1 := u.Repo.GetTaskById(item)
+			if err1 != nil {
+				return nil, err1
 			}
 
-			counterAttention := 0
-			solveCheck := false
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-			for _, i := range submisTask.Tasks {
-				if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
-					solveCheck = true
-					break
-				} else {
-					counterAttention += 1
+			var tagsId []int
+			if task.CfTags.Elements[0].Int != 0 {
+				for i := 0; i < len(task.CfTags.Elements); i++ {
+					tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
 				}
 			}
 
-			buff.Solved = solveCheck
-			buff.NAttempts = counterAttention
+			buff.Tags = tagsId
 
-		} else {
-			buff.Solved = false
-			buff.NAttempts = 0
+			diff := false
+			for _, i := range *difficultyTask {
+				if i == item {
+					diff = true
+					break
+				}
+			}
+
+			if diff {
+				diffTask, err2 := u.Repo.GetSetDifficultyTask(UserId, item)
+				//fmt.Println(diffTask)
+				if err2 != nil {
+					return nil, err2
+				}
+				buff.DifficultyMatch = diffTask.Difficulty
+			} else {
+				buff.DifficultyMatch = 0
+			}
+
+			submis := false
+			for _, i := range *submissionTask {
+				if i == item {
+					submis = true
+					break
+				}
+			}
+
+			if submis {
+				submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
+				//fmt.Println(submisTask)
+				if err2 != nil {
+					return nil, err2
+				}
+
+				counterAttention := 0
+				solveCheck := false
+
+				for _, i := range submisTask.Tasks {
+					if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
+						solveCheck = true
+						break
+					} else {
+						counterAttention += 1
+					}
+				}
+
+				buff.Solved = solveCheck
+				buff.NAttempts = counterAttention
+
+			} else {
+				buff.Solved = false
+				buff.NAttempts = 0
+			}
+
+			story.Story = append(story.Story, buff)
 		}
-
-		story.Story = append(story.Story, buff)
 	}
 
 	result, err := json.Marshal(story)
