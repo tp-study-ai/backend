@@ -270,7 +270,17 @@ func (h HandlerTask) GetSendTaskByTaskId(ctx echo.Context) error {
 		return tools.CustomError(ctx, err, 0, "ParseInt")
 	}
 
+	check := &models.SendTasksJson{}
 	tasks, err := h.UseCase.GetSendTaskByTaskId(int(user.Id), int(taskId))
+	if tasks == check {
+		result, err := json.Marshal(models.Message{Message: "задача еще не решалась пользователем"})
+		if err != nil {
+			return tools.CustomError(ctx, err, 2, "GetSendTasks Marshal")
+		}
+
+		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+		return ctx.JSONBlob(http.StatusOK, result)
+	}
 	if err != nil {
 		return tools.CustomError(ctx, err, 1, "GetSendTasks usecase")
 	}
