@@ -36,7 +36,7 @@ func main() {
 	jwtManager := jwtManager.NewJwtManager()
 
 	taskRepo := task.NewRepositoryTask(pgxManager)
-	taskUcase := task.NewUseCaseTask(taskRepo, config.Testis, config.Ml)
+	taskUcase := task.NewUseCaseTask(taskRepo, config.Testis, config.Ml, config.MLRec)
 	taskHandler := task.NewHandlerTask(taskUcase)
 
 	authRepo := auth.NewRepositoryAuth(pgxManager)

@@ -253,6 +253,32 @@ type StoryItem struct {
 	NAttempts       int    `json:"n_attempts"`
 }
 type Story struct {
-	UserId int         `json:"user_id"`
+	UserId int         `json:"username"`
 	Story  []StoryItem `json:"story"`
+}
+
+type Problems struct {
+	ProblemUrl string `json:"problem_url"`
+	Rating     int    `json:"rating"`
+	Tags       []int  `json:"tags"`
+}
+
+type Recommended struct {
+	RecommendedTag int        `json:"recommended_tag"`
+	Priority       int        `json:"priority"`
+	Problems       []Problems `json:"problems"`
+}
+
+type Rec struct {
+	Rec []Recommended `json:"rec"`
+}
+
+type RecommendedResponse struct {
+	RecommendedTag string     `json:"recommended_tag"`
+	Priority       int        `json:"priority"`
+	Problems       []TaskJSON `json:"problems"`
+}
+
+type RecResponse struct {
+	Rec []RecommendedResponse `json:"rec"`
 }

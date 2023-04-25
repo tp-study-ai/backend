@@ -771,3 +771,87 @@
 >>    "username": "yutfut2"
 >> }
 >> ```
+
+## Recommendation
+
+>>> описание:
+>> страница рекомендаций
+>
+> метод:
+>> POST
+>
+> URL
+>> http://127.0.0.1:8000/api/recommendations
+>> ```
+>
+>> RESPONSE
+>>```json
+>>{
+>>  "rec": [
+>>      {
+>>          "recommended_tag": "тернарный поиск",
+>>          "priority": 1,
+>>          "problems": [
+>>              {
+>>                  "id": 3886,
+>>                  "name": "304_D. Rectangle Puzzle II",
+>>                  "description": "You are given a rectangle grid. That grid's size is n × m. Let's denote the coordinate system on the grid. So, each point on the grid will have coordinates — a pair of integers (x, y) (0 ≤ x ≤ n, 0 ≤ y ≤ m).\n\nYour task is to find a maximum sub-rectangle on the grid (x1, y1, x2, y2) so that it contains the given point (x, y), and its length-width ratio is exactly (a, b). In other words the following conditions must hold: 0 ≤ x1 ≤ x ≤ x2 ≤ n, 0 ≤ y1 ≤ y ≤ y2 ≤ m, <image>.\n\nThe sides of this sub-rectangle should be parallel to the axes. And values x1, y1, x2, y2 should be integers.\n\n<image>\n\nIf there are multiple solutions, find the rectangle which is closest to (x, y). Here \"closest\" means the Euclid distance between (x, y) and the center of the rectangle is as small as possible. If there are still multiple solutions, find the lexicographically minimum one. Here \"lexicographically minimum\" means that we should consider the sub-rectangle as sequence of integers (x1, y1, x2, y2), so we can choose the lexicographically minimum one.\n\nInput\n\nThe first line contains six integers n, m, x, y, a, b (1 ≤ n, m ≤ 109, 0 ≤ x ≤ n, 0 ≤ y ≤ m, 1 ≤ a ≤ n, 1 ≤ b ≤ m).\n\nOutput\n\nPrint four integers x1, y1, x2, y2, which represent the founded sub-rectangle whose left-bottom point is (x1, y1) and right-up point is (x2, y2).\n\nExamples\n\nInput\n\n9 9 5 5 2 1\n\n\nOutput\n\n1 3 9 7\n\n\nInput\n\n100 100 52 50 46 56\n\n\nOutput\n\n17 8 86 92",
+>>                  "public_tests": [
+>>                      "input",
+>>                      "100 100 52 50 46 56\n",
+>>                      "output",
+>>                      "17 8 86 92\n",
+>>                      "input",
+>>                      "9 9 5 5 2 1\n",
+>>                      "output",
+>>                      "1 3 9 7\n"
+>>                  ],
+>>                  "difficulty": 10,
+>>                  "cf_contest_id": 304,
+>>                  "cf_index": "D",
+>>                  "cf_points": 500,
+>>                  "cf_rating": 1700,
+>>                  "cf_tags_ID": [
+>>                      23,
+>>                      25
+>>                  ],
+>>                  "cf_tags_RU": [
+>>                      "реализация",
+>>                      "математика"
+>>                  ],
+>>                  "cf_tags_en": [
+>>                      "implementation",
+>>                      "math"
+>>                  ],
+>>                  "time_limit": 2,
+>>                  "memory_limit_bytes": 256000000,
+>>                  "link": "https://codeforces.com/contest/304/problem/D?locale=ru",
+>>                  "short_link": "",
+>>                  "name_ru": "D. Прямоугольная загадка II",
+>>                  "task_ru": "<div>\n<p>Дана прямоугольная сетка размера <span class=\"tex-span\"><i>n</i> × <i>m</i></span>. Введем систему координат на сетке. Итак, каждая точка на сетке имеет координаты — пару целых чисел <span class=\"tex-span\">(<i>x</i>, <i>y</i>)</span> <span class=\"tex-span\">(0 ≤ <i>x</i> ≤ <i>n</i>, 0 ≤ <i>y</i> ≤ <i>m</i>)</span>.</p>\n<p>Ваша задача — найти наибольший подпрямоугольник на сетке <span class=\"tex-span\">(<i>x</i><sub class=\"lower-index\">1</sub>, <i>y</i><sub class=\"lower-index\">1</sub>, <i>x</i><sub class=\"lower-index\">2</sub>, <i>y</i><sub class=\"lower-index\">2</sub>)</span>, содержащий данную точку <span class=\"tex-span\">(<i>x</i>, <i>y</i>)</span>, такой, что соотношение длин его сторон равняется <span class=\"tex-span\">(<i>a</i>, <i>b</i>)</span>. Иными словами, должны выполняться следующие условия: <span class=\"tex-span\">0 ≤ <i>x</i><sub class=\"lower-index\">1</sub> ≤ <i>x</i> ≤ <i>x</i><sub class=\"lower-index\">2</sub> ≤ <i>n</i></span>, <span class=\"tex-span\">0 ≤ <i>y</i><sub class=\"lower-index\">1</sub> ≤ <i>y</i> ≤ <i>y</i><sub class=\"lower-index\">2</sub> ≤ <i>m</i></span>, <img align=\"middle\" class=\"tex-formula\" src=\"https://espresso.codeforces.com/0c36d1eac2611e4dc89474c61ba622f0db130f00.png\" style=\"max-width: 100.0%;max-height: 100.0%;\">.</p>\n<p>Стороны этого подпрямоугольника должны быть параллельны осям координат. Величины <span class=\"tex-span\"><i>x</i><sub class=\"lower-index\">1</sub>, <i>y</i><sub class=\"lower-index\">1</sub>, <i>x</i><sub class=\"lower-index\">2</sub>, <i>y</i><sub class=\"lower-index\">2</sub></span> должны быть целыми.</p>\n<center> <img class=\"tex-graphics\" src=\"https://espresso.codeforces.com/ceee17be587b1dfbe1ae39292474b973fd250da4.png\" style=\"max-width: 100.0%;max-height: 100.0%;\"> </center>\n<p>Если существует несколько ответов, найдите ближайший к <span class=\"tex-span\">(<i>x</i>, <i>y</i>)</span> подпрямоугольник. Здесь «ближайший» означает, что Евклидово расстояние между <span class=\"tex-span\">(<i>x</i>, <i>y</i>)</span> и центром прямоугольника как можно меньше. Если все равно существует несколько ответов, выведите лексикографически минимальный. Здесь «лексикографически минимальный» означает, что мы должны рассматривать подпрямоугольник как последовательность целых чисел <span class=\"tex-span\">(<i>x</i><sub class=\"lower-index\">1</sub>, <i>y</i><sub class=\"lower-index\">1</sub>, <i>x</i><sub class=\"lower-index\">2</sub>, <i>y</i><sub class=\"lower-index\">2</sub>)</span>, так, что можно выбрать из них лексикографически минимальную.</p>\n</div>\n",
+>>                  "input": "<div class=\"input-specification\">\n<div class=\"section-title\">Входные данные</div>\n<p>В первой строке записано шесть целых чисел <span class=\"tex-span\"><i>n</i>, <i>m</i>, <i>x</i>, <i>y</i>, <i>a</i>, <i>b</i></span> <span class=\"tex-span\">(1 ≤ <i>n</i>, <i>m</i> ≤ 10<sup class=\"upper-index\">9</sup>, 0 ≤ <i>x</i> ≤ <i>n</i>, 0 ≤ <i>y</i> ≤ <i>m</i>, 1 ≤ <i>a</i> ≤ <i>n</i>, 1 ≤ <i>b</i> ≤ <i>m</i>)</span>.</p>\n</div>\n",
+>>                  "output": "<div class=\"output-specification\">\n<div class=\"section-title\">Выходные данные</div>\n<p>Выведите четыре целых числа <span class=\"tex-span\"><i>x</i><sub class=\"lower-index\">1</sub>, <i>y</i><sub class=\"lower-index\">1</sub>, <i>x</i><sub class=\"lower-index\">2</sub>, <i>y</i><sub class=\"lower-index\">2</sub></span>, обозначающие обнаруженный вложенный прямоугольник с левым нижним углом в <span class=\"tex-span\">(<i>x</i><sub class=\"lower-index\">1</sub>, <i>y</i><sub class=\"lower-index\">1</sub>)</span>, а правым верхним — в <span class=\"tex-span\">(<i>x</i><sub class=\"lower-index\">2</sub>, <i>y</i><sub class=\"lower-index\">2</sub>)</span>.</p>\n</div>\n",
+>>                  "note": ""
+>>              },
+>>              {
+>>                  ...
+>>              },
+>>              ...
+>>          ]
+>>      },
+>>      {
+>>          "recommended_tag": "кратчайшие пути",
+>>          "priority": 2,
+>>          "problems": [
+>>              {
+>>                  ...
+>>              },
+>>              ...
+>>          ]
+>>      },
+>>      {
+>>            ...
+>>      }
+>>  ]
+>>}
+>> ```

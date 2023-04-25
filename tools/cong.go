@@ -10,6 +10,7 @@ type Config struct {
 	Host     string `toml:"Host"`
 	Testis   string `toml:"testis"`
 	Ml       string `toml:"ml"`
+	MLRec    string `toml:"ml_rec"`
 }
 
 func NewConfig() *Config {

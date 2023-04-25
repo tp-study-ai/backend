@@ -15,13 +15,15 @@ type UseCaseTask struct {
 	Repo    Repository
 	Secret1 string
 	Secret2 string
+	Secret3 string
 }
 
-func NewUseCaseTask(TaskRepo Repository, secret string, secret1 string) *UseCaseTask {
+func NewUseCaseTask(TaskRepo Repository, secret string, secret1 string, secret2 string) *UseCaseTask {
 	return &UseCaseTask{
 		Repo:    TaskRepo,
 		Secret1: secret,
 		Secret2: secret1,
+		Secret3: secret2,
 	}
 }
 
@@ -719,7 +721,7 @@ func (u *UseCaseTask) SetDifficultyTask(difficulty models.DifficultyJson) error 
 	return nil
 }
 
-func (u *UseCaseTask) Recommendations(UserId int) (*models.Story, error) {
+func (u *UseCaseTask) Recommendations(UserId int) (*models.RecResponse, error) {
 	difficultyTask, err := u.Repo.GetSetDifficultyTasks(UserId)
 	if err != nil {
 		return nil, err
@@ -754,8 +756,8 @@ func (u *UseCaseTask) Recommendations(UserId int) (*models.Story, error) {
 	story.UserId = UserId
 
 	for _, item := range allTasks {
-		fmt.Println("nice")
-		fmt.Println(item)
+		//fmt.Println("nice")
+		//fmt.Println(item)
 		var buff models.StoryItem
 		task, err1 := u.Repo.GetTaskById(item)
 		if err1 != nil {
@@ -784,7 +786,7 @@ func (u *UseCaseTask) Recommendations(UserId int) (*models.Story, error) {
 
 		if diff {
 			diffTask, err2 := u.Repo.GetSetDifficultyTask(UserId, item)
-			fmt.Println(diffTask)
+			//fmt.Println(diffTask)
 			if err2 != nil {
 				return nil, err2
 			}
@@ -803,7 +805,7 @@ func (u *UseCaseTask) Recommendations(UserId int) (*models.Story, error) {
 
 		if submis {
 			submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
-			fmt.Println(submisTask)
+			//fmt.Println(submisTask)
 			if err2 != nil {
 				return nil, err2
 			}
@@ -831,5 +833,87 @@ func (u *UseCaseTask) Recommendations(UserId int) (*models.Story, error) {
 		story.Story = append(story.Story, buff)
 	}
 
-	return story, nil
+	result, err := json.Marshal(story)
+	if err != nil {
+		return nil, err
+	}
+
+	req := bytes.NewBuffer(result)
+	resp, err := http.Post(u.Secret3, "application/json", req)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	//fmt.Println(string(body))
+
+	var MlResponse models.Rec
+
+	err = json.Unmarshal(body, &MlResponse.Rec)
+	if err != nil {
+		return nil, err
+	}
+
+	RecommendationResponse := &models.RecResponse{}
+
+	for _, itemRec := range MlResponse.Rec {
+		var buff models.RecommendedResponse
+		buff.RecommendedTag = TagDict[itemRec.RecommendedTag][1]
+		buff.Priority = itemRec.Priority
+
+		for _, itemRecTask := range itemRec.Problems {
+			task, err1 := u.Repo.GetTaskByLink("https://codeforces.com" + itemRecTask.ProblemUrl + "?locale=ru")
+			if err1 != nil {
+				continue
+				//return nil, err1
+			}
+
+			var tagsId []int
+			var tagsEn []string
+			var tagsRu []string
+
+			if task.CfTags.Elements[0].Int != 0 {
+				for j := 0; j < len(task.CfTags.Elements); j++ {
+					tagsId = append(tagsId, int(task.CfTags.Elements[j].Int))
+					tagsEn = append(tagsEn, TagDict[tagsId[j]][0])
+					tagsRu = append(tagsRu, TagDict[tagsId[j]][1])
+				}
+			}
+
+			buff.Problems = append(buff.Problems, models.TaskJSON{
+				Id:               task.Id,
+				Name:             task.Name,
+				Description:      task.Description,
+				PublicTests:      task.PublicTests,
+				Difficulty:       task.Difficulty,
+				CfContestId:      task.CfContestId,
+				CfIndex:          task.CfIndex,
+				CfPoints:         task.CfPoints,
+				CfRating:         task.CfRating,
+				CfTagsID:         tagsId,
+				CfTagsRu:         tagsRu,
+				CfTagsEN:         tagsEn,
+				TimeLimit:        task.TimeLimit,
+				MemoryLimitBytes: task.MemoryLimitBytes,
+				Link:             task.Link,
+				ShortLink:        task.ShortLink,
+				NameRu:           task.NameRu,
+				TaskRu:           task.TaskRu,
+				Input:            task.Input,
+				Output:           task.Output,
+				Note:             task.Note,
+			})
+		}
+
+		if buff.Problems == nil {
+			continue
+		}
+		RecommendationResponse.Rec = append(RecommendationResponse.Rec, buff)
+	}
+
+	return RecommendationResponse, nil
 }
