@@ -327,7 +327,8 @@ func (r *RepositoryTask) GetSendTaskByTaskId(UserId int, TaskId int) (*models.Se
 
 	rows, err := r.DB.Query(sql, newPostsData...)
 	if err != nil {
-		return nil, err
+		//return nil, err
+		return nil, errors.Errorf("GetSendTaskByTaskId1" + err.Error())
 	}
 	defer rows.Close()
 
@@ -349,7 +350,8 @@ func (r *RepositoryTask) GetSendTaskByTaskId(UserId int, TaskId int) (*models.Se
 		)
 
 		if err != nil {
-			return nil, err
+			//return nil, err
+			return nil, errors.Errorf("GetSendTaskByTaskId2" + err.Error())
 		}
 
 		Task1.Tasks = append(Task1.Tasks, buff)
