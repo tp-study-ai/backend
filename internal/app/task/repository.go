@@ -351,7 +351,7 @@ func (r *RepositoryTask) GetSendTaskByTaskId(UserId int, TaskId int) (*models.Se
 
 		if err != nil {
 			//return nil, err
-			return nil, errors.Errorf("GetSendTaskByTaskId2" + err.Error())
+			return nil, errors.Errorf("GetSendTaskByTaskId2" + " " + err.Error() + " " + string(UserId) + " " + string(TaskId))
 		}
 
 		Task1.Tasks = append(Task1.Tasks, buff)
