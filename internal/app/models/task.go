@@ -187,7 +187,7 @@ type SimilarResponse struct{}
 type MlTaskResponse struct {
 	ProblemUrl string  `json:"problem_url"`
 	Rating     float64 `json:"rating"`
-	Tags       string  `json:"tags"`
+	Tags       []int   `json:"tags"`
 }
 
 type MlResponse struct {

@@ -295,6 +295,9 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest, userId
 
 func (u *UseCaseTask) GetSimilar(solution models.SimilarRequest) (*models.Tasks, error) {
 	solution.NRecs = 6
+
+	fmt.Println(solution)
+
 	result, err := json.Marshal(solution)
 	if err != nil {
 		return nil, err
@@ -311,7 +314,7 @@ func (u *UseCaseTask) GetSimilar(solution models.SimilarRequest) (*models.Tasks,
 		return nil, err
 	}
 
-	//fmt.Println(body)
+	fmt.Println(string(body))
 
 	var TestisResponse []models.MlTaskResponse
 
@@ -320,7 +323,7 @@ func (u *UseCaseTask) GetSimilar(solution models.SimilarRequest) (*models.Tasks,
 		return nil, err
 	}
 
-	//fmt.Println(TestisResponse)
+	fmt.Println(TestisResponse)
 
 	Tasks := &models.Tasks{}
 
