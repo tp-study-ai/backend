@@ -494,12 +494,29 @@ func (r *RepositoryTask) GetDoneTask(id int) (*[]int, error) {
 
 func (r *RepositoryTask) SetDifficultyTask(difficulty models.DifficultyDb) error {
 	fmt.Println("difficulty", difficulty)
+	var difficulty1 int
+	sql1 := `select "difficulty" from "difficulty_task" where "user_id" = $1 and "task_id" = $2`
+	err := r.DB.QueryRow(sql1, difficulty.UserId, difficulty.TaskId).Scan(
+		&difficulty1,
+	)
+	if err != nil {
+		if difficulty1 == difficulty.Difficulty {
+			return nil
+		} else {
+			var deletePostsData []interface{}
+			deletePostsData = append(deletePostsData, difficulty.UserId)
+			deletePostsData = append(deletePostsData, difficulty.TaskId)
+			sql2 := `DELETE FROM "difficulty_task" WHERE "user_id" = $1 AND "task_id" = $2;`
+			_, err = r.DB.Query(sql2, deletePostsData...)
+		}
+	}
+
 	sql := `insert into "difficulty_task" ("user_id", "task_id", "difficulty") values ($1, $2, $3);`
 	var newPostsData []interface{}
 	newPostsData = append(newPostsData, difficulty.UserId)
 	newPostsData = append(newPostsData, difficulty.TaskId)
 	newPostsData = append(newPostsData, difficulty.Difficulty)
-	_, err := r.DB.Query(sql, newPostsData...)
+	_, err = r.DB.Query(sql, newPostsData...)
 	return err
 }
 
