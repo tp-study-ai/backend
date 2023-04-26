@@ -507,7 +507,8 @@ func (r *RepositoryTask) SetDifficultyTask(difficulty models.DifficultyDb) error
 			deletePostsData = append(deletePostsData, difficulty.UserId)
 			deletePostsData = append(deletePostsData, difficulty.TaskId)
 			sql2 := `DELETE FROM "difficulty_task" WHERE "user_id" = $1 AND "task_id" = $2;`
-			_, err = r.DB.Query(sql2, deletePostsData...)
+			rows, _ := r.DB.Query(sql2, deletePostsData...)
+			defer rows.Close()
 		}
 	}
 
