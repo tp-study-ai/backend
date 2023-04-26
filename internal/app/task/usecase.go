@@ -850,6 +850,9 @@ func (u *UseCaseTask) Recommendations(UserId int) (*models.RecResponse, error) {
 			story.Story = append(story.Story, buff)
 		}
 	}
+	if story.Story == nil {
+		story.Story = make([]models.StoryItem, 0)
+	}
 
 	result, err := json.Marshal(story)
 	if err != nil {
