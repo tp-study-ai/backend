@@ -873,7 +873,7 @@ func (u *UseCaseTask) Recommendations(UserId int) (*models.RecResponse, error) {
 
 	err = json.Unmarshal(body, &MlResponse.Rec)
 	if err != nil {
-		return nil, errors.Errorf("876 " + err.Error())
+		return nil, errors.Errorf("876 " + err.Error() + string(body))
 	}
 
 	RecommendationResponse := &models.RecResponse{}
