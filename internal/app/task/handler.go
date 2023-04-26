@@ -494,7 +494,7 @@ func (h HandlerTask) Recommendations(ctx echo.Context) error {
 
 	response, err := h.UseCase.Recommendations(int(user.Id))
 	if err != nil {
-		return tools.CustomError(ctx, err, 0, "ошибка получения рекомендация")
+		return tools.CustomError(ctx, err, 1, "ошибка получения рекомендаций")
 	}
 
 	result, err := json.Marshal(response)
