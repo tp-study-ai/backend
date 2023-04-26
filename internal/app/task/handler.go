@@ -27,12 +27,12 @@ func NewHandlerTask(useCase UseCase) *HandlerTask {
 func (h HandlerTask) GetTask(ctx echo.Context) error {
 	task, err := h.UseCase.GetTask()
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "GetTask")
+		return tools.CustomError(ctx, err, 1, "ошибка полчения задачи")
 	}
 
 	result, err := json.Marshal(task)
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "GetTask")
+		return tools.CustomError(ctx, err, 1, "ошибка формирования задачи")
 	}
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
@@ -43,17 +43,17 @@ func (h HandlerTask) GetTaskById(ctx echo.Context) error {
 	fmt.Println("Param: ", id, " ", reflect.TypeOf(id))
 	che, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		return tools.CustomError(ctx, err, 0, "ParseInt")
+		return tools.CustomError(ctx, err, 0, "невалидный id задачи")
 	}
 
 	task, err := h.UseCase.GetTaskById(int(che))
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "GetTaskById")
+		return tools.CustomError(ctx, err, 1, "ошибка получения задачи")
 	}
 
 	result, err := json.Marshal(task)
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "GetTaskById")
+		return tools.CustomError(ctx, err, 1, "ошибка формирования задачи")
 	}
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
@@ -64,7 +64,7 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 	//fmt.Printf("Param: %s, %s\n", page, reflect.TypeOf(page))
 	pageInt, err := strconv.ParseInt(page, 10, 64)
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "Parse int")
+		return tools.CustomError(ctx, err, 1, "не валидный id задачи")
 	}
 
 	sort := ctx.QueryParam("sort")
@@ -118,12 +118,12 @@ func (h HandlerTask) GetTaskByLimit(ctx echo.Context) error {
 
 	tasks, err := h.UseCase.GetTaskByLimit(int(pageInt), sort, tagsInt, int(requestMinRatig), int(requestMaxRatig))
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "что-то сломалось GetTaskByLimit")
+		return tools.CustomError(ctx, err, 1, "ошибка полчения задач")
 	}
 
 	result, err := json.Marshal(tasks)
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "Marshal")
+		return tools.CustomError(ctx, err, 2, "ошибка формирования задач")
 	}
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
@@ -137,18 +137,18 @@ func (h HandlerTask) CheckSolution(ctx echo.Context) error {
 
 	var solution models.CheckSolutionRequest
 	if err := ctx.Bind(&solution); err != nil {
-		return tools.CustomError(ctx, err, 1, "CheckSolution Bind")
+		return tools.CustomError(ctx, err, 1, "неверное формирования запроса")
 	}
 
 	test := &models.CheckSolutionUseCaseResponse{}
 	testisResponse, err := h.UseCase.CheckSolution(solution, int(user.Id))
 	if err != nil || testisResponse == test {
-		return tools.CustomError(ctx, err, 2, "CheckSolution usecase")
+		return tools.CustomError(ctx, err, 2, "ошибка тестирования задачи")
 	}
 
 	result, err := json.Marshal(testisResponse)
 	if err != nil {
-		return tools.CustomError(ctx, err, 3, "CheckSolution Marshal")
+		return tools.CustomError(ctx, err, 3, "ошибка формирования ответа тестирования")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -210,7 +210,7 @@ func (h HandlerTask) GetTags(ctx echo.Context) error {
 
 	result, err := json.Marshal(tags)
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "теги отвалились")
+		return tools.CustomError(ctx, err, 1, "ошибка формирвания тегов")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -220,17 +220,17 @@ func (h HandlerTask) GetTags(ctx echo.Context) error {
 func (h HandlerTask) GetSimilar(ctx echo.Context) error {
 	var che models.SimilarRequest
 	if err := ctx.Bind(&che); err != nil {
-		return tools.CustomError(ctx, err, 0, "GetSimilar Bind")
+		return tools.CustomError(ctx, err, 0, "ошибка формирования запроса")
 	}
 
 	tasks, err := h.UseCase.GetSimilar(che)
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "GetSimilar usecase")
+		return tools.CustomError(ctx, err, 1, "ошибка работы рекомендательной системы")
 	}
 
 	result, err := json.Marshal(tasks)
 	if err != nil {
-		return tools.CustomError(ctx, err, 3, "GetSimilar Marshal")
+		return tools.CustomError(ctx, err, 3, "ошибка формирования рекомендаций")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -245,12 +245,12 @@ func (h HandlerTask) GetSendTasks(ctx echo.Context) error {
 
 	tasks, err := h.UseCase.GetSendTask(int(user.Id))
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "GetSendTasks usecase")
+		return tools.CustomError(ctx, err, 1, "ошибка получения посылок")
 	}
 
 	result, err := json.Marshal(tasks)
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "GetSendTasks Marshal")
+		return tools.CustomError(ctx, err, 2, "ошибка формирования посылок")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -267,14 +267,14 @@ func (h HandlerTask) GetSendTaskByTaskId(ctx echo.Context) error {
 	fmt.Println("Param: ", id, " ", reflect.TypeOf(id))
 	taskId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		return tools.CustomError(ctx, err, 0, "ParseInt")
+		return tools.CustomError(ctx, err, 0, "не валидный id задачи")
 	}
 
 	tasks, err := h.UseCase.GetSendTaskByTaskId(int(user.Id), int(taskId))
 	if err != nil {
 		result, err1 := json.Marshal(models.Message{Message: "задача еще не решалась пользователем"})
 		if err1 != nil {
-			return tools.CustomError(ctx, err, 2, "GetSendTasks Marshal")
+			return tools.CustomError(ctx, err, 2, "ошибка формирования посылок")
 		}
 
 		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -286,7 +286,7 @@ func (h HandlerTask) GetSendTaskByTaskId(ctx echo.Context) error {
 
 	result, err := json.Marshal(tasks)
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "GetSendTasks Marshal")
+		return tools.CustomError(ctx, err, 2, "ошибка формирования посылок")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -303,20 +303,20 @@ func (h HandlerTask) LikeTask(ctx echo.Context) error {
 
 	var like models.LikeJson
 	if err := ctx.Bind(&like); err != nil {
-		return tools.CustomError(ctx, err, 1, "CheckSolution Bind")
+		return tools.CustomError(ctx, err, 1, "ошибка формирования запроса")
 	}
 
 	fmt.Println("like", like)
 
 	err := h.UseCase.LikeTask(models.LikeJson{UserId: user.Id, TaskId: like.TaskId})
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "GetSimilar usecase")
+		return tools.CustomError(ctx, err, 1, "ошибка оценки задачи")
 	}
 	result, err := json.Marshal(models.Message{
 		Message: "лайк поставлен",
 	})
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+		return tools.CustomError(ctx, err, 2, "ошибка формирования ответа")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -333,20 +333,20 @@ func (h HandlerTask) DeleteLike(ctx echo.Context) error {
 
 	var like models.LikeJson
 	if err := ctx.Bind(&like); err != nil {
-		return tools.CustomError(ctx, err, 1, "CheckSolution Bind")
+		return tools.CustomError(ctx, err, 1, "ошибка формирования запроса")
 	}
 
 	fmt.Println("like", like)
 
 	err := h.UseCase.DeleteLike(models.LikeJson{UserId: user.Id, TaskId: like.TaskId})
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "GetSimilar usecase")
+		return tools.CustomError(ctx, err, 1, "ошибка оценки задачи")
 	}
 	result, err := json.Marshal(models.Message{
 		Message: "лайк удален",
 	})
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+		return tools.CustomError(ctx, err, 2, "ошибка формирования ответа")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -363,14 +363,14 @@ func (h HandlerTask) GetLikeTasks(ctx echo.Context) error {
 
 	tasks, err := h.UseCase.GetLikeTask(user.Id)
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "GetLikeTasks usecase")
+		return tools.CustomError(ctx, err, 1, "ошибка полчения оценных задач")
 	}
 
 	fmt.Println(tasks)
 
 	result, err := json.Marshal(tasks)
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+		return tools.CustomError(ctx, err, 2, "ошибка формирования оцененых задач")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -385,12 +385,12 @@ func (h HandlerTask) GetCountTaskOfDate(ctx echo.Context) error {
 
 	days, err := h.UseCase.GetCountTaskOfDate(int(user.Id))
 	if err != nil {
-		return tools.CustomError(ctx, err, 0, "ошибка получения задачи")
+		return tools.CustomError(ctx, err, 0, "ошибка получения задач")
 	}
 
 	result, err := json.Marshal(days)
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+		return tools.CustomError(ctx, err, 2, "ошибка формирования ответа")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -405,12 +405,12 @@ func (h HandlerTask) GetChockMode(ctx echo.Context) error {
 
 	shockMode, err := h.UseCase.GetShockMode(int(user.Id))
 	if err != nil {
-		return tools.CustomError(ctx, err, 0, "ошибка получения задачи")
+		return tools.CustomError(ctx, err, 0, "ошибка получения ударного режима")
 	}
 
 	result, err := json.Marshal(shockMode)
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+		return tools.CustomError(ctx, err, 2, "ошибка формирования ответа")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -425,12 +425,12 @@ func (h HandlerTask) GetDoneTask(ctx echo.Context) error {
 
 	response, err := h.UseCase.GetDoneTask(int(user.Id))
 	if err != nil {
-		return tools.CustomError(ctx, err, 0, "ошибка получения задачи")
+		return tools.CustomError(ctx, err, 0, "ошибка получения решенных задач")
 	}
 
 	result, err := json.Marshal(response)
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+		return tools.CustomError(ctx, err, 2, "ошибка формирования задач")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -445,12 +445,12 @@ func (h HandlerTask) GetNotDoneTask(ctx echo.Context) error {
 
 	response, err := h.UseCase.GetNotDoneTask(int(user.Id))
 	if err != nil {
-		return tools.CustomError(ctx, err, 0, "ошибка получения задачи")
+		return tools.CustomError(ctx, err, 1, "ошибка получения начатых задач")
 	}
 
 	result, err := json.Marshal(response)
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+		return tools.CustomError(ctx, err, 2, "ошибка формирования задач")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -465,21 +465,21 @@ func (h HandlerTask) SetDifficultyTask(ctx echo.Context) error {
 
 	var like models.DifficultyJson
 	if err := ctx.Bind(&like); err != nil {
-		return tools.CustomError(ctx, err, 1, "CheckSolution Bind")
+		return tools.CustomError(ctx, err, 1, "ошибка формирования запроса")
 	}
 
 	like.UserId = int(user.Id)
 
 	err := h.UseCase.SetDifficultyTask(like)
 	if err != nil {
-		return tools.CustomError(ctx, err, 0, "ошибка получения задачи")
+		return tools.CustomError(ctx, err, 0, "ошибка оценки задачи")
 	}
 
 	result, err := json.Marshal(models.Message{
 		Message: "оценка поставленна",
 	})
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+		return tools.CustomError(ctx, err, 2, "ошибка формирования ответа")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
@@ -494,12 +494,12 @@ func (h HandlerTask) Recommendations(ctx echo.Context) error {
 
 	response, err := h.UseCase.Recommendations(int(user.Id))
 	if err != nil {
-		return tools.CustomError(ctx, err, 0, "ошибка получения задачи")
+		return tools.CustomError(ctx, err, 0, "ошибка получения рекомендация")
 	}
 
 	result, err := json.Marshal(response)
 	if err != nil {
-		return tools.CustomError(ctx, err, 2, "GetLikeTasks Marshal")
+		return tools.CustomError(ctx, err, 2, "ошибка формирования ответа")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
