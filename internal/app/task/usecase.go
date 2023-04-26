@@ -224,8 +224,8 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest, userId
 		}
 	}
 
-	if float64(PrivateTestsLength)*Task.TimeLimit > 300 {
-		PrivateTestsLength = int(300 / Task.TimeLimit)
+	if float64(PrivateTestsLength)*(Task.TimeLimit+1) > 300 {
+		PrivateTestsLength = int(300/Task.TimeLimit + 1)
 	}
 
 	tests := make([][]string, PrivateTestsLength)
@@ -243,7 +243,7 @@ func (u *UseCaseTask) CheckSolution(solution models.CheckSolutionRequest, userId
 		},
 		Tests:        tests,
 		BuildTimeout: 10,
-		TestTimeout:  Task.TimeLimit,
+		TestTimeout:  Task.TimeLimit + 1,
 	}
 
 	result, err := json.Marshal(SolutionReq)
