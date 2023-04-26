@@ -784,7 +784,7 @@ func (u *UseCaseTask) Recommendations(UserId int) (*models.RecResponse, error) {
 			buff.ProblemUrl = task.ShortLink
 			buff.Rating = task.CfRating
 
-			var tagsId []int
+			tagsId := make([]int, 0)
 			if task.CfTags.Elements[0].Int != 0 {
 				for i := 0; i < len(task.CfTags.Elements); i++ {
 					tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
