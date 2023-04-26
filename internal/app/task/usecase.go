@@ -524,10 +524,7 @@ func (u *UseCaseTask) GetCountTaskOfDate(id int) (*models.Days, error) {
 	now := time.Now()
 	days := &models.Days{}
 	for i := 0; i < 365; i++ {
-		task, err := u.Repo.GetCountTaskOfDate(id, now)
-		if err != nil {
-			return nil, err
-		}
+		task, _ := u.Repo.GetCountTaskOfDate(id, now)
 		days.Days = append(days.Days, models.Day{Day: now, Count: task})
 		now = now.Add(-24 * time.Hour)
 	}
@@ -541,11 +538,11 @@ func (u *UseCaseTask) GetShockMode(id int) (*models.ShockMode, error) {
 	a := 0
 	for i := 0; i < 365; i++ {
 		count, err := u.Repo.GetCountTaskOfDate(id, now)
-		if err != nil {
-			return nil, err
-		}
 		if count == 0 {
 			break
+		}
+		if err != nil {
+			return nil, err
 		}
 		a += 1
 		now = now.Add(-24 * time.Hour)
