@@ -516,7 +516,12 @@ func (r *RepositoryTask) SetDifficultyTask(difficulty models.DifficultyDb) error
 	newPostsData = append(newPostsData, difficulty.UserId)
 	newPostsData = append(newPostsData, difficulty.TaskId)
 	newPostsData = append(newPostsData, difficulty.Difficulty)
-	_, err = r.DB.Query(sql, newPostsData...)
+	rows, err := r.DB.Query(sql, newPostsData...)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
 	return err
 }
 
