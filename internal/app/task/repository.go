@@ -526,6 +526,7 @@ func (r *RepositoryTask) SetDifficultyTask(difficulty models.DifficultyDb) error
 	return err
 }
 
+// полчить все задачи пользовтеля
 func (r *RepositoryTask) GetSetDifficultyTasks(UserId int) (*[]int, error) {
 	var doneTask []int
 	var newPostsData []interface{}
@@ -556,6 +557,7 @@ func (r *RepositoryTask) GetSetDifficultyTasks(UserId int) (*[]int, error) {
 	return &doneTask, nil
 }
 
+// получить конкретную задачу пользователя
 func (r *RepositoryTask) GetSetDifficultyTask(UserId int, TaskId int) (*models.DifficultyDb, error) {
 	doneTask := &models.DifficultyDb{}
 	var newPostsData []interface{}
@@ -571,8 +573,66 @@ func (r *RepositoryTask) GetSetDifficultyTask(UserId int, TaskId int) (*models.D
 	)
 	if err != nil {
 		//return nil, err
-		return nil, errors.Errorf("GetSetDifficultyTask")
+		return nil, err
 	}
 
 	return doneTask, nil
+}
+
+func (r *RepositoryTask) GetEasyTasksForUser(UserId int) (*[]int, error) {
+	var easyTask []int
+	var newPostsData []interface{}
+	newPostsData = append(newPostsData, UserId)
+
+	sql := `SELECT "task_id" FROM "difficulty_task" WHERE "user_id" = $1 and "difficulty" = -1`
+
+	rows, err := r.DB.Query(sql, newPostsData...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var buff int
+		err = rows.Scan(
+			&buff,
+		)
+		if err != nil {
+			return nil, err
+		}
+		//fmt.Println(buff)
+
+		easyTask = append(easyTask, buff)
+	}
+
+	return &easyTask, nil
+}
+
+func (r *RepositoryTask) GetHardTasksForUser(UserId int) (*[]int, error) {
+	var hardTask []int
+	var newPostsData []interface{}
+	newPostsData = append(newPostsData, UserId)
+
+	sql := `SELECT "task_id" FROM "difficulty_task" WHERE "user_id" = $1 and "difficulty" = 1`
+
+	rows, err := r.DB.Query(sql, newPostsData...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var buff int
+		err = rows.Scan(
+			&buff,
+		)
+		if err != nil {
+			return nil, err
+		}
+		//fmt.Println(buff)
+
+		hardTask = append(hardTask, buff)
+	}
+
+	return &hardTask, nil
 }

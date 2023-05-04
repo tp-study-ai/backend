@@ -19,4 +19,5 @@ type UseCase interface {
 	GetNotDoneTask(id int) (*models.DoneTask, error)
 	SetDifficultyTask(difficulty models.DifficultyJson) error
 	Recommendations(UserId int) (*models.RecResponse, error)
+	Recommendations1(UserId int) (*models.RecResponse, error)
 }

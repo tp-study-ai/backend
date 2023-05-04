@@ -257,6 +257,18 @@ type Story struct {
 	Story  []StoryItem `json:"story"`
 }
 
+type StoryItem1 struct {
+	ProblemUrl string `json:"problem_url"`
+	Rating     int    `json:"rating"`
+	Tags       []int  `json:"tags"`
+	NAttempts  int    `json:"n_attempts"`
+}
+type Story1 struct {
+	Solved  []StoryItem1 `json:"solved"`
+	TooEasy []StoryItem1 `json:"too_easy"`
+	TooHard []StoryItem1 `json:"too_hard"`
+}
+
 type Problems struct {
 	ProblemUrl string `json:"problem_url"`
 	Rating     int    `json:"rating"`

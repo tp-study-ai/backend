@@ -492,7 +492,7 @@ func (h HandlerTask) Recommendations(ctx echo.Context) error {
 		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
 	}
 
-	response, err := h.UseCase.Recommendations(int(user.Id))
+	response, err := h.UseCase.Recommendations1(int(user.Id))
 	if err != nil {
 		return tools.CustomError(ctx, err, 1, "ошибка получения рекомендаций")
 	}
