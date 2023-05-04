@@ -16,14 +16,16 @@ type UseCaseTask struct {
 	Secret1 string
 	Secret2 string
 	Secret3 string
+	Secret4 string
 }
 
-func NewUseCaseTask(TaskRepo Repository, secret string, secret1 string, secret2 string) *UseCaseTask {
+func NewUseCaseTask(TaskRepo Repository, secret string, secret1 string, secret2 string, secret3 string) *UseCaseTask {
 	return &UseCaseTask{
 		Repo:    TaskRepo,
 		Secret1: secret,
 		Secret2: secret1,
 		Secret3: secret2,
+		Secret4: secret3,
 	}
 }
 
@@ -69,6 +71,9 @@ var TagDict = map[int][]string{
 
 func (u *UseCaseTask) GetTask() (task models.TaskJSON, err error) {
 	Task, err := u.Repo.GetTask()
+	if err != nil {
+		return
+	}
 
 	var tagsId []int
 	var tagsEn []string
@@ -106,9 +111,6 @@ func (u *UseCaseTask) GetTask() (task models.TaskJSON, err error) {
 		Note:             Task.Note,
 	}
 
-	if err != nil {
-		return
-	}
 	return
 }
 
@@ -1185,4 +1187,247 @@ func (u *UseCaseTask) Recommendations1(UserId int) (*models.RecResponse, error) 
 	}
 
 	return RecommendationResponse, nil
+}
+
+func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
+	easyTask, _ := u.Repo.GetEasyTasksForUser(UserId)
+	fmt.Println("difficultyTask", easyTask)
+
+	hardTask, _ := u.Repo.GetHardTasksForUser(UserId)
+	fmt.Println("submissionTask", hardTask)
+
+	doneTask, _ := u.Repo.GetDoneTask(UserId)
+	fmt.Println(doneTask)
+
+	newEasyTask := make([]int, 0)
+
+	for _, at := range *easyTask {
+		che := false
+		for _, dt := range *doneTask {
+			if at == dt {
+				che = true
+			}
+		}
+		if che == false {
+			newEasyTask = append(newEasyTask, at)
+		}
+	}
+
+	newHardTask := make([]int, 0)
+
+	for _, at := range *hardTask {
+		che := false
+		for _, dt := range *doneTask {
+			if at == dt {
+				che = true
+			}
+		}
+		if che == false {
+			newHardTask = append(newHardTask, at)
+		}
+	}
+
+	Story := &models.Story1{}
+
+	for _, item := range newEasyTask {
+		var buff models.StoryItem1
+
+		task, err1 := u.Repo.GetTaskById(item)
+		if err1 != nil {
+			return nil, err1
+		}
+
+		buff.ProblemUrl = task.ShortLink
+		buff.Rating = task.CfRating
+
+		buff.ProblemUrl = task.ShortLink
+		buff.Rating = task.CfRating
+
+		tagsId := make([]int, 0)
+		if task.CfTags.Elements[0].Int != 0 {
+			for i := 0; i < len(task.CfTags.Elements); i++ {
+				tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
+			}
+		}
+
+		buff.Tags = tagsId
+
+		counterAttention := 0
+
+		submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
+		if err2 != nil {
+			buff.NAttempts = counterAttention
+		} else {
+			for _, i := range submisTask.Tasks {
+				if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
+					break
+				} else {
+					counterAttention += 1
+				}
+			}
+
+			buff.NAttempts = counterAttention
+		}
+
+		Story.TooEasy = append(Story.TooEasy, buff)
+	}
+
+	for _, item := range newHardTask {
+		var buff models.StoryItem1
+
+		task, err1 := u.Repo.GetTaskById(item)
+		if err1 != nil {
+			return nil, err1
+		}
+
+		buff.ProblemUrl = task.ShortLink
+		buff.Rating = task.CfRating
+
+		buff.ProblemUrl = task.ShortLink
+		buff.Rating = task.CfRating
+
+		tagsId := make([]int, 0)
+		if task.CfTags.Elements[0].Int != 0 {
+			for i := 0; i < len(task.CfTags.Elements); i++ {
+				tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
+			}
+		}
+
+		buff.Tags = tagsId
+
+		counterAttention := 0
+
+		submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
+		if err2 != nil {
+			buff.NAttempts = counterAttention
+		} else {
+			for _, i := range submisTask.Tasks {
+				if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
+					break
+				} else {
+					counterAttention += 1
+				}
+			}
+
+			buff.NAttempts = counterAttention
+		}
+
+		Story.TooEasy = append(Story.TooEasy, buff)
+	}
+
+	for _, item := range *doneTask {
+		var buff models.StoryItem1
+
+		task, err1 := u.Repo.GetTaskById(item)
+		if err1 != nil {
+			return nil, err1
+		}
+
+		buff.ProblemUrl = task.ShortLink
+		buff.Rating = task.CfRating
+
+		buff.ProblemUrl = task.ShortLink
+		buff.Rating = task.CfRating
+
+		tagsId := make([]int, 0)
+		if task.CfTags.Elements[0].Int != 0 {
+			for i := 0; i < len(task.CfTags.Elements); i++ {
+				tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
+			}
+		}
+
+		buff.Tags = tagsId
+
+		counterAttention := 0
+
+		submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
+		if err2 != nil {
+			buff.NAttempts = counterAttention
+		} else {
+			for _, i := range submisTask.Tasks {
+				if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
+					break
+				} else {
+					counterAttention += 1
+				}
+			}
+
+			buff.NAttempts = counterAttention
+		}
+
+		Story.TooEasy = append(Story.TooEasy, buff)
+	}
+
+	result, err := json.Marshal(Story)
+	if err != nil {
+		return nil, err
+	}
+
+	req := bytes.NewBuffer(result)
+	resp, err := http.Post(u.Secret4, "application/json", req)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	//fmt.Println(string(body))
+
+	var ColdStartML models.ColdStartML
+
+	err = json.Unmarshal(body, &ColdStartML)
+	if err != nil {
+		return nil, errors.Errorf("876 " + err.Error() + " " + string(body) + " " + string(result) + " " + fmt.Sprint(doneTask) + " " + fmt.Sprint(newEasyTask) + " " + fmt.Sprint(newHardTask))
+	}
+
+	task, err := u.Repo.GetTaskByLink("https://codeforces.com" + ColdStartML.ProblemUrl + "?locale=ru")
+	if err != nil {
+		return nil, err
+	}
+
+	var tagsId []int
+	var tagsEn []string
+	var tagsRu []string
+
+	if task.CfTags.Elements[0].Int != 0 {
+		for i := 0; i < len(task.CfTags.Elements); i++ {
+			tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
+			tagsEn = append(tagsEn, TagDict[tagsId[i]][0])
+			tagsRu = append(tagsRu, TagDict[tagsId[i]][1])
+		}
+	}
+
+	task1 := models.TaskJSON{
+		Id:               task.Id,
+		Name:             task.Name,
+		Description:      task.Description,
+		PublicTests:      task.PublicTests,
+		Difficulty:       task.Difficulty,
+		CfContestId:      task.CfContestId,
+		CfIndex:          task.CfIndex,
+		CfPoints:         task.CfPoints,
+		CfRating:         task.CfRating,
+		CfTagsID:         tagsId,
+		CfTagsRu:         tagsRu,
+		CfTagsEN:         tagsEn,
+		TimeLimit:        task.TimeLimit,
+		MemoryLimitBytes: task.MemoryLimitBytes,
+		Link:             task.Link,
+		ShortLink:        task.ShortLink,
+		NameRu:           task.NameRu,
+		TaskRu:           task.TaskRu,
+		Input:            task.Input,
+		Output:           task.Output,
+		Note:             task.Note,
+	}
+
+	response := &models.ColdStartResponse{
+		Progress: ColdStartML.Progress,
+		Task:     task1,
+	}
+
+	return response, nil
 }

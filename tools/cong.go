@@ -11,6 +11,7 @@ type Config struct {
 	Testis   string `toml:"testis"`
 	Ml       string `toml:"ml"`
 	MLRec    string `toml:"ml_rec"`
+	MLCS     string `toml:"ml_cold_start"`
 }
 
 func NewConfig() *Config {
