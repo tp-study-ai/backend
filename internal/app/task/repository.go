@@ -584,7 +584,7 @@ func (r *RepositoryTask) GetEasyTasksForUser(UserId int) (*[]int, error) {
 	var newPostsData []interface{}
 	newPostsData = append(newPostsData, UserId)
 
-	sql := `SELECT "task_id" FROM "difficulty_task" WHERE "user_id" = $1 and "difficulty" = -1`
+	sql := `SELECT "task_id" FROM "difficulty_task" WHERE "user_id" = $1 and "difficulty" = -1;`
 
 	rows, err := r.DB.Query(sql, newPostsData...)
 	if err != nil {

@@ -937,13 +937,13 @@ func (u *UseCaseTask) Recommendations(UserId int) (*models.RecResponse, error) {
 
 func (u *UseCaseTask) Recommendations1(UserId int) (*models.RecResponse, error) {
 	easyTask, err := u.Repo.GetEasyTasksForUser(UserId)
-	fmt.Println("difficultyTask", easyTask)
+	fmt.Println("GetEasyTasksForUser", easyTask)
 
 	hardTask, err := u.Repo.GetHardTasksForUser(UserId)
-	fmt.Println("submissionTask", hardTask)
+	fmt.Println("GetHardTasksForUser", *hardTask)
 
 	doneTask, err := u.Repo.GetDoneTask(UserId)
-	fmt.Println(doneTask)
+	fmt.Println("GetDoneTask", doneTask)
 
 	newEasyTask := make([]int, 0)
 
@@ -975,133 +975,145 @@ func (u *UseCaseTask) Recommendations1(UserId int) (*models.RecResponse, error) 
 
 	Story := &models.Story1{}
 
-	for _, item := range newEasyTask {
-		var buff models.StoryItem1
+	if len(newEasyTask) != 0 {
+		for _, item := range newEasyTask {
+			var buff models.StoryItem1
 
-		task, err1 := u.Repo.GetTaskById(item)
-		if err1 != nil {
-			return nil, err1
-		}
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		tagsId := make([]int, 0)
-		if task.CfTags.Elements[0].Int != 0 {
-			for i := 0; i < len(task.CfTags.Elements); i++ {
-				tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
+			task, err1 := u.Repo.GetTaskById(item)
+			if err1 != nil {
+				return nil, err1
 			}
-		}
 
-		buff.Tags = tagsId
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-		counterAttention := 0
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-		submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
-		if err2 != nil {
-			buff.NAttempts = counterAttention
-		} else {
-			for _, i := range submisTask.Tasks {
-				if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
-					break
-				} else {
-					counterAttention += 1
+			tagsId := make([]int, 0)
+			if task.CfTags.Elements[0].Int != 0 {
+				for i := 0; i < len(task.CfTags.Elements); i++ {
+					tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
 				}
 			}
 
-			buff.NAttempts = counterAttention
-		}
+			buff.Tags = tagsId
 
-		Story.TooEasy = append(Story.TooEasy, buff)
+			counterAttention := 0
+
+			submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
+			if err2 != nil {
+				buff.NAttempts = counterAttention
+			} else {
+				for _, i := range submisTask.Tasks {
+					if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
+						break
+					} else {
+						counterAttention += 1
+					}
+				}
+
+				buff.NAttempts = counterAttention
+			}
+
+			Story.TooEasy = append(Story.TooEasy, buff)
+		}
+	} else {
+		Story.TooEasy = make([]models.StoryItem1, 0)
 	}
 
-	for _, item := range newHardTask {
-		var buff models.StoryItem1
+	if len(newHardTask) != 0 {
+		for _, item := range newHardTask {
+			var buff models.StoryItem1
 
-		task, err1 := u.Repo.GetTaskById(item)
-		if err1 != nil {
-			return nil, err1
-		}
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		tagsId := make([]int, 0)
-		if task.CfTags.Elements[0].Int != 0 {
-			for i := 0; i < len(task.CfTags.Elements); i++ {
-				tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
+			task, err1 := u.Repo.GetTaskById(item)
+			if err1 != nil {
+				return nil, err1
 			}
-		}
 
-		buff.Tags = tagsId
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-		counterAttention := 0
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-		submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
-		if err2 != nil {
-			buff.NAttempts = counterAttention
-		} else {
-			for _, i := range submisTask.Tasks {
-				if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
-					break
-				} else {
-					counterAttention += 1
+			tagsId := make([]int, 0)
+			if task.CfTags.Elements[0].Int != 0 {
+				for i := 0; i < len(task.CfTags.Elements); i++ {
+					tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
 				}
 			}
 
-			buff.NAttempts = counterAttention
-		}
+			buff.Tags = tagsId
 
-		Story.TooEasy = append(Story.TooEasy, buff)
+			counterAttention := 0
+
+			submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
+			if err2 != nil {
+				buff.NAttempts = counterAttention
+			} else {
+				for _, i := range submisTask.Tasks {
+					if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
+						break
+					} else {
+						counterAttention += 1
+					}
+				}
+
+				buff.NAttempts = counterAttention
+			}
+
+			Story.TooHard = append(Story.TooHard, buff)
+		}
+	} else {
+		Story.TooHard = make([]models.StoryItem1, 0)
 	}
 
-	for _, item := range *doneTask {
-		var buff models.StoryItem1
+	if len(*doneTask) != 0 {
+		for _, item := range *doneTask {
+			var buff models.StoryItem1
 
-		task, err1 := u.Repo.GetTaskById(item)
-		if err1 != nil {
-			return nil, err1
-		}
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		tagsId := make([]int, 0)
-		if task.CfTags.Elements[0].Int != 0 {
-			for i := 0; i < len(task.CfTags.Elements); i++ {
-				tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
+			task, err1 := u.Repo.GetTaskById(item)
+			if err1 != nil {
+				return nil, err1
 			}
-		}
 
-		buff.Tags = tagsId
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-		counterAttention := 0
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-		submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
-		if err2 != nil {
-			buff.NAttempts = counterAttention
-		} else {
-			for _, i := range submisTask.Tasks {
-				if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
-					break
-				} else {
-					counterAttention += 1
+			tagsId := make([]int, 0)
+			if task.CfTags.Elements[0].Int != 0 {
+				for i := 0; i < len(task.CfTags.Elements); i++ {
+					tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
 				}
 			}
 
-			buff.NAttempts = counterAttention
-		}
+			buff.Tags = tagsId
 
-		Story.TooEasy = append(Story.TooEasy, buff)
+			counterAttention := 0
+
+			submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
+			if err2 != nil {
+				buff.NAttempts = counterAttention
+			} else {
+				for _, i := range submisTask.Tasks {
+					if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
+						break
+					} else {
+						counterAttention += 1
+					}
+				}
+
+				buff.NAttempts = counterAttention
+			}
+
+			Story.Solved = append(Story.Solved, buff)
+		}
+	} else {
+		Story.Solved = make([]models.StoryItem1, 0)
 	}
 
 	result, err := json.Marshal(Story)
@@ -1120,7 +1132,7 @@ func (u *UseCaseTask) Recommendations1(UserId int) (*models.RecResponse, error) 
 		return nil, err
 	}
 
-	//fmt.Println(string(body))
+	fmt.Println(string(body))
 
 	var MlResponse models.Rec
 
@@ -1197,7 +1209,7 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 	fmt.Println("submissionTask", hardTask)
 
 	doneTask, _ := u.Repo.GetDoneTask(UserId)
-	fmt.Println(doneTask)
+	fmt.Println("submissionTask", doneTask)
 
 	newEasyTask := make([]int, 0)
 
@@ -1312,7 +1324,7 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 			buff.NAttempts = counterAttention
 		}
 
-		Story.TooEasy = append(Story.TooEasy, buff)
+		Story.TooHard = append(Story.TooHard, buff)
 	}
 
 	for _, item := range *doneTask {
@@ -1355,8 +1367,10 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 			buff.NAttempts = counterAttention
 		}
 
-		Story.TooEasy = append(Story.TooEasy, buff)
+		Story.Solved = append(Story.Solved, buff)
 	}
+
+	fmt.Println(Story)
 
 	result, err := json.Marshal(Story)
 	if err != nil {
