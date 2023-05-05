@@ -514,7 +514,7 @@ func (h HandlerTask) ColdStart(ctx echo.Context) error {
 
 	response, err := h.UseCase.ColdStart(int(user.Id))
 	if err != nil {
-		return tools.CustomError(ctx, err, 1, "ошибка получения рекомендаций")
+		return tools.CustomError(ctx, err, 1, "ошибка получения задачи холодного старта")
 	}
 
 	result, err := json.Marshal(response)

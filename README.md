@@ -778,7 +778,7 @@
 >> страница рекомендаций
 >
 > метод:
->> POST
+>> GET
 >
 > URL
 >> http://127.0.0.1:8000/api/recommendations
@@ -853,5 +853,80 @@
 >>            ...
 >>      }
 >>  ]
+>>}
+>> ```
+
+>>> описание:
+>> Холодный старт
+>
+> метод:
+>> GET
+>
+> URL
+>> http://127.0.0.1:8000/api/cold_start
+>> ```
+>
+>> RESPONSE
+>>```json
+>>{
+>>  "progress": [
+>>      {
+>>          "tag": 23,
+>>          "done": false
+>>      },
+>>      {
+>>          ...
+>>      }
+>>      ...
+>>  ],
+>>  "task": {
+>>      "id": 1686,
+>>      "name": "202_A. LLPS",
+>>      "description": "This problem's actual name, \"Lexicographically Largest Palindromic Subsequence\" is too long to fit into the page headline.\n\nYou are given string s consisting of lowercase English letters only. Find its lexicographically largest palindromic subsequence.\n\nWe'll call a non-empty string s[p1p2... pk] = sp1sp2... spk (1 ≤  p1 < p2 < ... < pk ≤  |s|) a subsequence of string s = s1s2... s|s|, where |s| is the length of string s. For example, strings \"abcb\", \"b\" and \"abacaba\" are subsequences of string \"abacaba\".\n\nString x = x1x2... x|x| is lexicographically larger than string y = y1y2... y|y| if either |x| > |y| and x1 = y1, x2 = y2, ..., x|y| = y|y|, or there exists such number r (r < |x|, r < |y|) that x1 = y1, x2 = y2, ..., xr = yr and xr + 1 > yr + 1. Characters in the strings are compared according to their ASCII codes. For example, string \"ranger\" is lexicographically larger than string \"racecar\" and string \"poster\" is lexicographically larger than string \"post\".\n\nString s = s1s2... s|s| is a palindrome if it matches string rev(s) = s|s|s|s| - 1... s1. In other words, a string is a palindrome if it reads the same way from left to right and from right to left. For example, palindromic strings are \"racecar\", \"refer\" and \"z\".\n\nInput\n\nThe only input line contains a non-empty string s consisting of lowercase English letters only. Its length does not exceed 10.\n\nOutput\n\nPrint the lexicographically largest palindromic subsequence of string s.\n\nExamples\n\nInput\n\nradar\n\n\nOutput\n\nrr\n\n\nInput\n\nbowwowwow\n\n\nOutput\n\nwwwww\n\n\nInput\n\ncodeforces\n\n\nOutput\n\ns\n\n\nInput\n\nmississipp\n\n\nOutput\n\nssss\n\nNote\n\nAmong all distinct subsequences of string \"radar\" the following ones are palindromes: \"a\", \"d\", \"r\", \"aa\", \"rr\", \"ada\", \"rar\", \"rdr\", \"raar\" and \"radar\". The lexicographically largest of them is \"rr\".",
+>>      "public_tests": [
+>>        "input",
+>>        "mississipp\n",
+>>        "output",
+>>        "ssss\n",
+>>      ],
+>>      "difficulty": 7,
+>>      "cf_contest_id": 202,
+>>      "cf_index": "A",
+>>      "cf_points": 500,
+>>      "cf_rating": 800,
+>>      "cf_tags_ID": [
+>>        3,
+>>        4,
+>>        5,
+>>        21,
+>>        23,
+>>        34
+>>      ],
+>>      "cf_tags_RU": [
+>>        "бинарный поиск",
+>>        "битмаски",
+>>        "перебор",
+>>        "жадные алгоритмы",
+>>        "реализация",
+>>        "строки"
+>>      ],
+>>        "cf_tags_en": [
+>>        "binary search",
+>>        "bitmasks",
+>>        "brute force",
+>>        "greedy",
+>>        "implementation",
+>>        "strings"
+>>      ],
+>>      "time_limit": 2,
+>>      "memory_limit_bytes": 256000000,
+>>      "link": "link",
+>>      "short_link": "short_link",
+>>      "name_ru": "name_ru",
+>>      "task_ru": "task_ru",
+>>      "input": "input",
+>>      "output": "output",
+>>      "note": "note"
+>>  }
 >>}
 >> ```

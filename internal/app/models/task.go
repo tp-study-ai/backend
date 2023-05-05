@@ -301,14 +301,14 @@ type Progress struct {
 }
 
 type ColdStartML struct {
-	ProblemUrl  string   `json:"problem_url"`
-	Tag         int      `json:"tag"`
-	Progress    Progress `json:"progress"`
-	ProblemTags []int    `json:"problem_tags"`
-	Rating      int      `json:"rating"`
+	ProblemUrl  string     `json:"problem_url"`
+	Tag         int        `json:"tag"`
+	Progress    []Progress `json:"progress"`
+	ProblemTags []int      `json:"problem_tags"`
+	Rating      int        `json:"rating"`
 }
 
 type ColdStartResponse struct {
-	Progress Progress `json:"progress"`
-	Task     TaskJSON `json:"task"`
+	Progress []Progress `json:"progress"`
+	Task     TaskJSON   `json:"task"`
 }

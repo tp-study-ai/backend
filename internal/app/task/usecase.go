@@ -1241,133 +1241,145 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 
 	Story := &models.Story1{}
 
-	for _, item := range newEasyTask {
-		var buff models.StoryItem1
+	if len(newEasyTask) != 0 {
+		for _, item := range newEasyTask {
+			var buff models.StoryItem1
 
-		task, err1 := u.Repo.GetTaskById(item)
-		if err1 != nil {
-			return nil, err1
-		}
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		tagsId := make([]int, 0)
-		if task.CfTags.Elements[0].Int != 0 {
-			for i := 0; i < len(task.CfTags.Elements); i++ {
-				tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
+			task, err1 := u.Repo.GetTaskById(item)
+			if err1 != nil {
+				return nil, err1
 			}
-		}
 
-		buff.Tags = tagsId
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-		counterAttention := 0
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-		submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
-		if err2 != nil {
-			buff.NAttempts = counterAttention
-		} else {
-			for _, i := range submisTask.Tasks {
-				if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
-					break
-				} else {
-					counterAttention += 1
+			tagsId := make([]int, 0)
+			if task.CfTags.Elements[0].Int != 0 {
+				for i := 0; i < len(task.CfTags.Elements); i++ {
+					tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
 				}
 			}
 
-			buff.NAttempts = counterAttention
-		}
+			buff.Tags = tagsId
 
-		Story.TooEasy = append(Story.TooEasy, buff)
+			counterAttention := 0
+
+			submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
+			if err2 != nil {
+				buff.NAttempts = counterAttention
+			} else {
+				for _, i := range submisTask.Tasks {
+					if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
+						break
+					} else {
+						counterAttention += 1
+					}
+				}
+
+				buff.NAttempts = counterAttention
+			}
+
+			Story.TooEasy = append(Story.TooEasy, buff)
+		}
+	} else {
+		Story.TooEasy = make([]models.StoryItem1, 0)
 	}
 
-	for _, item := range newHardTask {
-		var buff models.StoryItem1
+	if len(newHardTask) != 0 {
+		for _, item := range newHardTask {
+			var buff models.StoryItem1
 
-		task, err1 := u.Repo.GetTaskById(item)
-		if err1 != nil {
-			return nil, err1
-		}
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		tagsId := make([]int, 0)
-		if task.CfTags.Elements[0].Int != 0 {
-			for i := 0; i < len(task.CfTags.Elements); i++ {
-				tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
+			task, err1 := u.Repo.GetTaskById(item)
+			if err1 != nil {
+				return nil, err1
 			}
-		}
 
-		buff.Tags = tagsId
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-		counterAttention := 0
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-		submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
-		if err2 != nil {
-			buff.NAttempts = counterAttention
-		} else {
-			for _, i := range submisTask.Tasks {
-				if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
-					break
-				} else {
-					counterAttention += 1
+			tagsId := make([]int, 0)
+			if task.CfTags.Elements[0].Int != 0 {
+				for i := 0; i < len(task.CfTags.Elements); i++ {
+					tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
 				}
 			}
 
-			buff.NAttempts = counterAttention
-		}
+			buff.Tags = tagsId
 
-		Story.TooHard = append(Story.TooHard, buff)
+			counterAttention := 0
+
+			submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
+			if err2 != nil {
+				buff.NAttempts = counterAttention
+			} else {
+				for _, i := range submisTask.Tasks {
+					if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
+						break
+					} else {
+						counterAttention += 1
+					}
+				}
+
+				buff.NAttempts = counterAttention
+			}
+
+			Story.TooHard = append(Story.TooHard, buff)
+		}
+	} else {
+		Story.TooHard = make([]models.StoryItem1, 0)
 	}
 
-	for _, item := range *doneTask {
-		var buff models.StoryItem1
+	if len(*doneTask) != 0 {
+		for _, item := range *doneTask {
+			var buff models.StoryItem1
 
-		task, err1 := u.Repo.GetTaskById(item)
-		if err1 != nil {
-			return nil, err1
-		}
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		buff.ProblemUrl = task.ShortLink
-		buff.Rating = task.CfRating
-
-		tagsId := make([]int, 0)
-		if task.CfTags.Elements[0].Int != 0 {
-			for i := 0; i < len(task.CfTags.Elements); i++ {
-				tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
+			task, err1 := u.Repo.GetTaskById(item)
+			if err1 != nil {
+				return nil, err1
 			}
-		}
 
-		buff.Tags = tagsId
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-		counterAttention := 0
+			buff.ProblemUrl = task.ShortLink
+			buff.Rating = task.CfRating
 
-		submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
-		if err2 != nil {
-			buff.NAttempts = counterAttention
-		} else {
-			for _, i := range submisTask.Tasks {
-				if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
-					break
-				} else {
-					counterAttention += 1
+			tagsId := make([]int, 0)
+			if task.CfTags.Elements[0].Int != 0 {
+				for i := 0; i < len(task.CfTags.Elements); i++ {
+					tagsId = append(tagsId, int(task.CfTags.Elements[i].Int))
 				}
 			}
 
-			buff.NAttempts = counterAttention
-		}
+			buff.Tags = tagsId
 
-		Story.Solved = append(Story.Solved, buff)
+			counterAttention := 0
+
+			submisTask, err2 := u.Repo.GetSendTaskByTaskId(UserId, item)
+			if err2 != nil {
+				buff.NAttempts = counterAttention
+			} else {
+				for _, i := range submisTask.Tasks {
+					if i.TestsTotal == i.TestsPassed && i.TestsTotal != 0 {
+						break
+					} else {
+						counterAttention += 1
+					}
+				}
+
+				buff.NAttempts = counterAttention
+			}
+
+			Story.Solved = append(Story.Solved, buff)
+		}
+	} else {
+		Story.Solved = make([]models.StoryItem1, 0)
 	}
 
 	fmt.Println(Story)
@@ -1388,13 +1400,13 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 		return nil, err
 	}
 
-	//fmt.Println(string(body))
+	fmt.Println(string(body))
 
 	var ColdStartML models.ColdStartML
 
 	err = json.Unmarshal(body, &ColdStartML)
 	if err != nil {
-		return nil, errors.Errorf("876 " + err.Error() + " " + string(body) + " " + string(result) + " " + fmt.Sprint(doneTask) + " " + fmt.Sprint(newEasyTask) + " " + fmt.Sprint(newHardTask))
+		return nil, errors.Errorf("1409 " + err.Error() + " " + string(body) + " " + string(result) + " " + fmt.Sprint(doneTask) + " " + fmt.Sprint(newEasyTask) + " " + fmt.Sprint(newHardTask))
 	}
 
 	task, err := u.Repo.GetTaskByLink("https://codeforces.com" + ColdStartML.ProblemUrl + "?locale=ru")
