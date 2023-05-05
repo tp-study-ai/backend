@@ -1124,7 +1124,7 @@ func (u *UseCaseTask) Recommendations1(UserId int) (*models.RecResponse, error) 
 	req := bytes.NewBuffer(result)
 	resp, err := http.Post(u.Secret3, "application/json", req)
 	if err != nil {
-		return nil, err
+		return nil, errors.Errorf("1127" + err.Error())
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -1138,7 +1138,7 @@ func (u *UseCaseTask) Recommendations1(UserId int) (*models.RecResponse, error) 
 
 	err = json.Unmarshal(body, &MlResponse.Rec)
 	if err != nil {
-		return nil, errors.Errorf("876 " + err.Error() + " " + string(body) + " " + string(result) + " " + fmt.Sprint(doneTask) + " " + fmt.Sprint(newEasyTask) + " " + fmt.Sprint(newHardTask))
+		return nil, errors.Errorf("1141 " + err.Error() + " " + string(body) + " " + string(result) + " " + fmt.Sprint(doneTask) + " " + fmt.Sprint(newEasyTask) + " " + fmt.Sprint(newHardTask))
 	}
 
 	RecommendationResponse := &models.RecResponse{}
