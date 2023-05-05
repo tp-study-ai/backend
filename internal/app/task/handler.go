@@ -505,3 +505,23 @@ func (h HandlerTask) Recommendations(ctx echo.Context) error {
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
 	return ctx.JSONBlob(http.StatusOK, result)
 }
+
+func (h HandlerTask) ColdStart(ctx echo.Context) error {
+	user := middleware.GetUserFromCtx(ctx)
+	if user == nil {
+		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
+	}
+
+	response, err := h.UseCase.ColdStart(int(user.Id))
+	if err != nil {
+		return tools.CustomError(ctx, err, 1, "ошибка получения рекомендаций")
+	}
+
+	result, err := json.Marshal(response)
+	if err != nil {
+		return tools.CustomError(ctx, err, 2, "ошибка формирования ответа")
+	}
+
+	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+	return ctx.JSONBlob(http.StatusOK, result)
+}

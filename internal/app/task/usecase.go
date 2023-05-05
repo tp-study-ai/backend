@@ -1124,7 +1124,7 @@ func (u *UseCaseTask) Recommendations1(UserId int) (*models.RecResponse, error) 
 	req := bytes.NewBuffer(result)
 	resp, err := http.Post(u.Secret3, "application/json", req)
 	if err != nil {
-		return nil, errors.Errorf("1127" + err.Error())
+		return nil, errors.Errorf("1127 " + err.Error())
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
