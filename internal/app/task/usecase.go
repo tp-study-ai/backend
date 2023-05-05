@@ -557,7 +557,7 @@ func (u *UseCaseTask) GetShockMode(id int) (*models.ShockMode, error) {
 	} else {
 		fmt.Println()
 		now = now.Add(-24 * time.Hour)
-		for i := 0; i < 365; i++ {
+		for i := 0; i < 60; i++ {
 			count, err := u.Repo.GetCountTaskOfDate(id, now)
 			if err != nil {
 				return nil, err
