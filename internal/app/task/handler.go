@@ -516,6 +516,15 @@ func (h HandlerTask) ColdStart(ctx echo.Context) error {
 	if err != nil {
 		return tools.CustomError(ctx, err, 1, "ошибка получения задачи холодного старта")
 	}
+	if err == nil && err == nil {
+		result, err1 := json.Marshal(models.Message{Message: "Холодный старт успешно пройден"})
+		if err1 != nil {
+			return tools.CustomError(ctx, err, 2, "ошибка формирования ответа")
+		}
+
+		ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+		return ctx.JSONBlob(http.StatusOK, result)
+	}
 
 	result, err := json.Marshal(response)
 	if err != nil {

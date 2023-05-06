@@ -1416,6 +1416,7 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 		if err1 != nil {
 			return nil, err1
 		}
+		return nil, nil
 	}
 
 	task, err := u.Repo.GetTaskByLink("https://codeforces.com" + ColdStartML.ProblemUrl + "?locale=ru")
@@ -1467,34 +1468,41 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 	return response, nil
 }
 
-//func (u *UseCaseTask) Chat(Message models.ChatGPT) (*models.ColdStartResponse, error) {
-//	task, err := u.Repo.GetTaskById(Message.TaskId)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	result, err := json.Marshal(Story)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	req := bytes.NewBuffer(result)
-//	resp, err := http.Post(u.Secret4, "application/json", req)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	body, err := ioutil.ReadAll(resp.Body)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	fmt.Println(string(body))
-//
-//	var ColdStartML models.ColdStartML
-//
-//	err = json.Unmarshal(body, &ColdStartML)
-//	if err != nil {
-//		return nil, errors.Errorf("1409 " + err.Error() + " " + string(body) + " " + string(result) + " " + fmt.Sprint(doneTask) + " " + fmt.Sprint(newEasyTask) + " " + fmt.Sprint(newHardTask))
-//	}
-//}
+func (u *UseCaseTask) Chat(Message models.ChatGPT) (*models.Message, error) {
+	task, err := u.Repo.GetTaskById(Message.TaskId)
+	if err != nil {
+		return nil, err
+	}
+
+	MessageRequest := &models.ChatGPTRequest{}
+	MessageRequest.UserMessage = Message.Message
+	MessageRequest.Statement = task.Description
+	MessageRequest.UserSolution = Message.Code
+
+	result, err := json.Marshal(MessageRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	req := bytes.NewBuffer(result)
+	resp, err := http.Post(u.Secret5, "application/json", req)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(string(body))
+
+	var ChatGPTResponse models.Message
+
+	err = json.Unmarshal(body, &ChatGPTResponse)
+	if err != nil {
+		return nil, errors.Errorf("1409 " + err.Error())
+	}
+
+	return &ChatGPTResponse, nil
+}

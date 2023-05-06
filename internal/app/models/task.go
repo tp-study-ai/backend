@@ -321,6 +321,7 @@ type ChatGPT struct {
 }
 
 type ChatGPTRequest struct {
+	UserMessage    string `json:"user_message"`
 	Statement      string `json:"statement"`
 	UserSolution   string `json:"user_solution"`
 	MasterSolution string `json:"master_solution"`
