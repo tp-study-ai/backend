@@ -40,7 +40,7 @@ func (r *RepositoryAuth) GetUser(UserRequest *models.UserDB) (*models.UserDB, er
 func (r *RepositoryAuth) CreateUser(UserRequest *models.UserDB) (*models.UserDB, error) {
 	UserResponse := &models.UserDB{}
 	err := r.DB.QueryRow(
-		`INSERT INTO "users" ("username","password","cold_start") VALUES ($1,$2,"false") RETURNING "id", "username", "password", "cold_start"`,
+		`INSERT INTO "users" ("username","password","cold_start") VALUES ($1,$2,'false') RETURNING "id", "username", "password", "cold_start"`,
 		UserRequest.Username, UserRequest.Password,
 	).Scan(&UserResponse.Id, &UserResponse.Username, &UserResponse.Password, &UserResponse.ColdStart)
 	if err != nil {
