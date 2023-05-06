@@ -31,7 +31,7 @@ func (u *UseCaseAuth) Register(User *models.UserJson) (*models.ResponseUserJson,
 		return nil, errors.Errorf("некорректаня работа чего то там")
 	}
 
-	return &models.ResponseUserJson{Id: User2.Id, Username: User2.Username}, nil
+	return &models.ResponseUserJson{Id: User2.Id, Username: User2.Username, ColdStart: User2.ColdStart}, nil
 }
 
 func (u *UseCaseAuth) Login(User *models.UserJson) (*models.ResponseUserJson, error) {
@@ -50,7 +50,7 @@ func (u *UseCaseAuth) GetUserById(id models.UserId) (*models.ResponseUserJson, e
 	if err != nil {
 		return nil, err
 	}
-	return &models.ResponseUserJson{Id: user.Id, Username: user.Username}, nil
+	return &models.ResponseUserJson{Id: user.Id, Username: user.Username, ColdStart: user.ColdStart}, nil
 }
 
 func (u *UseCaseAuth) Update(UserRequest *models.UpdateJson, UserId models.UserId) (*models.ResponseUserJson, error) {
@@ -93,7 +93,7 @@ func (u *UseCaseAuth) Update(UserRequest *models.UpdateJson, UserId models.UserI
 		if err != nil {
 			return nil, err
 		}
-		return &models.ResponseUserJson{Id: UserResponse.Id, Username: UserResponse.Username}, nil
+		return &models.ResponseUserJson{Id: UserResponse.Id, Username: UserResponse.Username, ColdStart: UserResponse.ColdStart}, nil
 	}
 	return nil, errors.Errorf("error")
 }
