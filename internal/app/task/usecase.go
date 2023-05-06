@@ -1420,7 +1420,7 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 
 	task, err := u.Repo.GetTaskByLink("https://codeforces.com" + ColdStartML.ProblemUrl + "?locale=ru")
 	if err != nil {
-		return nil, errors.Errorf(err.Error() + " " + string(ColdStartML.ProblemUrl))
+		return nil, errors.Errorf(err.Error() + " 1423 " + ColdStartML.ProblemUrl)
 	}
 
 	var tagsId []int
