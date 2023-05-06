@@ -1469,6 +1469,7 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 }
 
 func (u *UseCaseTask) Chat(Message models.ChatGPT) (*models.Message, error) {
+	fmt.Println(Message.TaskId)
 	task, err := u.Repo.GetTaskById(Message.TaskId)
 	if err != nil {
 		return nil, err
@@ -1483,6 +1484,10 @@ func (u *UseCaseTask) Chat(Message models.ChatGPT) (*models.Message, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	//client := http.Client{
+	//	Timeout: 1000 * time.Second,
+	//}
 
 	req := bytes.NewBuffer(result)
 	resp, err := http.Post(u.Secret5, "application/json", req)
