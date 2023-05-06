@@ -301,6 +301,7 @@ type Progress struct {
 }
 
 type ColdStartML struct {
+	Finished    bool       `json:"finished"`
 	ProblemUrl  string     `json:"problem_url"`
 	Tag         int        `json:"tag"`
 	Progress    []Progress `json:"progress"`
