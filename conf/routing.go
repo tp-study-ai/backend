@@ -45,6 +45,8 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	router.GET("/api/recommendations", sh.TaskHandler.Recommendations, mwChain...)
 	router.GET("/api/cold_start", sh.TaskHandler.ColdStart, mwChain...)
 
+	router.POST("/api/chat_gpt", sh.TaskHandler.ChatGPT, mwChain...)
+
 	router.GET("api/calendar", sh.TaskHandler.GetCountTaskOfDate, mwChain...)
 	router.GET("api/shock_mode", sh.TaskHandler.GetChockMode, mwChain...)
 
