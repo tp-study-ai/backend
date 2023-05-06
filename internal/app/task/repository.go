@@ -636,3 +636,17 @@ func (r *RepositoryTask) GetHardTasksForUser(UserId int) (*[]int, error) {
 
 	return &hardTask, nil
 }
+
+func (r *RepositoryTask) UpdateUserColdStart(UserId int) error {
+	var newPostsData []interface{}
+	newPostsData = append(newPostsData, UserId)
+
+	sql := `UPDATE "users" SET "cold_start" = 'true' WHERE "id"=$1`
+
+	rows, err := r.DB.Query(sql, newPostsData...)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	return nil
+}

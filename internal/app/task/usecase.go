@@ -1409,6 +1409,13 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 		return nil, errors.Errorf("1409 " + err.Error() + " " + string(body) + " " + string(result) + " " + fmt.Sprint(doneTask) + " " + fmt.Sprint(newEasyTask) + " " + fmt.Sprint(newHardTask))
 	}
 
+	if ColdStartML.Finished == true {
+		err1 := u.Repo.UpdateUserColdStart(UserId)
+		if err1 != nil {
+			return nil, err1
+		}
+	}
+
 	task, err := u.Repo.GetTaskByLink("https://codeforces.com" + ColdStartML.ProblemUrl + "?locale=ru")
 	if err != nil {
 		return nil, err

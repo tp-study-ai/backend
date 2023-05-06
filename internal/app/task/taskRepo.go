@@ -25,4 +25,5 @@ type Repository interface {
 	GetSetDifficultyTask(UserId int, TaskId int) (*models.DifficultyDb, error)
 	GetEasyTasksForUser(UserId int) (*[]int, error)
 	GetHardTasksForUser(UserId int) (*[]int, error)
+	UpdateUserColdStart(UserId int) error
 }
