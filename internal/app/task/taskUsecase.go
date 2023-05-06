@@ -21,4 +21,5 @@ type UseCase interface {
 	Recommendations(UserId int) (*models.RecResponse, error)
 	Recommendations1(UserId int) (*models.RecResponse, error)
 	ColdStart(UserId int) (*models.ColdStartResponse, error)
+	Chat(Message models.ChatGPT) (*models.Message, error)
 }
