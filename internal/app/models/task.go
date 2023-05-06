@@ -313,3 +313,15 @@ type ColdStartResponse struct {
 	Progress []Progress `json:"progress"`
 	Task     TaskJSON   `json:"task"`
 }
+
+type ChatGPT struct {
+	TaskId  int    `json:"task_id"`
+	Message string `json:"message"`
+	Code    string `json:"code"`
+}
+
+type ChatGPTRequest struct {
+	Statement      string `json:"statement"`
+	UserSolution   string `json:"user_solution"`
+	MasterSolution string `json:"master_solution"`
+}
