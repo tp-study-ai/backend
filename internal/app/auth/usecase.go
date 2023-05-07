@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/models"
+	"github.com/tp-study-ai/backend/tools"
 )
 
 type UseCaseAuth struct {
@@ -17,17 +18,17 @@ func NewUseCaseAuth(TaskRepo Repository) *UseCaseAuth {
 }
 
 func (u *UseCaseAuth) Register(User *models.UserJson) (*models.ResponseUserJson, error) {
-	User1, err := u.Repo.GetUser(&models.UserDB{Username: User.Username, Password: User.Password})
+	User1, err := u.Repo.GetUser(&models.UserDB{Username: User.Username, Password: tools.GetMD5Hash(User.Password)})
 	if err == nil && User1.Username == User.Username {
 		return nil, errors.Errorf("такой пользователь уже существует")
 	}
 
-	User2, err := u.Repo.CreateUser(&models.UserDB{Username: User.Username, Password: User.Password})
+	User2, err := u.Repo.CreateUser(&models.UserDB{Username: User.Username, Password: tools.GetMD5Hash(User.Password)})
 	if err != nil {
 		return nil, err
 	}
 
-	if User.Username != User2.Username || User.Password != User2.Password {
+	if User.Username != User2.Username || tools.GetMD5Hash(User.Password) != tools.GetMD5Hash(User2.Password) {
 		return nil, errors.Errorf("некорректаня работа чего то там")
 	}
 
@@ -35,11 +36,11 @@ func (u *UseCaseAuth) Register(User *models.UserJson) (*models.ResponseUserJson,
 }
 
 func (u *UseCaseAuth) Login(User *models.UserJson) (*models.ResponseUserJson, error) {
-	User1, err := u.Repo.Login(&models.UserDB{Username: User.Username, Password: User.Password})
+	User1, err := u.Repo.Login(&models.UserDB{Username: User.Username, Password: tools.GetMD5Hash(User.Password)})
 	if err != nil {
 		return nil, err
 	}
-	if User1.Username == User.Username && User1.Password == User.Password {
+	if User1.Username == User.Username && tools.GetMD5Hash(User1.Password) == tools.GetMD5Hash(User.Password) {
 		return &models.ResponseUserJson{Id: User1.Id, Username: User1.Username}, nil
 	}
 	return nil, errors.Errorf("username || password не верно")
@@ -87,7 +88,7 @@ func (u *UseCaseAuth) Update(UserRequest *models.UpdateJson, UserId models.UserI
 			&models.UpdatePasswordDb{
 				Id:          Uuser.Id,
 				Username:    Uuser.Username,
-				NewPassword: UserRequest.NewPassword,
+				NewPassword: tools.GetMD5Hash(UserRequest.NewPassword),
 			},
 		)
 		if err != nil {
