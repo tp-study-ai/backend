@@ -28,7 +28,7 @@ func (u *UseCaseAuth) Register(User *models.UserJson) (*models.ResponseUserJson,
 		return nil, err
 	}
 
-	if User.Username != User2.Username || tools.GetMD5Hash(User.Password) != tools.GetMD5Hash(User2.Password) {
+	if User.Username != User2.Username || tools.GetMD5Hash(User.Password) != User2.Password {
 		return nil, errors.Errorf("некорректаня работа чего то там")
 	}
 
