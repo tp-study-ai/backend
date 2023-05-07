@@ -13,6 +13,7 @@ type Config struct {
 	MLRec    string `toml:"ml_rec"`
 	MLCS     string `toml:"ml_cold_start"`
 	CG       string `toml:"cg"`
+	JWT      string `toml:"jwt"`
 }
 
 func NewConfig() *Config {

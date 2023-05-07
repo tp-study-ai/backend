@@ -33,7 +33,7 @@ func main() {
 	}
 	defer pgxManager.Close()
 
-	jwtManager := jwtManager.NewJwtManager()
+	jwtManager := jwtManager.NewJwtManager(config.JWT)
 
 	taskRepo := task.NewRepositoryTask(pgxManager)
 	taskUcase := task.NewUseCaseTask(taskRepo, config.Testis, config.Ml, config.MLRec, config.MLCS, config.CG)
