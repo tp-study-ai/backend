@@ -1416,7 +1416,10 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 		if err1 != nil {
 			return nil, err1
 		}
-		return &models.ColdStartResponse{Finished: ColdStartML.Finished}, nil
+		return &models.ColdStartResponse{
+			Finished: ColdStartML.Finished,
+			Progress: make([]models.Progress, 0),
+		}, nil
 	}
 
 	task, err := u.Repo.GetTaskByLink("https://codeforces.com" + ColdStartML.ProblemUrl + "?locale=ru")

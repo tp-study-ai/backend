@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/conf"
 	"github.com/tp-study-ai/backend/internal/app/auth"
+	"github.com/tp-study-ai/backend/internal/app/metrics"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
 	"github.com/tp-study-ai/backend/tools"
@@ -44,6 +45,13 @@ func main() {
 	authHandler := auth.NewHandlerAuth(authUcase, jwtManager)
 
 	router := echo.New()
+
+	m, err := metrics.CreateNewMetric("main")
+	if err != nil {
+		panic(err)
+	}
+
+	router.Use(m.CollectMetrics)
 
 	serverRouting := conf.ServerHandlers{
 		TaskHandler: taskHandler,

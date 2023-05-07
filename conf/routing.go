@@ -3,6 +3,7 @@ package conf
 import (
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/tp-study-ai/backend/internal/app/auth"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
@@ -24,6 +25,8 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	mwChain := []echo.MiddlewareFunc{
 		mw.AuthMiddleware,
 	}
+
+	router.GET("metrics", echo.WrapHandler(promhttp.Handler()))
 
 	router.GET("/api/get_task", sh.TaskHandler.GetTask, mwChain...)
 	router.GET("/api/get_task_by_id", sh.TaskHandler.GetTaskById, mwChain...)
