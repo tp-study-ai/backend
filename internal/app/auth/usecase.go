@@ -40,7 +40,7 @@ func (u *UseCaseAuth) Login(User *models.UserJson) (*models.ResponseUserJson, er
 	if err != nil {
 		return nil, err
 	}
-	if User1.Username == User.Username && tools.GetMD5Hash(User1.Password) == tools.GetMD5Hash(User.Password) {
+	if User1.Username == User.Username && User1.Password == tools.GetMD5Hash(User.Password) {
 		return &models.ResponseUserJson{Id: User1.Id, Username: User1.Username}, nil
 	}
 	return nil, errors.Errorf("username || password не верно")
