@@ -310,6 +310,7 @@ type ColdStartML struct {
 }
 
 type ColdStartResponse struct {
+	Finished bool       `json:"finished"`
 	Progress []Progress `json:"progress"`
 	Task     TaskJSON   `json:"task"`
 }

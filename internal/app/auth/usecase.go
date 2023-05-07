@@ -65,34 +65,34 @@ func (u *UseCaseAuth) Update(UserRequest *models.UpdateJson, UserId models.UserI
 	fmt.Println(UserRequest.NewUsername)
 	if len(UserRequest.NewUsername) != 0 {
 		fmt.Println("nice")
-		UserResponse, err := u.Repo.UpdateUsername(
+		UserResponse, err1 := u.Repo.UpdateUsername(
 			&models.UpdateUsernameDb{
 				Id:          Uuser.Id,
 				Username:    Uuser.Username,
 				NewUsername: UserRequest.NewUsername,
 			},
 		)
-		fmt.Println(err)
-		if err != nil {
-			return nil, err
+		fmt.Println(err1)
+		if err1 != nil {
+			return nil, err1
 		}
 		if len(UserRequest.NewPassword) == 0 {
-			return &models.ResponseUserJson{Id: UserResponse.Id, Username: UserResponse.Username}, nil
+			return &models.ResponseUserJson{Id: UserResponse.Id, Username: UserResponse.Username, ColdStart: UserResponse.ColdStart}, nil
 		}
 	}
 
 	fmt.Println(UserRequest.NewPassword)
 	if len(UserRequest.NewPassword) != 0 {
 		fmt.Println("nice")
-		UserResponse, err := u.Repo.UpdatePassword(
+		UserResponse, err1 := u.Repo.UpdatePassword(
 			&models.UpdatePasswordDb{
 				Id:          Uuser.Id,
 				Username:    Uuser.Username,
 				NewPassword: tools.GetMD5Hash(UserRequest.NewPassword),
 			},
 		)
-		if err != nil {
-			return nil, err
+		if err1 != nil {
+			return nil, err1
 		}
 		return &models.ResponseUserJson{Id: UserResponse.Id, Username: UserResponse.Username, ColdStart: UserResponse.ColdStart}, nil
 	}
