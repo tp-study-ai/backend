@@ -1480,10 +1480,9 @@ func (u *UseCaseTask) Chat(Message models.ChatGPT) (*models.Message, error) {
 	}
 
 	MessageRequest := &models.ChatGPTRequest{
-		UserMessage:    Message.Message,
-		Statement:      task.Description,
-		UserSolution:   Message.Code,
-		MasterSolution: task.MasterSolution,
+		UserMessage:  Message.Message,
+		Statement:    task.Description,
+		UserSolution: Message.Code,
 	}
 
 	result, err := json.Marshal(MessageRequest)
