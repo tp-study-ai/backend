@@ -1474,24 +1474,22 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 
 func (u *UseCaseTask) Chat(Message models.ChatGPT) (*models.Message, error) {
 	fmt.Println(Message.TaskId)
-	task, err := u.Repo.GetTaskById(Message.TaskId)
+	task, err := u.Repo.GetTaskForCG(Message.TaskId)
 	if err != nil {
 		return nil, err
 	}
 
-	MessageRequest := &models.ChatGPTRequest{}
-	MessageRequest.UserMessage = Message.Message
-	MessageRequest.Statement = task.Description
-	MessageRequest.UserSolution = Message.Code
+	MessageRequest := &models.ChatGPTRequest{
+		UserMessage:    Message.Message,
+		Statement:      task.Description,
+		UserSolution:   Message.Code,
+		MasterSolution: task.MasterSolution,
+	}
 
 	result, err := json.Marshal(MessageRequest)
 	if err != nil {
 		return nil, err
 	}
-
-	//client := http.Client{
-	//	Timeout: 1000 * time.Second,
-	//}
 
 	req := bytes.NewBuffer(result)
 	resp, err := http.Post(u.Secret5, "application/json", req)
@@ -1510,7 +1508,7 @@ func (u *UseCaseTask) Chat(Message models.ChatGPT) (*models.Message, error) {
 
 	err = json.Unmarshal(body, &ChatGPTResponse)
 	if err != nil {
-		return nil, errors.Errorf("1409 " + err.Error())
+		return nil, errors.Errorf("1511 " + err.Error())
 	}
 
 	return &ChatGPTResponse, nil
