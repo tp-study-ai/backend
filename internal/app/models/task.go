@@ -39,11 +39,6 @@ type TaskDB struct {
 	Note             string           `db:"note"`
 }
 
-type TaskCG struct {
-	Description    string `db:"description"`
-	MasterSolution string `db:"master_solution"`
-}
-
 type TasksResponse struct {
 	Tasks []TaskDB
 }

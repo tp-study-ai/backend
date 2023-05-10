@@ -7,7 +7,6 @@ import (
 
 type Repository interface {
 	GetTask() (Task models.TaskDB, err error)
-	GetTaskForCG(id int) (*models.TaskCG, error)
 	GetTaskById(id int) (Task models.TaskDB, err error)
 	GetTaskByLimit(id int, sort string, tag []int, minRating int, maxRating int) (*models.TasksResponse, int, error)
 	SendTask(task *models.SendTask) (*models.SendTask, error)

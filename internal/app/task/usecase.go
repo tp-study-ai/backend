@@ -1474,7 +1474,7 @@ func (u *UseCaseTask) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 
 func (u *UseCaseTask) Chat(Message models.ChatGPT) (*models.Message, error) {
 	fmt.Println(Message.TaskId)
-	task, err := u.Repo.GetTaskForCG(Message.TaskId)
+	task, err := u.Repo.GetTaskById(Message.TaskId)
 	if err != nil {
 		return nil, err
 	}

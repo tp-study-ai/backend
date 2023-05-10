@@ -56,18 +56,6 @@ func (r *RepositoryTask) GetTask() (Task models.TaskDB, err error) {
 	return
 }
 
-func (r *RepositoryTask) GetTaskForCG(id int) (*models.TaskCG, error) {
-	task := &models.TaskCG{}
-	err := r.DB.QueryRow(`select "description", "master_solution" from "tasks"where id = $1;`, id).Scan(
-		&task.Description,
-		&task.MasterSolution,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return task, err
-}
-
 func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskDB, err error) {
 	err = r.DB.QueryRow(
 		`select *
