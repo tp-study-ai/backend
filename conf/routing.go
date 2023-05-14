@@ -7,11 +7,13 @@ import (
 	"github.com/tp-study-ai/backend/internal/app/auth"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
+	"github.com/tp-study-ai/backend/internal/app/testis/testisHandler"
 )
 
 type ServerHandlers struct {
-	TaskHandler *task.HandlerTask
-	AuthHandler *auth.HandlerAuth
+	TaskHandler   *task.HandlerTask
+	AuthHandler   *auth.HandlerAuth
+	TestisHandler *testisHandler.HandlerTestis
 }
 
 func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.CommonMiddleware) {
@@ -31,7 +33,10 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	router.GET("/api/get_task", sh.TaskHandler.GetTask, mwChain...)
 	router.GET("/api/get_task_by_id", sh.TaskHandler.GetTaskById, mwChain...)
 	router.GET("/api/tasks_list", sh.TaskHandler.GetTaskByLimit, mwChain...)
-	router.POST("/api/check_solution", sh.TaskHandler.CheckSolution, mwChain...)
+
+	// testis
+	router.POST("/api/check_solution", sh.TestisHandler.CheckSolution, mwChain...)
+
 	router.GET("/api/get_tags", sh.TaskHandler.GetTags, mwChain...)
 
 	router.POST("/api/get_similar", sh.TaskHandler.GetSimilar, mwChain...)

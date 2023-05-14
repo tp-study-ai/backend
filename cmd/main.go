@@ -10,6 +10,11 @@ import (
 	"github.com/tp-study-ai/backend/internal/app/metrics"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
+
+	"github.com/tp-study-ai/backend/internal/app/testis/testisHandler"
+	"github.com/tp-study-ai/backend/internal/app/testis/testisRepository"
+	"github.com/tp-study-ai/backend/internal/app/testis/testisUseCase"
+
 	"github.com/tp-study-ai/backend/tools"
 	"github.com/tp-study-ai/backend/tools/authManager/jwtManager"
 	"log"
@@ -40,6 +45,10 @@ func main() {
 	taskUcase := task.NewUseCaseTask(taskRepo, config.Testis, config.Ml, config.MLRec, config.MLCS, config.CG)
 	taskHandler := task.NewHandlerTask(taskUcase)
 
+	testisRepo := testisRepository.NewRepositoryTask(pgxManager)
+	testisUseCase := testisUseCase.NewUseCaseTestis(testisRepo, config.Testis, config.Ml, config.MLRec, config.MLCS, config.CG)
+	testisHandler := testisHandler.NewHandlerTestis(testisUseCase)
+
 	authRepo := auth.NewRepositoryAuth(pgxManager)
 	authUcase := auth.NewUseCaseAuth(authRepo)
 	authHandler := auth.NewHandlerAuth(authUcase, jwtManager)
@@ -54,8 +63,9 @@ func main() {
 	router.Use(m.CollectMetrics)
 
 	serverRouting := conf.ServerHandlers{
-		TaskHandler: taskHandler,
-		AuthHandler: authHandler,
+		TaskHandler:   taskHandler,
+		TestisHandler: testisHandler,
+		AuthHandler:   authHandler,
 	}
 
 	comonMw := middleware.NewCommonMiddleware(jwtManager)
