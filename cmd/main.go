@@ -7,6 +7,11 @@ import (
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/conf"
 	"github.com/tp-study-ai/backend/internal/app/auth"
+
+	"github.com/tp-study-ai/backend/internal/app/like/likeHandler"
+	"github.com/tp-study-ai/backend/internal/app/like/likeRepository"
+	"github.com/tp-study-ai/backend/internal/app/like/likeUseCase"
+
 	"github.com/tp-study-ai/backend/internal/app/metrics"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
@@ -49,6 +54,10 @@ func main() {
 	testisUseCase := testisUseCase.NewUseCaseTestis(testisRepo, config.Testis, config.Ml, config.MLRec, config.MLCS, config.CG)
 	testisHandler := testisHandler.NewHandlerTestis(testisUseCase)
 
+	likeRepo := likeRepository.NewRepositoryLike(pgxManager)
+	likeUseCase := likeUseCase.NewUseCaseLike(likeRepo)
+	likeHandler := likeHandler.NewHandlerLike(likeUseCase)
+
 	authRepo := auth.NewRepositoryAuth(pgxManager)
 	authUcase := auth.NewUseCaseAuth(authRepo)
 	authHandler := auth.NewHandlerAuth(authUcase, jwtManager)
@@ -66,6 +75,7 @@ func main() {
 		TaskHandler:   taskHandler,
 		TestisHandler: testisHandler,
 		AuthHandler:   authHandler,
+		LikeHandler:   likeHandler,
 	}
 
 	comonMw := middleware.NewCommonMiddleware(jwtManager)

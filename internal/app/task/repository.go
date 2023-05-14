@@ -360,66 +360,66 @@ func (r *RepositoryTask) GetSendTaskByTaskId(UserId int, TaskId int) (*models.Se
 	return Task1, nil
 }
 
-func (r *RepositoryTask) LikeTask(like models.LikeDb) (err error) {
-	fmt.Println("RepositoryTask", like)
-	sql := `insert into "likes" ("user_id", "task_id") values ($1, $2);`
-	var newPostsData []interface{}
-	newPostsData = append(newPostsData, like.UserId)
-	newPostsData = append(newPostsData, like.TaskId)
-	_, err = r.DB.Query(sql, newPostsData...)
-	return err
-}
-
-func (r *RepositoryTask) DeleteLike(like models.LikeDb) (err error) {
-	fmt.Println("RepositoryTask", like)
-	sql := `DELETE FROM "likes" WHERE "user_id" = $1 AND "task_id" = $2;`
-	var newPostsData []interface{}
-	newPostsData = append(newPostsData, like.UserId)
-	newPostsData = append(newPostsData, like.TaskId)
-	_, err = r.DB.Query(sql, newPostsData...)
-	return err
-}
-
-func (r *RepositoryTask) GetLike(like models.LikeDb) (*models.LikeDb, error) {
-	like1 := &models.LikeDb{}
-	sql := `SELECT "id", "user_id", "task_id" FROM "likes" WHERE "user_id" = $1 AND "task_id" = $2;`
-	err := r.DB.QueryRow(sql, like.UserId, like.TaskId).Scan(&like1.Id, &like1.UserId, &like1.TaskId)
-	if err != nil {
-		return nil, err
-	}
-	return like1, nil
-}
-
-func (r *RepositoryTask) GetLikes(UserId models.UserId) (*models.LikesDb, error) {
-	Likes := &models.LikesDb{}
-	var newPostsData []interface{}
-	newPostsData = append(newPostsData, UserId)
-
-	sql := `SELECT "id", "user_id", "task_id" FROM "likes" WHERE "user_id" = $1`
-
-	rows, err := r.DB.Query(sql, newPostsData...)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var buff models.LikeDb
-		err = rows.Scan(
-			&buff.Id,
-			&buff.UserId,
-			&buff.TaskId,
-		)
-		if err != nil {
-			return nil, err
-		}
-		fmt.Println(buff)
-
-		Likes.Likes = append(Likes.Likes, buff)
-	}
-
-	return Likes, nil
-}
+//func (r *RepositoryTask) LikeTask(like models.LikeDb) (err error) {
+//	fmt.Println("RepositoryTask", like)
+//	sql := `insert into "likes" ("user_id", "task_id") values ($1, $2);`
+//	var newPostsData []interface{}
+//	newPostsData = append(newPostsData, like.UserId)
+//	newPostsData = append(newPostsData, like.TaskId)
+//	_, err = r.DB.Query(sql, newPostsData...)
+//	return err
+//}
+//
+//func (r *RepositoryTask) DeleteLike(like models.LikeDb) (err error) {
+//	fmt.Println("RepositoryTask", like)
+//	sql := `DELETE FROM "likes" WHERE "user_id" = $1 AND "task_id" = $2;`
+//	var newPostsData []interface{}
+//	newPostsData = append(newPostsData, like.UserId)
+//	newPostsData = append(newPostsData, like.TaskId)
+//	_, err = r.DB.Query(sql, newPostsData...)
+//	return err
+//}
+//
+//func (r *RepositoryTask) GetLike(like models.LikeDb) (*models.LikeDb, error) {
+//	like1 := &models.LikeDb{}
+//	sql := `SELECT "id", "user_id", "task_id" FROM "likes" WHERE "user_id" = $1 AND "task_id" = $2;`
+//	err := r.DB.QueryRow(sql, like.UserId, like.TaskId).Scan(&like1.Id, &like1.UserId, &like1.TaskId)
+//	if err != nil {
+//		return nil, err
+//	}
+//	return like1, nil
+//}
+//
+//func (r *RepositoryTask) GetLikes(UserId models.UserId) (*models.LikesDb, error) {
+//	Likes := &models.LikesDb{}
+//	var newPostsData []interface{}
+//	newPostsData = append(newPostsData, UserId)
+//
+//	sql := `SELECT "id", "user_id", "task_id" FROM "likes" WHERE "user_id" = $1`
+//
+//	rows, err := r.DB.Query(sql, newPostsData...)
+//	if err != nil {
+//		return nil, err
+//	}
+//	defer rows.Close()
+//
+//	for rows.Next() {
+//		var buff models.LikeDb
+//		err = rows.Scan(
+//			&buff.Id,
+//			&buff.UserId,
+//			&buff.TaskId,
+//		)
+//		if err != nil {
+//			return nil, err
+//		}
+//		fmt.Println(buff)
+//
+//		Likes.Likes = append(Likes.Likes, buff)
+//	}
+//
+//	return Likes, nil
+//}
 
 func (r *RepositoryTask) GetCountTaskOfDate(id int, day time.Time) (int, error) {
 	var countTask int

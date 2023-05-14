@@ -5,6 +5,7 @@ import (
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/tp-study-ai/backend/internal/app/auth"
+	"github.com/tp-study-ai/backend/internal/app/like/likeHandler"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
 	"github.com/tp-study-ai/backend/internal/app/testis/testisHandler"
@@ -14,6 +15,7 @@ type ServerHandlers struct {
 	TaskHandler   *task.HandlerTask
 	AuthHandler   *auth.HandlerAuth
 	TestisHandler *testisHandler.HandlerTestis
+	LikeHandler   *likeHandler.HandlerLike
 }
 
 func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.CommonMiddleware) {
@@ -43,9 +45,12 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 
 	router.GET("/api/get_send_tasks", sh.TaskHandler.GetSendTasks, mwChain...)
 	router.GET("/api/get_send_tasks_by_task_id", sh.TaskHandler.GetSendTaskByTaskId, mwChain...)
-	router.POST("/api/like_task", sh.TaskHandler.LikeTask, mwChain...)
-	router.POST("/api/delete_like", sh.TaskHandler.DeleteLike, mwChain...)
-	router.GET("/api/get_like_tasks", sh.TaskHandler.GetLikeTasks, mwChain...)
+
+	// like
+	router.POST("/api/like_task", sh.LikeHandler.LikeTask, mwChain...)
+	router.POST("/api/delete_like", sh.LikeHandler.DeleteLike, mwChain...)
+	router.GET("/api/get_like_tasks", sh.LikeHandler.GetLikeTasks, mwChain...)
+
 	router.GET("/api/get_done_task", sh.TaskHandler.GetDoneTask, mwChain...)
 	router.GET("/api/get_not_done_task", sh.TaskHandler.GetNotDoneTask, mwChain...)
 	router.POST("/api/set_difficulty", sh.TaskHandler.SetDifficultyTask, mwChain...)
