@@ -8,6 +8,7 @@ import (
 	"github.com/tp-study-ai/backend/internal/app/chatGPT/chatGPTHandler"
 	"github.com/tp-study-ai/backend/internal/app/like/likeHandler"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
+	"github.com/tp-study-ai/backend/internal/app/ml/mlHandler"
 	"github.com/tp-study-ai/backend/internal/app/task"
 	"github.com/tp-study-ai/backend/internal/app/testis/testisHandler"
 )
@@ -18,6 +19,7 @@ type ServerHandlers struct {
 	TestisHandler  *testisHandler.HandlerTestis
 	LikeHandler    *likeHandler.HandlerLike
 	ChatGPTHandler *chatGPTHandler.HandlerChatGPT
+	MLHandler      *mlHandler.HandlerML
 }
 
 func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.CommonMiddleware) {
@@ -43,7 +45,10 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 
 	router.GET("/api/get_tags", sh.TaskHandler.GetTags, mwChain...)
 
-	router.POST("/api/get_similar", sh.TaskHandler.GetSimilar, mwChain...)
+	// ml
+	router.POST("/api/get_similar", sh.MLHandler.GetSimilar, mwChain...)
+	router.GET("/api/recommendations", sh.MLHandler.Recommendations, mwChain...)
+	router.GET("/api/cold_start", sh.MLHandler.ColdStart, mwChain...)
 
 	router.GET("/api/get_send_tasks", sh.TaskHandler.GetSendTasks, mwChain...)
 	router.GET("/api/get_send_tasks_by_task_id", sh.TaskHandler.GetSendTaskByTaskId, mwChain...)
@@ -57,14 +62,13 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	router.GET("/api/get_not_done_task", sh.TaskHandler.GetNotDoneTask, mwChain...)
 	router.POST("/api/set_difficulty", sh.TaskHandler.SetDifficultyTask, mwChain...)
 
-	router.GET("/api/recommendations", sh.TaskHandler.Recommendations, mwChain...)
-	router.GET("/api/cold_start", sh.TaskHandler.ColdStart, mwChain...)
-
+	// chatGPT
 	router.POST("/api/chat_gpt", sh.ChatGPTHandler.ChatGPT, mwChain...)
 
 	router.GET("api/calendar", sh.TaskHandler.GetCountTaskOfDate, mwChain...)
 	router.GET("api/shock_mode", sh.TaskHandler.GetChockMode, mwChain...)
 
+	//auth
 	router.POST("/api/register", sh.AuthHandler.Register, mwChain...)
 	router.POST("/api/login", sh.AuthHandler.Login, mwChain...)
 	router.GET("/api/logout", sh.AuthHandler.Logout, mwChain...)

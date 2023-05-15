@@ -10,6 +10,9 @@ import (
 	"github.com/tp-study-ai/backend/internal/app/chatGPT/chatGPTHandler"
 	"github.com/tp-study-ai/backend/internal/app/chatGPT/chatGPTRepository"
 	"github.com/tp-study-ai/backend/internal/app/chatGPT/chatGPTUseCase"
+	"github.com/tp-study-ai/backend/internal/app/ml/mlHandler"
+	"github.com/tp-study-ai/backend/internal/app/ml/mlRepository"
+	"github.com/tp-study-ai/backend/internal/app/ml/mlUseCase"
 
 	"github.com/tp-study-ai/backend/internal/app/like/likeHandler"
 	"github.com/tp-study-ai/backend/internal/app/like/likeRepository"
@@ -65,6 +68,10 @@ func main() {
 	chatGPTUseCase := chatGPTUseCase.NewUseCaseChatGPT(chatGPTRepo, config.Testis, config.Ml, config.MLRec, config.MLCS, config.CG)
 	chatGPTHandler := chatGPTHandler.NewHandlerChatGPT(chatGPTUseCase)
 
+	mlRepo := mlRepository.NewRepositoryML(pgxManager)
+	mlUseCase := mlUseCase.NewUseCaseML(mlRepo, config.Testis, config.Ml, config.MLRec, config.MLCS, config.CG)
+	mlHandler := mlHandler.NewHandlerML(mlUseCase)
+
 	authRepo := auth.NewRepositoryAuth(pgxManager)
 	authUcase := auth.NewUseCaseAuth(authRepo)
 	authHandler := auth.NewHandlerAuth(authUcase, jwtManager)
@@ -84,6 +91,7 @@ func main() {
 		AuthHandler:    authHandler,
 		LikeHandler:    likeHandler,
 		ChatGPTHandler: chatGPTHandler,
+		MLHandler:      mlHandler,
 	}
 
 	comonMw := middleware.NewCommonMiddleware(jwtManager)

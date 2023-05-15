@@ -17,54 +17,11 @@ func NewUseCaseLike(likeRepo che.Repository) *UseCaseLike {
 	}
 }
 
-var TagDict = map[int][]string{
-	1:  {"*special", "*особая задача"},
-	2:  {"2-sat", "2-sat"},
-	3:  {"binary search", "бинарный поиск"},
-	4:  {"bitmasks", "битмаски"},
-	5:  {"brute force", "перебор"},
-	6:  {"chinese remainder theorem", "китайская теорема об остатках"},
-	7:  {"combinatorics", "комбинаторика"},
-	8:  {"constructive algorithms", "конструктив"},
-	9:  {"data structures", "структуры данных"},
-	10: {"dfs and similar", "поиск в глубину и подобное"},
-	11: {"divide and conquer", "разделяй и властвуй"},
-	12: {"dp", "дп"},
-	13: {"dsu", "системы непересекающихся множеств"},
-	14: {"expression parsing", "разбор выражений"},
-	15: {"fft", "быстрое преобразование Фурье"},
-	16: {"flows", "потоки"},
-	17: {"games", "игры"},
-	18: {"geometry", "геометрия"},
-	19: {"graph matchings", "паросочетания"},
-	20: {"graphs", "графы"},
-	21: {"greedy", "жадные алгоритмы"},
-	22: {"hashing", "хэши"},
-	23: {"implementation", "реализация"},
-	24: {"interactive", "интерактив"},
-	25: {"math", "математика"},
-	26: {"matrices", "матрицы"},
-	27: {"meet-in-the-middle", "meet-in-the-middle"},
-	28: {"number theory", "теория чисел"},
-	29: {"probabilities", "теория вероятностей"},
-	30: {"schedules", "расписания"},
-	31: {"shortest paths", "кратчайшие пути"},
-	32: {"sortings", "сортировки"},
-	33: {"string suffix structures", "строковые суфф. структуры"},
-	34: {"strings", "строки"},
-	35: {"ternary search", "тернарный поиск"},
-	36: {"trees", "деревья"},
-	37: {"two pointers", "два указателя"},
-}
-
 func (u *UseCaseLike) LikeTask(like models.LikeJson) (err error) {
 	_, err = u.Repo.GetLike(models.LikeDb{UserId: like.UserId, TaskId: like.TaskId})
 	if err == nil {
 		return errors.Errorf("такой лайк уже есть")
 	}
-	//if like.UserId == like1.UserId && like.TaskId == like1.TaskId {
-	//	return errors.Errorf("такой лайк уже есть")
-	//}
 	err = u.Repo.LikeTask(models.LikeDb{UserId: like.UserId, TaskId: like.TaskId})
 	return
 }
@@ -103,11 +60,8 @@ func (u *UseCaseLike) GetLikeTask(UserId models.UserId) (*models.LikeTasks, erro
 		if task.CfTags.Elements[0].Int != 0 {
 			for j := 0; j < len(task.CfTags.Elements); j++ {
 				tagsId = append(tagsId, int(task.CfTags.Elements[j].Int))
-				//fmt.Println(tagsId)
-				tagsEn = append(tagsEn, TagDict[tagsId[j]][0])
-				//fmt.Println(tagsRu)
-				tagsRu = append(tagsRu, TagDict[tagsId[j]][1])
-				//fmt.Println(tagsEn)
+				tagsEn = append(tagsEn, models.TagDict[tagsId[j]][0])
+				tagsRu = append(tagsRu, models.TagDict[tagsId[j]][1])
 			}
 		}
 
