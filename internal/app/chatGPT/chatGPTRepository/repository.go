@@ -13,7 +13,7 @@ func NewRepositoryChatGPT(db *pgx.ConnPool) *RepositoryChatGPT {
 	return &RepositoryChatGPT{DB: db}
 }
 
-func (r *RepositoryChatGPT) GetTaskById(id int) (Task models.TaskDB, err error) {
+func (r *RepositoryChatGPT) GetTaskForChatGPT(id int) (Task models.TaskDB, err error) {
 	err = r.DB.QueryRow(
 		`select *
 		from "tasks"
