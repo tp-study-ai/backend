@@ -42,6 +42,7 @@ func (r *RepositoryLike) GetTaskById(id int) (Task models.TaskDB, err error) {
 		&Task.Input,
 		&Task.Output,
 		&Task.Note,
+		&Task.MasterSolution,
 	)
 
 	return
