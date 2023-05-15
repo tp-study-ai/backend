@@ -15,7 +15,7 @@ func NewRepositoryChatGPT(db *pgx.ConnPool) *RepositoryChatGPT {
 
 func (r *RepositoryChatGPT) GetTaskForChatGPT(id int) (*models.TaskDbForChatGPT, error) {
 	Task := &models.TaskDbForChatGPT{}
-	sql := `select * from "tasks" where id = $1;`
+	sql := `select "description", "master_solution" from "tasks" where id = $1;`
 
 	err := r.DB.QueryRow(
 		sql,
