@@ -7,6 +7,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/conf"
 	"github.com/tp-study-ai/backend/internal/app/auth"
+	"github.com/tp-study-ai/backend/internal/app/chatGPT/chatGPTHandler"
+	"github.com/tp-study-ai/backend/internal/app/chatGPT/chatGPTRepository"
+	"github.com/tp-study-ai/backend/internal/app/chatGPT/chatGPTUseCase"
 
 	"github.com/tp-study-ai/backend/internal/app/like/likeHandler"
 	"github.com/tp-study-ai/backend/internal/app/like/likeRepository"
@@ -58,6 +61,10 @@ func main() {
 	likeUseCase := likeUseCase.NewUseCaseLike(likeRepo)
 	likeHandler := likeHandler.NewHandlerLike(likeUseCase)
 
+	chatGPTRepo := chatGPTRepository.NewRepositoryChatGPT(pgxManager)
+	chatGPTUseCase := chatGPTUseCase.NewUseCaseChatGPT(chatGPTRepo, config.Testis, config.Ml, config.MLRec, config.MLCS, config.CG)
+	chatGPTHandler := chatGPTHandler.NewHandlerChatGPT(chatGPTUseCase)
+
 	authRepo := auth.NewRepositoryAuth(pgxManager)
 	authUcase := auth.NewUseCaseAuth(authRepo)
 	authHandler := auth.NewHandlerAuth(authUcase, jwtManager)
@@ -72,10 +79,11 @@ func main() {
 	router.Use(m.CollectMetrics)
 
 	serverRouting := conf.ServerHandlers{
-		TaskHandler:   taskHandler,
-		TestisHandler: testisHandler,
-		AuthHandler:   authHandler,
-		LikeHandler:   likeHandler,
+		TaskHandler:    taskHandler,
+		TestisHandler:  testisHandler,
+		AuthHandler:    authHandler,
+		LikeHandler:    likeHandler,
+		ChatGPTHandler: chatGPTHandler,
 	}
 
 	comonMw := middleware.NewCommonMiddleware(jwtManager)

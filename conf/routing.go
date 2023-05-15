@@ -5,6 +5,7 @@ import (
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/tp-study-ai/backend/internal/app/auth"
+	"github.com/tp-study-ai/backend/internal/app/chatGPT/chatGPTHandler"
 	"github.com/tp-study-ai/backend/internal/app/like/likeHandler"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
@@ -12,10 +13,11 @@ import (
 )
 
 type ServerHandlers struct {
-	TaskHandler   *task.HandlerTask
-	AuthHandler   *auth.HandlerAuth
-	TestisHandler *testisHandler.HandlerTestis
-	LikeHandler   *likeHandler.HandlerLike
+	TaskHandler    *task.HandlerTask
+	AuthHandler    *auth.HandlerAuth
+	TestisHandler  *testisHandler.HandlerTestis
+	LikeHandler    *likeHandler.HandlerLike
+	ChatGPTHandler *chatGPTHandler.HandlerChatGPT
 }
 
 func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.CommonMiddleware) {
@@ -58,7 +60,7 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	router.GET("/api/recommendations", sh.TaskHandler.Recommendations, mwChain...)
 	router.GET("/api/cold_start", sh.TaskHandler.ColdStart, mwChain...)
 
-	router.POST("/api/chat_gpt", sh.TaskHandler.ChatGPT, mwChain...)
+	router.POST("/api/chat_gpt", sh.ChatGPTHandler.ChatGPT, mwChain...)
 
 	router.GET("api/calendar", sh.TaskHandler.GetCountTaskOfDate, mwChain...)
 	router.GET("api/shock_mode", sh.TaskHandler.GetChockMode, mwChain...)

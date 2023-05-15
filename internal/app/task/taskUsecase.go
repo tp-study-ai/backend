@@ -16,5 +16,5 @@ type UseCase interface {
 	SetDifficultyTask(difficulty models.DifficultyJson) error
 	Recommendations1(UserId int) (*models.RecResponse, error)
 	ColdStart(UserId int) (*models.ColdStartResponse, error)
-	Chat(Message models.ChatGPT) (*models.Message, error)
+	//Chat(Message models.ChatGPT) (*models.Message, error)
 }

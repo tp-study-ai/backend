@@ -425,27 +425,27 @@ func (h HandlerTask) ColdStart(ctx echo.Context) error {
 	return ctx.JSONBlob(http.StatusOK, result)
 }
 
-func (h HandlerTask) ChatGPT(ctx echo.Context) error {
-	user := middleware.GetUserFromCtx(ctx)
-	if user == nil {
-		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
-	}
-
-	var ChatGPTRequest models.ChatGPT
-	if err := ctx.Bind(&ChatGPTRequest); err != nil {
-		return tools.CustomError(ctx, err, 1, "ошибка формирования запроса")
-	}
-
-	response, err := h.UseCase.Chat(ChatGPTRequest)
-	if err != nil {
-		return tools.CustomError(ctx, err, 1, "ошибка получения ответа")
-	}
-
-	result, err := json.Marshal(response)
-	if err != nil {
-		return tools.CustomError(ctx, err, 2, "ошибка формирования ответа")
-	}
-
-	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-	return ctx.JSONBlob(http.StatusOK, result)
-}
+//func (h HandlerTask) ChatGPT(ctx echo.Context) error {
+//	user := middleware.GetUserFromCtx(ctx)
+//	if user == nil {
+//		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
+//	}
+//
+//	var ChatGPTRequest models.ChatGPT
+//	if err := ctx.Bind(&ChatGPTRequest); err != nil {
+//		return tools.CustomError(ctx, err, 1, "ошибка формирования запроса")
+//	}
+//
+//	response, err := h.UseCase.Chat(ChatGPTRequest)
+//	if err != nil {
+//		return tools.CustomError(ctx, err, 1, "ошибка получения ответа")
+//	}
+//
+//	result, err := json.Marshal(response)
+//	if err != nil {
+//		return tools.CustomError(ctx, err, 2, "ошибка формирования ответа")
+//	}
+//
+//	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
+//	return ctx.JSONBlob(http.StatusOK, result)
+//}
