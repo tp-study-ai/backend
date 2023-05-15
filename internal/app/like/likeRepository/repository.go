@@ -14,13 +14,11 @@ func NewRepositoryLike(db *pgx.ConnPool) *RepositoryLike {
 	return &RepositoryLike{DB: db}
 }
 
-func (r *RepositoryLike) GetTaskById(id int) (Task models.TaskDB, err error) {
-	err = r.DB.QueryRow(
-		`select *
-		from "tasks"
-		where id = $1;`,
-		id,
-	).Scan(
+func (r *RepositoryLike) GetTaskById(id int) (*models.TaskDB, error) {
+	Task := &models.TaskDB{}
+	sql := `select * from "tasks" where id = $1;`
+
+	err := r.DB.QueryRow(sql, id).Scan(
 		&Task.Id,
 		&Task.Name,
 		&Task.Description,
@@ -44,12 +42,14 @@ func (r *RepositoryLike) GetTaskById(id int) (Task models.TaskDB, err error) {
 		&Task.Note,
 		&Task.MasterSolution,
 	)
+	if err != nil {
+		return nil, err
+	}
 
-	return
+	return Task, nil
 }
 
 func (r *RepositoryLike) LikeTask(like models.LikeDb) (err error) {
-	fmt.Println("RepositoryTask", like)
 	sql := `insert into "likes" ("user_id", "task_id") values ($1, $2);`
 	var newPostsData []interface{}
 	newPostsData = append(newPostsData, like.UserId)
@@ -59,7 +59,6 @@ func (r *RepositoryLike) LikeTask(like models.LikeDb) (err error) {
 }
 
 func (r *RepositoryLike) DeleteLike(like models.LikeDb) (err error) {
-	fmt.Println("RepositoryTask", like)
 	sql := `DELETE FROM "likes" WHERE "user_id" = $1 AND "task_id" = $2;`
 	var newPostsData []interface{}
 	newPostsData = append(newPostsData, like.UserId)

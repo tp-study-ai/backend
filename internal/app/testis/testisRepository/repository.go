@@ -13,38 +13,19 @@ func NewRepositoryTask(db *pgx.ConnPool) *RepositoryTask {
 	return &RepositoryTask{DB: db}
 }
 
-func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskDB, err error) {
-	err = r.DB.QueryRow(
-		`select *
-		from "tasks"
-		where id = $1;`,
-		id,
-	).Scan(
-		&Task.Id,
-		&Task.Name,
-		&Task.Description,
-		&Task.PublicTests,
-		&Task.PrivateTests,
-		&Task.GeneratedTests,
-		&Task.Difficulty,
-		&Task.CfContestId,
-		&Task.CfIndex,
-		&Task.CfPoints,
-		&Task.CfRating,
-		&Task.CfTags,
-		&Task.TimeLimit,
-		&Task.MemoryLimitBytes,
-		&Task.Link,
-		&Task.ShortLink,
-		&Task.NameRu,
-		&Task.TaskRu,
-		&Task.Input,
-		&Task.Output,
-		&Task.Note,
-		&Task.MasterSolution,
-	)
+func (r *RepositoryTask) GetTaskForTestis(id int) (*models.TaskDBForTestis, error) {
+	Task := &models.TaskDBForTestis{}
+	sql := `select "private_tests", "time_limit" from "tasks" where id = $1;`
 
-	return
+	err := r.DB.QueryRow(sql, id).Scan(
+		&Task.PrivateTests,
+		&Task.TimeLimit,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return Task, nil
 }
 
 func (r *RepositoryTask) SendTask(task *models.SendTask) (*models.SendTask, error) {

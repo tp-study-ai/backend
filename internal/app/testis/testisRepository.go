@@ -3,6 +3,6 @@ package testis
 import "github.com/tp-study-ai/backend/internal/app/models"
 
 type Repository interface {
-	GetTaskById(id int) (Task models.TaskDB, err error)
+	GetTaskForTestis(id int) (*models.TaskDBForTestis, error)
 	SendTask(task *models.SendTask) (*models.SendTask, error)
 }

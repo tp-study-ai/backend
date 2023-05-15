@@ -2,7 +2,6 @@ package likeHandler
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	che "github.com/tp-study-ai/backend/internal/app/like"
@@ -29,14 +28,10 @@ func (h HandlerLike) LikeTask(ctx echo.Context) error {
 		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
 	}
 
-	fmt.Println("Id users:", user.Id)
-
 	var like models.LikeJson
 	if err := ctx.Bind(&like); err != nil {
 		return tools.CustomError(ctx, err, 1, "ошибка формирования запроса")
 	}
-
-	fmt.Println("like", like)
 
 	err := h.UseCase.LikeTask(models.LikeJson{UserId: user.Id, TaskId: like.TaskId})
 	if err != nil {
@@ -59,14 +54,10 @@ func (h HandlerLike) DeleteLike(ctx echo.Context) error {
 		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
 	}
 
-	fmt.Println("Id users:", user.Id)
-
 	var like models.LikeJson
 	if err := ctx.Bind(&like); err != nil {
 		return tools.CustomError(ctx, err, 1, "ошибка формирования запроса")
 	}
-
-	fmt.Println("like", like)
 
 	err := h.UseCase.DeleteLike(models.LikeJson{UserId: user.Id, TaskId: like.TaskId})
 	if err != nil {
@@ -89,15 +80,10 @@ func (h HandlerLike) GetLikeTasks(ctx echo.Context) error {
 		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
 	}
 
-	fmt.Println(user.Id)
-
 	tasks, err := h.UseCase.GetLikeTask(user.Id)
 	if err != nil {
 		return tools.CustomError(ctx, err, 1, "ошибка полчения оценных задач")
 	}
-
-	fmt.Println(tasks)
-
 	result, err := json.Marshal(tasks)
 	if err != nil {
 		return tools.CustomError(ctx, err, 2, "ошибка формирования оцененых задач")

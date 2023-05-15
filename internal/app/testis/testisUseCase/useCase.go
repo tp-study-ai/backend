@@ -31,7 +31,7 @@ func NewUseCaseTestis(TaskRepo che.Repository, secret string, secret1 string, se
 }
 
 func (u *UseCaseTestis) CheckSolution(solution models.CheckSolutionRequest, userId int) (*models.CheckSolutionUseCaseResponse, error) {
-	Task, err := u.Repo.GetTaskById(solution.TaskId)
+	Task, err := u.Repo.GetTaskForTestis(solution.TaskId)
 	if err != nil {
 		return nil, err
 	}

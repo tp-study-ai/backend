@@ -36,34 +36,34 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 
 	router.GET("metrics", echo.WrapHandler(promhttp.Handler()))
 
-	router.GET("/api/get_task", sh.TaskHandler.GetTask, mwChain...)
-	router.GET("/api/get_task_by_id", sh.TaskHandler.GetTaskById, mwChain...)
-	router.GET("/api/tasks_list", sh.TaskHandler.GetTaskByLimit, mwChain...)
-
 	// testis
 	router.POST("/api/check_solution", sh.TestisHandler.CheckSolution, mwChain...)
-
-	router.GET("/api/get_tags", sh.TaskHandler.GetTags, mwChain...)
 
 	// ml
 	router.POST("/api/get_similar", sh.MLHandler.GetSimilar, mwChain...)
 	router.GET("/api/recommendations", sh.MLHandler.Recommendations, mwChain...)
 	router.GET("/api/cold_start", sh.MLHandler.ColdStart, mwChain...)
 
-	router.GET("/api/get_send_tasks", sh.TaskHandler.GetSendTasks, mwChain...)
-	router.GET("/api/get_send_tasks_by_task_id", sh.TaskHandler.GetSendTaskByTaskId, mwChain...)
-
 	// like
 	router.POST("/api/like_task", sh.LikeHandler.LikeTask, mwChain...)
 	router.POST("/api/delete_like", sh.LikeHandler.DeleteLike, mwChain...)
 	router.GET("/api/get_like_tasks", sh.LikeHandler.GetLikeTasks, mwChain...)
 
+	// chatGPT
+	router.POST("/api/chat_gpt", sh.ChatGPTHandler.ChatGPT, mwChain...)
+
+	router.GET("/api/get_task", sh.TaskHandler.GetTask, mwChain...)
+	router.GET("/api/get_task_by_id", sh.TaskHandler.GetTaskById, mwChain...)
+	router.GET("/api/tasks_list", sh.TaskHandler.GetTaskByLimit, mwChain...)
+
+	router.GET("/api/get_tags", sh.TaskHandler.GetTags, mwChain...)
+
+	router.GET("/api/get_send_tasks", sh.TaskHandler.GetSendTasks, mwChain...)
+	router.GET("/api/get_send_tasks_by_task_id", sh.TaskHandler.GetSendTaskByTaskId, mwChain...)
+
 	router.GET("/api/get_done_task", sh.TaskHandler.GetDoneTask, mwChain...)
 	router.GET("/api/get_not_done_task", sh.TaskHandler.GetNotDoneTask, mwChain...)
 	router.POST("/api/set_difficulty", sh.TaskHandler.SetDifficultyTask, mwChain...)
-
-	// chatGPT
-	router.POST("/api/chat_gpt", sh.ChatGPTHandler.ChatGPT, mwChain...)
 
 	router.GET("api/calendar", sh.TaskHandler.GetCountTaskOfDate, mwChain...)
 	router.GET("api/shock_mode", sh.TaskHandler.GetChockMode, mwChain...)

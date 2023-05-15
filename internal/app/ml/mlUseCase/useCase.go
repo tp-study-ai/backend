@@ -326,7 +326,6 @@ func (u *UseCaseML) Recommendations(UserId int) (*models.RecResponse, error) {
 			task, err1 := u.Repo.GetTaskByLink("https://codeforces.com" + itemRecTask.ProblemUrl + "?locale=ru")
 			if err1 != nil {
 				continue
-				//return nil, err1
 			}
 
 			var tagsId []int
@@ -580,7 +579,7 @@ func (u *UseCaseML) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 
 	err = json.Unmarshal(body, &ColdStartML)
 	if err != nil {
-		return nil, errors.Errorf("1409 " + err.Error() + " " + string(body) + " " + string(result) + " " + fmt.Sprint(doneTask) + " " + fmt.Sprint(newEasyTask) + " " + fmt.Sprint(newHardTask))
+		return nil, err
 	}
 
 	if ColdStartML.Finished == true {
@@ -596,7 +595,7 @@ func (u *UseCaseML) ColdStart(UserId int) (*models.ColdStartResponse, error) {
 
 	task, err := u.Repo.GetTaskByLink("https://codeforces.com" + ColdStartML.ProblemUrl + "?locale=ru")
 	if err != nil {
-		return nil, errors.Errorf(err.Error() + " 1423 " + ColdStartML.ProblemUrl)
+		return nil, err
 	}
 
 	var tagsId []int
