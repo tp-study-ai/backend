@@ -13,36 +13,20 @@ func NewRepositoryChatGPT(db *pgx.ConnPool) *RepositoryChatGPT {
 	return &RepositoryChatGPT{DB: db}
 }
 
-func (r *RepositoryChatGPT) GetTaskForChatGPT(id int) (Task models.TaskDB, err error) {
-	err = r.DB.QueryRow(
-		`select *
-		from "tasks"
-		where id = $1;`,
+func (r *RepositoryChatGPT) GetTaskForChatGPT(id int) (*models.TaskDbForChatGPT, error) {
+	Task := &models.TaskDbForChatGPT{}
+	sql := `select * from "tasks" where id = $1;`
+
+	err := r.DB.QueryRow(
+		sql,
 		id,
 	).Scan(
-		&Task.Id,
-		&Task.Name,
 		&Task.Description,
-		&Task.PublicTests,
-		&Task.PrivateTests,
-		&Task.GeneratedTests,
-		&Task.Difficulty,
-		&Task.CfContestId,
-		&Task.CfIndex,
-		&Task.CfPoints,
-		&Task.CfRating,
-		&Task.CfTags,
-		&Task.TimeLimit,
-		&Task.MemoryLimitBytes,
-		&Task.Link,
-		&Task.ShortLink,
-		&Task.NameRu,
-		&Task.TaskRu,
-		&Task.Input,
-		&Task.Output,
-		&Task.Note,
 		&Task.MasterSolution,
 	)
+	if err != nil {
+		return nil, err
+	}
 
-	return
+	return Task, nil
 }

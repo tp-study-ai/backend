@@ -33,7 +33,7 @@ func NewUseCaseChatGPT(TaskRepo che.Repository, secret string, secret1 string, s
 
 func (u *UseCaseChatGPT) Chat(Message models.ChatGPT) (*models.Message, error) {
 	fmt.Println(Message.TaskId)
-	task, err := u.Repo.GetTaskById(Message.TaskId)
+	task, err := u.Repo.GetTaskForChatGPT(Message.TaskId)
 	if err != nil {
 		return nil, err
 	}
