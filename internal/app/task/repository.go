@@ -51,6 +51,7 @@ func (r *RepositoryTask) GetTask() (Task models.TaskDB, err error) {
 		&Task.Input,
 		&Task.Output,
 		&Task.Note,
+		&Task.MasterSolution,
 	)
 
 	return
@@ -84,6 +85,7 @@ func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskDB, err error) {
 		&Task.Input,
 		&Task.Output,
 		&Task.Note,
+		&Task.MasterSolution,
 	)
 
 	return
@@ -211,6 +213,7 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int, minRatin
 			&buff.Input,
 			&buff.Output,
 			&buff.Note,
+			&buff.MasterSolution,
 		)
 
 		if err != nil {
@@ -268,6 +271,7 @@ func (r *RepositoryTask) GetTaskByLink(link string) (Task models.TaskDB, err err
 		&Task.Input,
 		&Task.Output,
 		&Task.Note,
+		&Task.MasterSolution,
 	)
 
 	return

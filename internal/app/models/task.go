@@ -37,6 +37,7 @@ type TaskDB struct {
 	Input            string           `db:"input"`
 	Output           string           `db:"output"`
 	Note             string           `db:"note"`
+	MasterSolution   string           `db:"master_solution"`
 }
 
 type TasksResponse struct {
