@@ -2,7 +2,6 @@ package task
 
 import (
 	"github.com/tp-study-ai/backend/internal/app/models"
-	"time"
 )
 
 type Repository interface {
@@ -13,7 +12,6 @@ type Repository interface {
 	GetTaskByLink(link string) (Task models.TaskDB, err error)
 	GetSendTask(UserId int) (*models.SendTasks, error)
 	GetSendTaskByTaskId(UserId int, TaskId int) (*models.SendTasks, error)
-	GetCountTaskOfDate(id int, day time.Time) (int, error)
 	GetAllUserTask(id int) (*[]int, error)
 	GetDoneTask(id int) (*[]int, error)
 	SetDifficultyTask(difficulty models.DifficultyDb) error

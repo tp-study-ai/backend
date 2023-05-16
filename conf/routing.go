@@ -4,22 +4,24 @@ import (
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/tp-study-ai/backend/internal/app/auth"
+	"github.com/tp-study-ai/backend/internal/app/auth/authHandler"
+	"github.com/tp-study-ai/backend/internal/app/bonusSystem/bonusSystemHandler"
 	"github.com/tp-study-ai/backend/internal/app/chatGPT/chatGPTHandler"
 	"github.com/tp-study-ai/backend/internal/app/like/likeHandler"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/ml/mlHandler"
-	"github.com/tp-study-ai/backend/internal/app/task"
+	"github.com/tp-study-ai/backend/internal/app/task/taskHandler"
 	"github.com/tp-study-ai/backend/internal/app/testis/testisHandler"
 )
 
 type ServerHandlers struct {
-	TaskHandler    *task.HandlerTask
-	AuthHandler    *auth.HandlerAuth
-	TestisHandler  *testisHandler.HandlerTestis
-	LikeHandler    *likeHandler.HandlerLike
-	ChatGPTHandler *chatGPTHandler.HandlerChatGPT
-	MLHandler      *mlHandler.HandlerML
+	TaskHandler        *taskHandler.HandlerTask
+	AuthHandler        *authHandler.HandlerAuth
+	TestisHandler      *testisHandler.HandlerTestis
+	LikeHandler        *likeHandler.HandlerLike
+	ChatGPTHandler     *chatGPTHandler.HandlerChatGPT
+	MLHandler          *mlHandler.HandlerML
+	BonusSystemHandler *bonusSystemHandler.HandlerBonusSystem
 }
 
 func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.CommonMiddleware) {
@@ -55,18 +57,16 @@ func (sh *ServerHandlers) ConfigureRouting(router *echo.Echo, mw *middleware.Com
 	router.GET("/api/get_task", sh.TaskHandler.GetTask, mwChain...)
 	router.GET("/api/get_task_by_id", sh.TaskHandler.GetTaskById, mwChain...)
 	router.GET("/api/tasks_list", sh.TaskHandler.GetTaskByLimit, mwChain...)
-
 	router.GET("/api/get_tags", sh.TaskHandler.GetTags, mwChain...)
-
 	router.GET("/api/get_send_tasks", sh.TaskHandler.GetSendTasks, mwChain...)
 	router.GET("/api/get_send_tasks_by_task_id", sh.TaskHandler.GetSendTaskByTaskId, mwChain...)
-
 	router.GET("/api/get_done_task", sh.TaskHandler.GetDoneTask, mwChain...)
 	router.GET("/api/get_not_done_task", sh.TaskHandler.GetNotDoneTask, mwChain...)
 	router.POST("/api/set_difficulty", sh.TaskHandler.SetDifficultyTask, mwChain...)
 
-	router.GET("api/calendar", sh.TaskHandler.GetCountTaskOfDate, mwChain...)
-	router.GET("api/shock_mode", sh.TaskHandler.GetChockMode, mwChain...)
+	// bonusSystem
+	router.GET("api/calendar", sh.BonusSystemHandler.GetCountTaskOfDate, mwChain...)
+	router.GET("api/shock_mode", sh.BonusSystemHandler.GetChockMode, mwChain...)
 
 	//auth
 	router.POST("/api/register", sh.AuthHandler.Register, mwChain...)

@@ -1,13 +1,13 @@
-package task
+package taskUseCase
 
 import (
 	"fmt"
 	"github.com/tp-study-ai/backend/internal/app/models"
-	"time"
+	"github.com/tp-study-ai/backend/internal/app/task"
 )
 
 type UseCaseTask struct {
-	Repo    Repository
+	Repo    task.Repository
 	Secret1 string
 	Secret2 string
 	Secret3 string
@@ -15,7 +15,7 @@ type UseCaseTask struct {
 	Secret5 string
 }
 
-func NewUseCaseTask(TaskRepo Repository, secret string, secret1 string, secret2 string, secret3 string, secret4 string) *UseCaseTask {
+func NewUseCaseTask(TaskRepo task.Repository, secret string, secret1 string, secret2 string, secret3 string, secret4 string) *UseCaseTask {
 	return &UseCaseTask{
 		Repo:    TaskRepo,
 		Secret1: secret,
@@ -227,60 +227,6 @@ func (u *UseCaseTask) GetSendTaskByTaskId(UserId int, TaskId int) (*models.SendT
 	}
 
 	return reqTasks, nil
-}
-
-func (u *UseCaseTask) GetCountTaskOfDate(id int) (*models.Days, error) {
-	now := time.Now()
-	days := &models.Days{}
-	for i := 0; i < 365; i++ {
-		task, _ := u.Repo.GetCountTaskOfDate(id, now)
-		days.Days = append(days.Days, models.Day{Day: now, Count: task})
-		now = now.Add(-24 * time.Hour)
-	}
-
-	return days, nil
-}
-
-func (u *UseCaseTask) GetShockMode(id int) (*models.ShockMode, error) {
-	shockMode := &models.ShockMode{}
-	now := time.Now()
-	a := 0
-	for i := 0; i < 365; i++ {
-		count, err := u.Repo.GetCountTaskOfDate(id, now)
-		if count == 0 {
-			break
-		}
-		if err != nil {
-			return nil, err
-		}
-		a += 1
-		now = now.Add(-24 * time.Hour)
-	}
-
-	if a != 0 {
-		shockMode.Today = true
-		shockMode.ShockMode = a
-		return shockMode, nil
-	} else {
-		fmt.Println()
-		now = now.Add(-24 * time.Hour)
-		for i := 0; i < 60; i++ {
-			count, err := u.Repo.GetCountTaskOfDate(id, now)
-			if err != nil {
-				return nil, err
-			}
-			if count == 0 {
-				break
-			}
-			a += 1
-			now = now.Add(-24 * time.Hour)
-		}
-	}
-
-	shockMode.Today = false
-	shockMode.ShockMode = a
-
-	return shockMode, nil
 }
 
 func (u *UseCaseTask) GetNotDoneTask(id int) (*models.DoneTask, error) {

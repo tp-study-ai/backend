@@ -1,4 +1,4 @@
-package task
+package taskHandler
 
 import (
 	"encoding/json"
@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/models"
+	"github.com/tp-study-ai/backend/internal/app/task"
 	"github.com/tp-study-ai/backend/tools"
 	"net/http"
 	"reflect"
@@ -15,10 +16,10 @@ import (
 )
 
 type HandlerTask struct {
-	UseCase UseCase
+	UseCase task.UseCase
 }
 
-func NewHandlerTask(useCase UseCase) *HandlerTask {
+func NewHandlerTask(useCase task.UseCase) *HandlerTask {
 	return &HandlerTask{
 		UseCase: useCase,
 	}
@@ -192,46 +193,6 @@ func (h HandlerTask) GetSendTaskByTaskId(ctx echo.Context) error {
 	result, err := json.Marshal(tasks)
 	if err != nil {
 		return tools.CustomError(ctx, err, 2, "ошибка формирования посылок")
-	}
-
-	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-	return ctx.JSONBlob(http.StatusOK, result)
-}
-
-func (h HandlerTask) GetCountTaskOfDate(ctx echo.Context) error {
-	user := middleware.GetUserFromCtx(ctx)
-	if user == nil {
-		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
-	}
-
-	days, err := h.UseCase.GetCountTaskOfDate(int(user.Id))
-	if err != nil {
-		return tools.CustomError(ctx, err, 0, "ошибка получения задач")
-	}
-
-	result, err := json.Marshal(days)
-	if err != nil {
-		return tools.CustomError(ctx, err, 2, "ошибка формирования ответа")
-	}
-
-	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))
-	return ctx.JSONBlob(http.StatusOK, result)
-}
-
-func (h HandlerTask) GetChockMode(ctx echo.Context) error {
-	user := middleware.GetUserFromCtx(ctx)
-	if user == nil {
-		return tools.CustomError(ctx, errors.Errorf("пользователь не в системе"), 0, "ошибка при запросе пользователя")
-	}
-
-	shockMode, err := h.UseCase.GetShockMode(int(user.Id))
-	if err != nil {
-		return tools.CustomError(ctx, err, 0, "ошибка получения ударного режима")
-	}
-
-	result, err := json.Marshal(shockMode)
-	if err != nil {
-		return tools.CustomError(ctx, err, 2, "ошибка формирования ответа")
 	}
 
 	ctx.Response().Header().Add(echo.HeaderContentLength, strconv.Itoa(len(result)))

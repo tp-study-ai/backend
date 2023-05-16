@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/jackc/pgx/pgtype"
-	"time"
 )
 
 type TagJson struct {
@@ -98,24 +97,6 @@ type SendTaskJson struct {
 
 type SendTasksJson struct {
 	Tasks []SendTaskJson `json:"tasks"`
-}
-
-type Message struct {
-	Message string `json:"message"`
-}
-
-type Day struct {
-	Day   time.Time `json:"day"`
-	Count int       `json:"count_task"`
-}
-
-type Days struct {
-	Days []Day `json:"days"`
-}
-
-type ShockMode struct {
-	Today     bool `json:"today"`
-	ShockMode int  `json:"chock_mode"`
 }
 
 type DoneTask struct {

@@ -1,17 +1,18 @@
-package auth
+package authUseCase
 
 import (
 	"fmt"
 	"github.com/pkg/errors"
+	"github.com/tp-study-ai/backend/internal/app/auth"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"github.com/tp-study-ai/backend/tools"
 )
 
 type UseCaseAuth struct {
-	Repo Repository
+	Repo auth.Repository
 }
 
-func NewUseCaseAuth(TaskRepo Repository) *UseCaseAuth {
+func NewUseCaseAuth(TaskRepo auth.Repository) *UseCaseAuth {
 	return &UseCaseAuth{
 		Repo: TaskRepo,
 	}

@@ -5,29 +5,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/pkg/errors"
-	che "github.com/tp-study-ai/backend/internal/app/chatGPT"
+	"github.com/tp-study-ai/backend/internal/app/chatGPT"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"io/ioutil"
 	"net/http"
 )
 
 type UseCaseChatGPT struct {
-	Repo    che.Repository
-	Secret1 string
-	Secret2 string
-	Secret3 string
-	Secret4 string
-	Secret5 string
+	Repo     chatGPT.Repository
+	CGSecret string
 }
 
-func NewUseCaseChatGPT(TaskRepo che.Repository, secret string, secret1 string, secret2 string, secret3 string, secret4 string) *UseCaseChatGPT {
+func NewUseCaseChatGPT(TaskRepo chatGPT.Repository, secret string) *UseCaseChatGPT {
 	return &UseCaseChatGPT{
-		Repo:    TaskRepo,
-		Secret1: secret,
-		Secret2: secret1,
-		Secret3: secret2,
-		Secret4: secret3,
-		Secret5: secret4,
+		Repo:     TaskRepo,
+		CGSecret: secret,
 	}
 }
 
@@ -51,7 +43,7 @@ func (u *UseCaseChatGPT) Chat(Message models.ChatGPT) (*models.Message, error) {
 	}
 
 	req := bytes.NewBuffer(result)
-	resp, err := http.Post(u.Secret5, "application/json", req)
+	resp, err := http.Post(u.CGSecret, "application/json", req)
 	if err != nil {
 		return nil, err
 	}

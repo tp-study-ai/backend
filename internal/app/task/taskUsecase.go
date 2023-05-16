@@ -8,8 +8,6 @@ type UseCase interface {
 	GetTaskByLimit(id int, sort string, tag []int, minRating int, maxRating int) (*models.TasksPagination, error)
 	GetSendTask(UserId int) (*models.SendTasksJson, error)
 	GetSendTaskByTaskId(UserId int, TaskId int) (*models.SendTasksJson, error)
-	GetCountTaskOfDate(id int) (*models.Days, error)
-	GetShockMode(id int) (*models.ShockMode, error)
 	GetDoneTask(id int) (*models.DoneTask, error)
 	GetNotDoneTask(id int) (*models.DoneTask, error)
 	SetDifficultyTask(difficulty models.DifficultyJson) error

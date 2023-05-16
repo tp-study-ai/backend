@@ -1,10 +1,11 @@
-package auth
+package authHandler
 
 import (
 	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
+	"github.com/tp-study-ai/backend/internal/app/auth"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/models"
 	"github.com/tp-study-ai/backend/tools"
@@ -20,11 +21,11 @@ const (
 )
 
 type HandlerAuth struct {
-	UseCase     UseCase
+	UseCase     auth.UseCase
 	AuthManager authManager.AuthManager
 }
 
-func NewHandlerAuth(usecase UseCase, authManager authManager.AuthManager) *HandlerAuth {
+func NewHandlerAuth(usecase auth.UseCase, authManager authManager.AuthManager) *HandlerAuth {
 	return &HandlerAuth{
 		UseCase:     usecase,
 		AuthManager: authManager,
