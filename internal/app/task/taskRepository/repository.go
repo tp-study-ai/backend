@@ -229,41 +229,6 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int, minRatin
 	return tasks, TaskCount, nil
 }
 
-func (r *RepositoryTask) GetTaskByLink(link string) (*models.TaskDB, error) {
-	Task := &models.TaskDB{}
-	sql := `select * from "tasks" where link = $1;`
-
-	err := r.DB.QueryRow(sql, link).Scan(
-		&Task.Id,
-		&Task.Name,
-		&Task.Description,
-		&Task.PublicTests,
-		&Task.PrivateTests,
-		&Task.GeneratedTests,
-		&Task.Difficulty,
-		&Task.CfContestId,
-		&Task.CfIndex,
-		&Task.CfPoints,
-		&Task.CfRating,
-		&Task.CfTags,
-		&Task.TimeLimit,
-		&Task.MemoryLimitBytes,
-		&Task.Link,
-		&Task.TaskRu,
-		&Task.NameRu,
-		&Task.TaskRu,
-		&Task.Input,
-		&Task.Output,
-		&Task.Note,
-		&Task.MasterSolution,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return Task, nil
-}
-
 func (r *RepositoryTask) GetSendTask(UserId int) (*models.SendTasks, error) {
 	Task1 := &models.SendTasks{}
 
@@ -351,7 +316,6 @@ func (r *RepositoryTask) GetSendTaskByTaskId(UserId int, TaskId int) (*models.Se
 	return Task1, nil
 }
 
-// GetAllUserTask получение всех задач которые пользователь решал удачно или нет
 func (r *RepositoryTask) GetAllUserTask(id int) (*[]int, error) {
 	var allTask []int
 	var newPostsData []interface{}
@@ -442,126 +406,3 @@ func (r *RepositoryTask) SetDifficultyTask(difficulty models.DifficultyDb) error
 
 	return err
 }
-
-func (r *RepositoryTask) GetSetDifficultyTasks(UserId int) (*[]int, error) {
-	var doneTask []int
-	var newPostsData []interface{}
-	newPostsData = append(newPostsData, UserId)
-
-	sql := `SELECT "task_id" FROM "difficulty_task" WHERE "user_id" = $1`
-
-	rows, err := r.DB.Query(sql, newPostsData...)
-	if err != nil {
-		//return nil, err
-		return nil, errors.Errorf("GetSetDifficultyTasks")
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var buff int
-		err = rows.Scan(
-			&buff,
-		)
-		if err != nil {
-			return nil, err
-		}
-		//fmt.Println(buff)
-
-		doneTask = append(doneTask, buff)
-	}
-
-	return &doneTask, nil
-}
-
-func (r *RepositoryTask) GetSetDifficultyTask(UserId int, TaskId int) (*models.DifficultyDb, error) {
-	doneTask := &models.DifficultyDb{}
-	var newPostsData []interface{}
-	newPostsData = append(newPostsData, UserId)
-	newPostsData = append(newPostsData, TaskId)
-
-	sql := `SELECT "user_id", "task_id", "difficulty" FROM "difficulty_task" WHERE "user_id" = $1 and "task_id" = $2`
-
-	err := r.DB.QueryRow(sql, UserId, TaskId).Scan(
-		&doneTask.UserId,
-		&doneTask.TaskId,
-		&doneTask.Difficulty,
-	)
-	if err != nil {
-		//return nil, err
-		return nil, err
-	}
-
-	return doneTask, nil
-}
-
-func (r *RepositoryTask) GetEasyTasksForUser(UserId int) (*[]int, error) {
-	var easyTask []int
-	var newPostsData []interface{}
-	newPostsData = append(newPostsData, UserId)
-
-	sql := `SELECT "task_id" FROM "difficulty_task" WHERE "user_id" = $1 and "difficulty" = -1;`
-
-	rows, err := r.DB.Query(sql, newPostsData...)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var buff int
-		err = rows.Scan(
-			&buff,
-		)
-		if err != nil {
-			return nil, err
-		}
-		//fmt.Println(buff)
-
-		easyTask = append(easyTask, buff)
-	}
-
-	return &easyTask, nil
-}
-
-func (r *RepositoryTask) GetHardTasksForUser(UserId int) (*[]int, error) {
-	var hardTask []int
-	var newPostsData []interface{}
-	newPostsData = append(newPostsData, UserId)
-
-	sql := `SELECT "task_id" FROM "difficulty_task" WHERE "user_id" = $1 and "difficulty" = 1`
-
-	rows, err := r.DB.Query(sql, newPostsData...)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var buff int
-		err = rows.Scan(
-			&buff,
-		)
-		if err != nil {
-			return nil, err
-		}
-		//fmt.Println(buff)
-
-		hardTask = append(hardTask, buff)
-	}
-
-	return &hardTask, nil
-}
-
-//func (r *RepositoryTask) UpdateUserColdStart(UserId int) error {
-//	var newPostsData []interface{}
-//	newPostsData = append(newPostsData, UserId)
-//
-//	sql := `UPDATE "users" SET "cold_start" = 'true' WHERE "id"=$1`
-//
-//	rows, err := r.DB.Query(sql, newPostsData...)
-//	if err != nil {
-//		return err
-//	}
-//	defer rows.Close()
-//	return nil
-//}
