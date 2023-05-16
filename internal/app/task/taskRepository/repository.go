@@ -17,17 +17,20 @@ func NewRepositoryTask(db *pgx.ConnPool) *RepositoryTask {
 	return &RepositoryTask{DB: db}
 }
 
-func (r *RepositoryTask) GetTask() (Task models.TaskDB, err error) {
-	var count int
-	err = r.DB.QueryRow(
-		`select count(*) from "tasks"`,
-	).Scan(&count)
+func (r *RepositoryTask) GetTask() (*models.TaskDB, error) {
+	Task := &models.TaskDB{}
+	var countTask int
+
+	err := r.DB.QueryRow(`select count(*) from "tasks"`).Scan(&countTask)
+	if err != nil {
+		return nil, err
+	}
 
 	err = r.DB.QueryRow(
 		`select *
 		from "tasks"
 		where id = $1;`,
-		rand.Intn(count-1)+1,
+		rand.Intn(countTask-1)+1,
 	).Scan(
 		&Task.Id,
 		&Task.Name,
@@ -52,17 +55,18 @@ func (r *RepositoryTask) GetTask() (Task models.TaskDB, err error) {
 		&Task.Note,
 		&Task.MasterSolution,
 	)
+	if err != nil {
+		return nil, err
+	}
 
-	return
+	return Task, nil
 }
 
-func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskDB, err error) {
-	err = r.DB.QueryRow(
-		`select *
-		from "tasks"
-		where id = $1;`,
-		id,
-	).Scan(
+func (r *RepositoryTask) GetTaskById(id int) (*models.TaskDB, error) {
+	Task := &models.TaskDB{}
+	sql := `select * from "tasks" where id = $1;`
+
+	err := r.DB.QueryRow(sql, id).Scan(
 		&Task.Id,
 		&Task.Name,
 		&Task.Description,
@@ -86,8 +90,11 @@ func (r *RepositoryTask) GetTaskById(id int) (Task models.TaskDB, err error) {
 		&Task.Note,
 		&Task.MasterSolution,
 	)
+	if err != nil {
+		return nil, err
+	}
 
-	return
+	return Task, nil
 }
 
 func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int, minRating int, maxRating int) (*models.TasksResponse, int, error) {
@@ -174,9 +181,6 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int, minRatin
 
 	sql = sql + ` limit $1 offset $2`
 
-	fmt.Println(sqlCount)
-	fmt.Println(sql)
-
 	err := r.DB.QueryRow(sqlCount, ForTaskCount...).Scan(&TaskCount)
 	if err != nil {
 		return nil, 0, err
@@ -225,30 +229,11 @@ func (r *RepositoryTask) GetTaskByLimit(id int, sort string, tag []int, minRatin
 	return tasks, TaskCount, nil
 }
 
-func (r *RepositoryTask) SendTask(task *models.SendTask) (*models.SendTask, error) {
-	Task1 := &models.SendTask{}
-	err := r.DB.QueryRow(
-		`INSERT INTO "send_task" (
-			"user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text"
-			 ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
-	 RETURNING "id", "user_id", "task_id", "check_time", "build_time", "check_result", "check_message", "tests_passed", "tests_total", "lint_success", "code_text", "date"`,
-		task.UserId, task.TaskId, task.CheckTime, task.BuildTime, task.CheckResult, task.CheckMessage, task.TestsPassed, task.TestsTotal, task.LintSuccess, task.CodeText,
-	).Scan(
-		&Task1.ID, &Task1.UserId, &Task1.TaskId, &Task1.CheckTime, &Task1.BuildTime, &Task1.CheckResult, &Task1.CheckMessage, &Task1.TestsPassed, &Task1.TestsTotal, &Task1.LintSuccess, &Task1.CodeText, &Task1.Date,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return Task1, nil
-}
+func (r *RepositoryTask) GetTaskByLink(link string) (*models.TaskDB, error) {
+	Task := &models.TaskDB{}
+	sql := `select * from "tasks" where link = $1;`
 
-func (r *RepositoryTask) GetTaskByLink(link string) (Task models.TaskDB, err error) {
-	err = r.DB.QueryRow(
-		`select *
-		from "tasks"
-		where link = $1;`,
-		link,
-	).Scan(
+	err := r.DB.QueryRow(sql, link).Scan(
 		&Task.Id,
 		&Task.Name,
 		&Task.Description,
@@ -272,8 +257,11 @@ func (r *RepositoryTask) GetTaskByLink(link string) (Task models.TaskDB, err err
 		&Task.Note,
 		&Task.MasterSolution,
 	)
+	if err != nil {
+		return nil, err
+	}
 
-	return
+	return Task, nil
 }
 
 func (r *RepositoryTask) GetSendTask(UserId int) (*models.SendTasks, error) {
@@ -392,7 +380,6 @@ func (r *RepositoryTask) GetAllUserTask(id int) (*[]int, error) {
 	return &allTask, nil
 }
 
-// GetDoneTask получение всех задач которые пользователь решал удачно
 func (r *RepositoryTask) GetDoneTask(id int) (*[]int, error) {
 	var doneTask []int
 	var newPostsData []interface{}
@@ -456,7 +443,6 @@ func (r *RepositoryTask) SetDifficultyTask(difficulty models.DifficultyDb) error
 	return err
 }
 
-// полчить все задачи пользовтеля
 func (r *RepositoryTask) GetSetDifficultyTasks(UserId int) (*[]int, error) {
 	var doneTask []int
 	var newPostsData []interface{}
@@ -487,7 +473,6 @@ func (r *RepositoryTask) GetSetDifficultyTasks(UserId int) (*[]int, error) {
 	return &doneTask, nil
 }
 
-// получить конкретную задачу пользователя
 func (r *RepositoryTask) GetSetDifficultyTask(UserId int, TaskId int) (*models.DifficultyDb, error) {
 	doneTask := &models.DifficultyDb{}
 	var newPostsData []interface{}
@@ -567,16 +552,16 @@ func (r *RepositoryTask) GetHardTasksForUser(UserId int) (*[]int, error) {
 	return &hardTask, nil
 }
 
-func (r *RepositoryTask) UpdateUserColdStart(UserId int) error {
-	var newPostsData []interface{}
-	newPostsData = append(newPostsData, UserId)
-
-	sql := `UPDATE "users" SET "cold_start" = 'true' WHERE "id"=$1`
-
-	rows, err := r.DB.Query(sql, newPostsData...)
-	if err != nil {
-		return err
-	}
-	defer rows.Close()
-	return nil
-}
+//func (r *RepositoryTask) UpdateUserColdStart(UserId int) error {
+//	var newPostsData []interface{}
+//	newPostsData = append(newPostsData, UserId)
+//
+//	sql := `UPDATE "users" SET "cold_start" = 'true' WHERE "id"=$1`
+//
+//	rows, err := r.DB.Query(sql, newPostsData...)
+//	if err != nil {
+//		return err
+//	}
+//	defer rows.Close()
+//	return nil
+//}

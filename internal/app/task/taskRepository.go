@@ -5,11 +5,10 @@ import (
 )
 
 type Repository interface {
-	GetTask() (Task models.TaskDB, err error)
-	GetTaskById(id int) (Task models.TaskDB, err error)
+	GetTask() (*models.TaskDB, error)
+	GetTaskById(id int) (*models.TaskDB, error)
 	GetTaskByLimit(id int, sort string, tag []int, minRating int, maxRating int) (*models.TasksResponse, int, error)
-	SendTask(task *models.SendTask) (*models.SendTask, error)
-	GetTaskByLink(link string) (Task models.TaskDB, err error)
+	GetTaskByLink(link string) (*models.TaskDB, error)
 	GetSendTask(UserId int) (*models.SendTasks, error)
 	GetSendTaskByTaskId(UserId int, TaskId int) (*models.SendTasks, error)
 	GetAllUserTask(id int) (*[]int, error)
@@ -19,5 +18,5 @@ type Repository interface {
 	GetSetDifficultyTask(UserId int, TaskId int) (*models.DifficultyDb, error)
 	GetEasyTasksForUser(UserId int) (*[]int, error)
 	GetHardTasksForUser(UserId int) (*[]int, error)
-	UpdateUserColdStart(UserId int) error
+	//UpdateUserColdStart(UserId int) error
 }
