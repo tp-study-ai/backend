@@ -262,10 +262,9 @@ func (u *UseCaseTask) GetNotDoneTask(id int) (*models.DoneTask, error) {
 	notDoneTaskResponse.CountDoneTask = len(notDoneTask)
 
 	for _, taskId := range notDoneTask {
-		var buff models.TaskDB
-		buff, err = u.Repo.GetTaskById(taskId)
-		if err != nil {
-			return nil, err
+		buff, err1 := u.Repo.GetTaskById(taskId)
+		if err1 != nil {
+			return nil, err1
 		}
 
 		var tagsId []int
@@ -318,10 +317,10 @@ func (u *UseCaseTask) GetDoneTask(id int) (*models.DoneTask, error) {
 	doneTask.CountDoneTask = len(*tasks)
 
 	for _, taskId := range *tasks {
-		var buff models.TaskDB
-		buff, err = u.Repo.GetTaskById(taskId)
-		if err != nil {
-			return nil, err
+
+		buff, err1 := u.Repo.GetTaskById(taskId)
+		if err1 != nil {
+			return nil, err1
 		}
 
 		var tagsId []int
