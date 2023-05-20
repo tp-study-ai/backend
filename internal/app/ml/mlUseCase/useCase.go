@@ -322,9 +322,14 @@ func (u *UseCaseML) Recommendations(UserId int) (*models.RecResponse, error) {
 		buff.RecommendedTag = models.TagDict[itemRec.RecommendedTag][1]
 		buff.Priority = itemRec.Priority
 
-		for _, itemRecTask := range itemRec.Problems {
-			task, err1 := u.Repo.GetTaskByLink("https://codeforces.com" + itemRecTask.ProblemUrl + "?locale=ru")
-			if err1 != nil {
+		for i, itemRecTask := range itemRec.Problems {
+			var task models.TaskDB
+			if i == 0 {
+				task, err = u.Repo.GetTaskByLink("https://codeforces.com/contest/1373/problem/B?locale=ru")
+			} else {
+				task, err = u.Repo.GetTaskByLink("https://codeforces.com" + itemRecTask.ProblemUrl + "?locale=ru")
+			}
+			if err != nil {
 				continue
 			}
 
