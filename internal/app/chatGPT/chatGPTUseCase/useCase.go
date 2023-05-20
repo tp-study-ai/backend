@@ -1,9 +1,7 @@
 package chatGPTUseCase
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/internal/app/chatGPT"
 	"github.com/tp-study-ai/backend/internal/app/models"
 )
@@ -52,13 +50,15 @@ func (u *UseCaseChatGPT) Chat(Message models.ChatGPT) (*models.Message, error) {
 	//	return nil, err
 	//}
 
-	var ChatGPTResponse models.Message
-
-	//err = json.Unmarshal(body, &ChatGPTResponse)
-	err := json.Unmarshal([]byte("Привет! Рада видеть, что ты решаешь задачи на обучающей платформе и развиваешь свои навыки.\nЯ вижу что ты решаешь задачу про игру Алисы и Боба, где должен определить победителя.\nНо твоя ошибка заключается в том, что вместо инкремента cnt1 и cnt2 ты их декрементируешь.\nПопробуй поменять свой код следующим образом:\n```cpp\nif (s[i] == '0') {\n    cnt1++;\n} else {\n    cnt2++;\n}```"), &ChatGPTResponse)
-	if err != nil {
-		return nil, errors.Errorf("1511 " + err.Error())
+	ChatGPTResponse := &models.Message{
+		Message: "Привет! Рада видеть, что ты решаешь задачи на обучающей платформе и развиваешь свои навыки.\nЯ вижу что ты решаешь задачу про игру Алисы и Боба, где должен определить победителя.\nНо твоя ошибка заключается в том, что вместо инкремента cnt1 и cnt2 ты их декрементируешь.\nПопробуй поменять свой код следующим образом:\n```cpp\nif (s[i] == '0') {\n    cnt1++;\n} else {\n    cnt2++;\n}```",
 	}
 
-	return &ChatGPTResponse, nil
+	//err = json.Unmarshal(body, &ChatGPTResponse)
+	//err := json.Unmarshal([]byte("Привет! Рада видеть, что ты решаешь задачи на обучающей платформе и развиваешь свои навыки.\nЯ вижу что ты решаешь задачу про игру Алисы и Боба, где должен определить победителя.\nНо твоя ошибка заключается в том, что вместо инкремента cnt1 и cnt2 ты их декрементируешь.\nПопробуй поменять свой код следующим образом:\n```cpp\nif (s[i] == '0') {\n    cnt1++;\n} else {\n    cnt2++;\n}```"), &ChatGPTResponse)
+	//if err != nil {
+	//	return nil, errors.Errorf("1511 " + err.Error())
+	//}
+
+	return ChatGPTResponse, nil
 }
