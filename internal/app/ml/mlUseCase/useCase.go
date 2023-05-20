@@ -317,18 +317,53 @@ func (u *UseCaseML) Recommendations(UserId int) (*models.RecResponse, error) {
 
 	RecommendationResponse := &models.RecResponse{}
 
+	//
+
+	task1, err := u.Repo.GetTaskByLink("https://codeforces.com/contest/1373/problem/B?locale=ru")
+	var tagsId1 []int
+	var tagsEn1 []string
+	var tagsRu1 []string
+
+	if task1.CfTags.Elements[0].Int != 0 {
+		for j := 0; j < len(task1.CfTags.Elements); j++ {
+			tagsId1 = append(tagsId1, int(task1.CfTags.Elements[j].Int))
+			tagsEn1 = append(tagsEn1, models.TagDict[tagsId1[j]][0])
+			tagsRu1 = append(tagsRu1, models.TagDict[tagsId1[j]][1])
+		}
+	}
+
+	var buff models.RecommendedResponse
+
+	buff.Problems = append(buff.Problems, models.TaskJSON{
+		Id:               task1.Id,
+		Name:             task1.Name,
+		Description:      task1.Description,
+		PublicTests:      task1.PublicTests,
+		Difficulty:       task1.Difficulty,
+		CfContestId:      task1.CfContestId,
+		CfIndex:          task1.CfIndex,
+		CfPoints:         task1.CfPoints,
+		CfRating:         task1.CfRating,
+		CfTagsID:         tagsId1,
+		CfTagsRu:         tagsRu1,
+		CfTagsEN:         tagsEn1,
+		TimeLimit:        task1.TimeLimit,
+		MemoryLimitBytes: task1.MemoryLimitBytes,
+		Link:             task1.Link,
+		ShortLink:        task1.ShortLink,
+		NameRu:           task1.NameRu,
+		TaskRu:           task1.TaskRu,
+		Input:            task1.Input,
+		Output:           task1.Output,
+		Note:             task1.Note,
+	})
+
 	for _, itemRec := range MlResponse.Rec {
-		var buff models.RecommendedResponse
 		buff.RecommendedTag = models.TagDict[itemRec.RecommendedTag][1]
 		buff.Priority = itemRec.Priority
 
-		for i, itemRecTask := range itemRec.Problems {
-			var task models.TaskDB
-			if i == 0 {
-				task, err = u.Repo.GetTaskByLink("https://codeforces.com/contest/1373/problem/B?locale=ru")
-			} else {
-				task, err = u.Repo.GetTaskByLink("https://codeforces.com" + itemRecTask.ProblemUrl + "?locale=ru")
-			}
+		for _, itemRecTask := range itemRec.Problems {
+			task, err := u.Repo.GetTaskByLink("https://codeforces.com" + itemRecTask.ProblemUrl + "?locale=ru")
 			if err != nil {
 				continue
 			}
