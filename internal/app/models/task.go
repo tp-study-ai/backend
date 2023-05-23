@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/jackc/pgx/pgtype"
-	"time"
 )
 
 type TagJson struct {
@@ -37,6 +36,7 @@ type TaskDB struct {
 	Input            string           `db:"input"`
 	Output           string           `db:"output"`
 	Note             string           `db:"note"`
+	MasterSolution   string           `db:"master_solution"`
 }
 
 type TasksResponse struct {
@@ -76,81 +76,6 @@ type TasksPagination struct {
 	Tasks     []TaskJSON `json:"tasks"`
 }
 
-type LikeTasks struct {
-	CountTasks  int        `json:"count_tasks"`
-	TasksIdList []int      `json:"tasks_id_list"`
-	Tasks       []TaskJSON `json:"tasks"`
-}
-
-type SourceCode1 struct {
-	Makefile string `json:"Makefile"`
-	Main     string `json:"main.c"`
-	Main1    string `json:"lib/sum.c"`
-	Main2    string `json:"lib/sum.h"`
-}
-
-type SS123 struct {
-	SourceCode   SourceCode1 `json:"sourceCode"`
-	Tests        [][]string  `json:"tests"`
-	BuildTimeout int         `json:"buildTimeout"`
-	TestTimeout  int         `json:"testTimeout"`
-}
-
-type SourceCode struct {
-	Makefile string `json:"Makefile"`
-	Main     string `json:"main.cpp"`
-}
-
-type CheckSolution struct {
-	SourceCode   SourceCode `json:"sourceCode"`
-	Tests        [][]string `json:"tests"`
-	BuildTimeout int        `json:"buildTimeout"`
-	TestTimeout  float64    `json:"testTimeout"`
-}
-
-type CustomError struct {
-	Number  int    `json:"number"`
-	Comment string `json:"comment"`
-	Error   string `json:"error"`
-}
-
-type CheckSolutionRequest struct {
-	TaskId   int    `json:"task_id"`
-	Solution string `json:"solution"`
-}
-
-type CheckSolutionUseCase struct {
-	TaskId   int    `json:"task_id"`
-	Solution string `json:"solution"`
-}
-
-type CheckSolutionUseCaseResponse struct {
-	CheckTime    float64 `json:"checkTime"`
-	BuildTime    float64 `json:"buildTime"`
-	CheckResult  int     `json:"checkResult"`
-	CheckMessage string  `json:"checkMessage"`
-	TestsPassed  int     `json:"testsPassed"`
-	TestsTotal   int     `json:"testsTotal"`
-	LintSuccess  bool    `json:"lintSuccess"`
-}
-
-type SendTaskId uint64
-
-type SendTask struct {
-	ID           SendTaskId       `db:"id"`
-	UserId       int              `db:"user_id"`
-	TaskId       int              `db:"task_id"`
-	CheckTime    float64          `db:"check_time"`
-	BuildTime    float64          `db:"build_time"`
-	CheckResult  int              `db:"check_result"`
-	CheckMessage string           `db:"check_message"`
-	TestsPassed  int              `db:"tests_passed"`
-	TestsTotal   int              `db:"tests_total"`
-	LintSuccess  bool             `db:"lint_success"`
-	CodeText     string           `db:"code_text"`
-	Date         pgtype.Timestamp `db:"date"`
-}
-
 type SendTasks struct {
 	Tasks []SendTask
 }
@@ -174,59 +99,6 @@ type SendTasksJson struct {
 	Tasks []SendTaskJson `json:"tasks"`
 }
 
-type SimilarRequest struct {
-	SourceCode string `json:"source_code"`
-	ProblemUrl string `json:"problem_url"`
-	Rating     int    `json:"rating"`
-	Difficulty int    `json:"difficulty"`
-	NRecs      int    `json:"n_recs"`
-}
-
-type SimilarResponse struct{}
-
-type MlTaskResponse struct {
-	ProblemUrl string  `json:"problem_url"`
-	Rating     float64 `json:"rating"`
-	Tags       []int   `json:"tags"`
-}
-
-type MlResponse struct {
-	Tasks []MlTaskResponse
-}
-
-type LikeDb struct {
-	Id     int    `db:"id"`
-	UserId UserId `db:"user_id"`
-	TaskId int    `db:"task_id"`
-}
-
-type LikesDb struct {
-	Likes []LikeDb
-}
-
-type LikeJson struct {
-	UserId UserId `json:"user_id"`
-	TaskId int    `json:"task_id"`
-}
-
-type Message struct {
-	Message string `json:"message"`
-}
-
-type Day struct {
-	Day   time.Time `json:"day"`
-	Count int       `json:"count_task"`
-}
-
-type Days struct {
-	Days []Day `json:"days"`
-}
-
-type ShockMode struct {
-	Today     bool `json:"today"`
-	ShockMode int  `json:"chock_mode"`
-}
-
 type DoneTask struct {
 	CountDoneTask int        `json:"count_done_task"`
 	DoneTask      []TaskJSON `json:"done_task"`
@@ -244,86 +116,88 @@ type DifficultyJson struct {
 	Difficulty int `json:"difficulty"`
 }
 
-type StoryItem struct {
-	ProblemUrl      string `json:"problem_url"`
-	Rating          int    `json:"rating"`
-	Tags            []int  `json:"tags"`
-	DifficultyMatch int    `json:"difficulty_match"`
-	Solved          bool   `json:"solved"`
-	NAttempts       int    `json:"n_attempts"`
-}
-type Story struct {
-	UserId int         `json:"username"`
-	Story  []StoryItem `json:"story"`
+type Tags struct {
+	Id  int
+	Eng string
+	Rus string
 }
 
-type StoryItem1 struct {
-	ProblemUrl string `json:"problem_url"`
-	Rating     int    `json:"rating"`
-	Tags       []int  `json:"tags"`
-	NAttempts  int    `json:"n_attempts"`
-}
-type Story1 struct {
-	Solved  []StoryItem1 `json:"solved"`
-	TooEasy []StoryItem1 `json:"too_easy"`
-	TooHard []StoryItem1 `json:"too_hard"`
-}
-
-type Problems struct {
-	ProblemUrl string `json:"problem_url"`
-	Rating     int    `json:"rating"`
-	Tags       []int  `json:"tags"`
-}
-
-type Recommended struct {
-	RecommendedTag int        `json:"recommended_tag"`
-	Priority       int        `json:"priority"`
-	Problems       []Problems `json:"problems"`
-}
-
-type Rec struct {
-	Rec []Recommended `json:"rec"`
-}
-
-type RecommendedResponse struct {
-	RecommendedTag string     `json:"recommended_tag"`
-	Priority       int        `json:"priority"`
-	Problems       []TaskJSON `json:"problems"`
-}
-
-type RecResponse struct {
-	Rec []RecommendedResponse `json:"rec"`
-}
-
-type Progress struct {
-	Tag  int  `json:"tag"`
-	Done bool `json:"done"`
+var MyTags = []Tags{
+	Tags{Id: 1, Eng: "*special", Rus: "*особая задача"},
+	Tags{Id: 2, Eng: "2-sat", Rus: "2-sat"},
+	Tags{Id: 3, Eng: "binary search", Rus: "бинарный поиск"},
+	Tags{Id: 4, Eng: "bitmasks", Rus: "битмаски"},
+	Tags{Id: 5, Eng: "brute force", Rus: "перебор"},
+	Tags{Id: 6, Eng: "chinese remainder theorem", Rus: "китайская теорема об остатках"},
+	Tags{Id: 7, Eng: "combinatorics", Rus: "комбинаторика"},
+	Tags{Id: 8, Eng: "constructive algorithms", Rus: "конструктив"},
+	Tags{Id: 9, Eng: "data structures", Rus: "структуры данных"},
+	Tags{Id: 10, Eng: "dfs and similar", Rus: "поиск в глубину и подобное"},
+	Tags{Id: 11, Eng: "divide and conquer", Rus: "разделяй и властвуй"},
+	Tags{Id: 12, Eng: "dp", Rus: "дп"},
+	Tags{Id: 13, Eng: "dsu", Rus: "системы непересекающихся множеств"},
+	Tags{Id: 14, Eng: "expression parsing", Rus: "разбор выражений"},
+	Tags{Id: 15, Eng: "fft", Rus: "быстрое преобразование Фурье"},
+	Tags{Id: 16, Eng: "flows", Rus: "потоки"},
+	Tags{Id: 17, Eng: "games", Rus: "игры"},
+	Tags{Id: 18, Eng: "geometry", Rus: "геометрия"},
+	Tags{Id: 19, Eng: "graph matchings", Rus: "паросочетания"},
+	Tags{Id: 20, Eng: "graphs", Rus: "графы"},
+	Tags{Id: 21, Eng: "greedy", Rus: "жадные алгоритмы"},
+	Tags{Id: 22, Eng: "hashing", Rus: "хэши"},
+	Tags{Id: 23, Eng: "implementation", Rus: "реализация"},
+	Tags{Id: 24, Eng: "interactive", Rus: "интерактив"},
+	Tags{Id: 25, Eng: "math", Rus: "математика"},
+	Tags{Id: 26, Eng: "matrices", Rus: "матрицы"},
+	Tags{Id: 27, Eng: "meet-in-the-middle", Rus: "meet-in-the-middle"},
+	Tags{Id: 28, Eng: "number theory", Rus: "теория чисел"},
+	Tags{Id: 29, Eng: "probabilities", Rus: "теория вероятностей"},
+	Tags{Id: 30, Eng: "schedules", Rus: "расписания"},
+	Tags{Id: 31, Eng: "shortest paths", Rus: "кратчайшие пути"},
+	Tags{Id: 32, Eng: "sortings", Rus: "сортировки"},
+	Tags{Id: 33, Eng: "string suffix structures", Rus: "строковые суфф. структуры"},
+	Tags{Id: 34, Eng: "strings", Rus: "строки"},
+	Tags{Id: 35, Eng: "ternary search", Rus: "тернарный поиск"},
+	Tags{Id: 36, Eng: "trees", Rus: "деревья"},
+	Tags{Id: 37, Eng: "two pointers", Rus: "два указателя"},
 }
 
-type ColdStartML struct {
-	Finished    bool       `json:"finished"`
-	ProblemUrl  string     `json:"problem_url"`
-	Tag         int        `json:"tag"`
-	Progress    []Progress `json:"progress"`
-	ProblemTags []int      `json:"problem_tags"`
-	Rating      int        `json:"rating"`
-}
-
-type ColdStartResponse struct {
-	Finished bool       `json:"finished"`
-	Progress []Progress `json:"progress"`
-	Task     TaskJSON   `json:"task"`
-}
-
-type ChatGPT struct {
-	TaskId  int    `json:"task_id"`
-	Message string `json:"message"`
-	Code    string `json:"code"`
-}
-
-type ChatGPTRequest struct {
-	UserMessage    string `json:"user_message"`
-	Statement      string `json:"statement"`
-	UserSolution   string `json:"user_solution"`
-	MasterSolution string `json:"master_solution"`
+var TagDict = map[int][]string{
+	1:  {"*special", "*особая задача"},
+	2:  {"2-sat", "2-sat"},
+	3:  {"binary search", "бинарный поиск"},
+	4:  {"bitmasks", "битмаски"},
+	5:  {"brute force", "перебор"},
+	6:  {"chinese remainder theorem", "китайская теорема об остатках"},
+	7:  {"combinatorics", "комбинаторика"},
+	8:  {"constructive algorithms", "конструктив"},
+	9:  {"data structures", "структуры данных"},
+	10: {"dfs and similar", "поиск в глубину и подобное"},
+	11: {"divide and conquer", "разделяй и властвуй"},
+	12: {"dp", "дп"},
+	13: {"dsu", "системы непересекающихся множеств"},
+	14: {"expression parsing", "разбор выражений"},
+	15: {"fft", "быстрое преобразование Фурье"},
+	16: {"flows", "потоки"},
+	17: {"games", "игры"},
+	18: {"geometry", "геометрия"},
+	19: {"graph matchings", "паросочетания"},
+	20: {"graphs", "графы"},
+	21: {"greedy", "жадные алгоритмы"},
+	22: {"hashing", "хэши"},
+	23: {"implementation", "реализация"},
+	24: {"interactive", "интерактив"},
+	25: {"math", "математика"},
+	26: {"matrices", "матрицы"},
+	27: {"meet-in-the-middle", "meet-in-the-middle"},
+	28: {"number theory", "теория чисел"},
+	29: {"probabilities", "теория вероятностей"},
+	30: {"schedules", "расписания"},
+	31: {"shortest paths", "кратчайшие пути"},
+	32: {"sortings", "сортировки"},
+	33: {"string suffix structures", "строковые суфф. структуры"},
+	34: {"strings", "строки"},
+	35: {"ternary search", "тернарный поиск"},
+	36: {"trees", "деревья"},
+	37: {"two pointers", "два указателя"},
 }

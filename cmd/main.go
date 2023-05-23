@@ -6,10 +6,37 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/conf"
-	"github.com/tp-study-ai/backend/internal/app/auth"
+	"github.com/tp-study-ai/backend/internal/app/auth/authHandler"
+	"github.com/tp-study-ai/backend/internal/app/auth/authRepository"
+	"github.com/tp-study-ai/backend/internal/app/auth/authUseCase"
+
+	"github.com/tp-study-ai/backend/internal/app/bonusSystem/bonusSystemHandler"
+	"github.com/tp-study-ai/backend/internal/app/bonusSystem/bonusSystemRepository"
+	"github.com/tp-study-ai/backend/internal/app/bonusSystem/bonusSystemUseCase"
+
+	"github.com/tp-study-ai/backend/internal/app/chatGPT/chatGPTHandler"
+	"github.com/tp-study-ai/backend/internal/app/chatGPT/chatGPTRepository"
+	"github.com/tp-study-ai/backend/internal/app/chatGPT/chatGPTUseCase"
+
+	"github.com/tp-study-ai/backend/internal/app/ml/mlHandler"
+	"github.com/tp-study-ai/backend/internal/app/ml/mlRepository"
+	"github.com/tp-study-ai/backend/internal/app/ml/mlUseCase"
+
+	"github.com/tp-study-ai/backend/internal/app/task/taskHandler"
+	"github.com/tp-study-ai/backend/internal/app/task/taskRepository"
+	"github.com/tp-study-ai/backend/internal/app/task/taskUseCase"
+
+	"github.com/tp-study-ai/backend/internal/app/like/likeHandler"
+	"github.com/tp-study-ai/backend/internal/app/like/likeRepository"
+	"github.com/tp-study-ai/backend/internal/app/like/likeUseCase"
+
 	"github.com/tp-study-ai/backend/internal/app/metrics"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
-	"github.com/tp-study-ai/backend/internal/app/task"
+
+	"github.com/tp-study-ai/backend/internal/app/testis/testisHandler"
+	"github.com/tp-study-ai/backend/internal/app/testis/testisRepository"
+	"github.com/tp-study-ai/backend/internal/app/testis/testisUseCase"
+
 	"github.com/tp-study-ai/backend/tools"
 	"github.com/tp-study-ai/backend/tools/authManager/jwtManager"
 	"log"
@@ -36,13 +63,33 @@ func main() {
 
 	jwtManager := jwtManager.NewJwtManager(config.JWT)
 
-	taskRepo := task.NewRepositoryTask(pgxManager)
-	taskUcase := task.NewUseCaseTask(taskRepo, config.Testis, config.Ml, config.MLRec, config.MLCS, config.CG)
-	taskHandler := task.NewHandlerTask(taskUcase)
+	taskRepository := taskRepository.NewRepositoryTask(pgxManager)
+	taskUseCase := taskUseCase.NewUseCaseTask(taskRepository, config.Testis, config.Ml, config.MLRec, config.MLCS, config.CG)
+	taskHandler := taskHandler.NewHandlerTask(taskUseCase)
 
-	authRepo := auth.NewRepositoryAuth(pgxManager)
-	authUcase := auth.NewUseCaseAuth(authRepo)
-	authHandler := auth.NewHandlerAuth(authUcase, jwtManager)
+	testisRepository := testisRepository.NewRepositoryTask(pgxManager)
+	testisUseCase := testisUseCase.NewUseCaseTestis(testisRepository, config.Testis, config.Ml, config.MLRec, config.MLCS, config.CG)
+	testisHandler := testisHandler.NewHandlerTestis(testisUseCase)
+
+	likeRepository := likeRepository.NewRepositoryLike(pgxManager)
+	likeUseCase := likeUseCase.NewUseCaseLike(likeRepository)
+	likeHandler := likeHandler.NewHandlerLike(likeUseCase)
+
+	chatGPTRepository := chatGPTRepository.NewRepositoryChatGPT(pgxManager)
+	chatGPTUseCase := chatGPTUseCase.NewUseCaseChatGPT(chatGPTRepository, config.CG)
+	chatGPTHandler := chatGPTHandler.NewHandlerChatGPT(chatGPTUseCase)
+
+	mlRepository := mlRepository.NewRepositoryML(pgxManager)
+	mlUseCase := mlUseCase.NewUseCaseML(mlRepository, config.Testis, config.Ml, config.MLRec, config.MLCS, config.CG)
+	mlHandler := mlHandler.NewHandlerML(mlUseCase)
+
+	bonusSystemRepository := bonusSystemRepository.NewRepositoryBonusSystem(pgxManager)
+	bonusSystemUseCase := bonusSystemUseCase.NewUseCaseBonusSystem(bonusSystemRepository)
+	bonusSystemHandler := bonusSystemHandler.NewHandlerBonusSystem(bonusSystemUseCase)
+
+	authRepository := authRepository.NewRepositoryAuth(pgxManager)
+	authUseCase := authUseCase.NewUseCaseAuth(authRepository)
+	authHandler := authHandler.NewHandlerAuth(authUseCase, jwtManager)
 
 	router := echo.New()
 
@@ -54,8 +101,13 @@ func main() {
 	router.Use(m.CollectMetrics)
 
 	serverRouting := conf.ServerHandlers{
-		TaskHandler: taskHandler,
-		AuthHandler: authHandler,
+		TaskHandler:        taskHandler,
+		TestisHandler:      testisHandler,
+		AuthHandler:        authHandler,
+		LikeHandler:        likeHandler,
+		ChatGPTHandler:     chatGPTHandler,
+		MLHandler:          mlHandler,
+		BonusSystemHandler: bonusSystemHandler,
 	}
 
 	comonMw := middleware.NewCommonMiddleware(jwtManager)

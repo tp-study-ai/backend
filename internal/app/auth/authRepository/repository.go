@@ -1,4 +1,4 @@
-package auth
+package authRepository
 
 import (
 	"github.com/jackc/pgx"
