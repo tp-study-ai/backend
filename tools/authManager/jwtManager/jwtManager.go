@@ -13,14 +13,14 @@ type JwtManager struct {
 	expDuration time.Duration
 }
 
-func NewJwtManager() *JwtManager {
+func NewJwtManager(jwtS string) *JwtManager {
 	methodObj := jwt.GetSigningMethod("HS256")
 	t, _ := time.ParseDuration("168h")
 	if methodObj == nil {
 		return nil
 	}
 	return &JwtManager{
-		key:         []byte("jwt_key"),
+		key:         []byte(jwtS),
 		method:      methodObj,
 		expDuration: t,
 	}

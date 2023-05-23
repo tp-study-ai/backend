@@ -1,10 +1,13 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/tp-study-ai/backend/conf"
 	"github.com/tp-study-ai/backend/internal/app/auth"
+	"github.com/tp-study-ai/backend/internal/app/metrics"
 	"github.com/tp-study-ai/backend/internal/app/middleware"
 	"github.com/tp-study-ai/backend/internal/app/task"
 	"github.com/tp-study-ai/backend/tools"
@@ -14,16 +17,27 @@ import (
 )
 
 func main() {
-	pgxManager, err := tools.NewPostgres()
+	configPath := flag.String("config", "./backConfig/conf.toml", "path to config file")
+	flag.Parse()
+
+	config := tools.NewConfig()
+
+	err := tools.ReadConfigFile(*configPath, config)
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "error reading config"))
+	}
+	fmt.Println(config)
+
+	pgxManager, err := tools.NewPostgres(config)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "error creating postgres agent"))
 	}
 	defer pgxManager.Close()
 
-	jwtManager := jwtManager.NewJwtManager()
+	jwtManager := jwtManager.NewJwtManager(config.JWT)
 
 	taskRepo := task.NewRepositoryTask(pgxManager)
-	taskUcase := task.NewUseCaseTask(taskRepo)
+	taskUcase := task.NewUseCaseTask(taskRepo, config.Testis, config.Ml, config.MLRec, config.MLCS, config.CG)
 	taskHandler := task.NewHandlerTask(taskUcase)
 
 	authRepo := auth.NewRepositoryAuth(pgxManager)
@@ -31,6 +45,13 @@ func main() {
 	authHandler := auth.NewHandlerAuth(authUcase, jwtManager)
 
 	router := echo.New()
+
+	m, err := metrics.CreateNewMetric("main")
+	if err != nil {
+		panic(err)
+	}
+
+	router.Use(m.CollectMetrics)
 
 	serverRouting := conf.ServerHandlers{
 		TaskHandler: taskHandler,
